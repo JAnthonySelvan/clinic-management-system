@@ -516,6 +516,39 @@ function Home() {
           </div>
         </div>
       </section>
+      {/* ================= CALL TO ACTION ================= */}
+
+      <section className="py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
+            <h2 className="text-4xl font-bold text-white md:text-5xl">
+              Your Health Is Our Priority
+            </h2>
+
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+              Book your appointment today and receive expert medical care from
+              our experienced healthcare professionals. We're here to provide
+              the best treatment with compassion and excellence.
+            </p>
+
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                to="/appointment"
+                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition hover:scale-105"
+              >
+                Book Appointment
+              </Link>
+
+              <Link
+                to="/doctors"
+                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition hover:bg-white hover:text-[#253237]"
+              >
+                Meet Our Doctors
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
