@@ -16,6 +16,11 @@ import Doctors from "../pages/admin/Doctors";
 import Appointments from "../pages/admin/Appointments";
 import Messages from "../pages/admin/Messages";
 import AddDoctor from "../pages/admin/AddDoctor";
+import DoctorLayout from "../layouts/DoctorLayout";
+import DoctorDashboard from "../pages/doctor/DoctorDashboard";
+import DoctorAppointments from "../pages/doctor/DoctorAppointments";
+import DoctorProfile from "../pages/doctor/DoctorProfile";
+import DoctorSettings from "../pages/doctor/DoctorSettings";
 function AppRoutes() {
   return (
     <Routes>
@@ -38,6 +43,12 @@ function AppRoutes() {
       <Route path="/admin/doctors/add" element={<AddDoctor />} />
 
       <Route path="/doctor/login" element={<DoctorLogin />} />
+      <Route path="/doctor" element={<DoctorLayout />}>
+        <Route path="dashboard" element={<DoctorDashboard />} />
+        <Route path="appointments" element={<DoctorAppointments />} />
+        <Route path="profile" element={<DoctorProfile />} />
+        <Route path="settings" element={<DoctorSettings />} />
+      </Route>
 
       <Route path="*" element={<NotFound />} />
     </Routes>
