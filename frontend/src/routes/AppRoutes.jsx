@@ -5,13 +5,17 @@ import PublicLayout from "../layouts/PublicLayout";
 import Home from "../pages/public/Home";
 import About from "../pages/public/About";
 import Services from "../pages/public/Services";
-import Doctors from "../pages/public/Doctors";
 import Appointment from "../pages/public/Appointment";
 import Contact from "../pages/public/Contact";
 import AdminLogin from "../pages/auth/AdminLogin";
 import DoctorLogin from "../pages/auth/DoctorLogin";
 import NotFound from "../pages/NotFound";
-
+import AdminLayout from "../layouts/AdminLayout";
+import Dashboard from "../pages/admin/Dashboard";
+import Doctors from "../pages/admin/Doctors";
+import Appointments from "../pages/admin/Appointments";
+import Messages from "../pages/admin/Messages";
+import AddDoctor from "../pages/admin/AddDoctor";
 function AppRoutes() {
   return (
     <Routes>
@@ -25,6 +29,14 @@ function AppRoutes() {
       </Route>
 
       <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="doctors" element={<Doctors />} />
+        <Route path="appointments" element={<Appointments />} />
+        <Route path="messages" element={<Messages />} />
+      </Route>
+      <Route path="/admin/doctors/add" element={<AddDoctor />} />
+
       <Route path="/doctor/login" element={<DoctorLogin />} />
 
       <Route path="*" element={<NotFound />} />

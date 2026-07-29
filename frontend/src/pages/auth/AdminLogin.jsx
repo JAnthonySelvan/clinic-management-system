@@ -1,37 +1,61 @@
-function AdminLogin() {
+import { Link } from "react-router-dom";
+
+const AdminLogin = () => {
   return (
-    <section className="min-h-[70vh] flex items-center justify-center px-6 py-16 bg-[#e0fbfc]">
-      <div className="w-full max-w-md rounded-3xl bg-white p-10 shadow-xl">
-        <h1 className="text-3xl font-bold text-[#253237]">
-          Admin Login
-        </h1>
-        <p className="mt-3 text-[#5c6b73]">
-          Sign in to manage appointments, doctors, and dashboard reports.
-        </p>
-        <div className="mt-8 space-y-4">
-          <label className="block text-sm font-medium text-[#5c6b73]">
-            Email address
+    <section className="min-h-screen bg-[#F8FBFC] flex items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
+        <div className="mb-10 text-center">
+          <h1 className="text-4xl font-bold text-[#253237]">Admin Login</h1>
+
+          <p className="mt-3 text-[#5C6B73]">
+            Sign in to access the Saviours Clinic Admin Dashboard.
+          </p>
+        </div>
+
+        <form className="space-y-6">
+          <div>
+            <label className="mb-2 block font-medium text-[#253237]">
+              Email Address
+            </label>
+
             <input
               type="email"
               placeholder="admin@example.com"
-              className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#253237] focus:ring-2 focus:ring-[#9db4c0]"
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-[#253237]"
             />
-          </label>
-          <label className="block text-sm font-medium text-[#5c6b73]">
-            Password
+          </div>
+
+          <div>
+            <label className="mb-2 block font-medium text-[#253237]">
+              Password
+            </label>
+
             <input
               type="password"
               placeholder="••••••••"
-              className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#253237] focus:ring-2 focus:ring-[#9db4c0]"
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-[#253237]"
             />
-          </label>
-          <button className="w-full rounded-2xl bg-[#253237] px-4 py-3 text-white transition hover:bg-[#5c6b73]">
-            Continue
+          </div>
+
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-[#253237] py-3 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73]"
+          >
+            Login
           </button>
+        </form>
+
+        <div className="mt-8 text-center">
+          <Link
+            to="/"
+            className="text-[#5C6B73] transition hover:text-[#253237]"
+          >
+            ← Back to Website
+          </Link>
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default AdminLogin;
