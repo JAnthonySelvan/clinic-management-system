@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { loginUser, getCurrentUser, logoutUser } from "./authService";
+import {
+  loginUser,
+  getCurrentUser,
+  logoutUser,
+  updateProfile as updateProfileRequest,
+} from "./authService";
 
 const initialState = {
   user: null,
@@ -50,6 +55,21 @@ export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   }
 });
 
+// Update Profile (currently logged-in user)
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (profileData, thunkAPI) => {
+    try {
+      const response = await updateProfileRequest(profileData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to update profile",
+      );
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -89,6 +109,20 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
+      })
+
+      // Update Profile
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // Logout

@@ -1,42 +1,62 @@
-const todayAppointments = [
-  {
-    id: 1,
-    patient: "John Doe",
-    time: "10:00 AM",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    patient: "Sarah Wilson",
-    time: "11:30 AM",
-    status: "Approved",
-  },
-  {
-    id: 3,
-    patient: "David Joseph",
-    time: "02:00 PM",
-    status: "Completed",
-  },
-];
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDoctorAppointments } from "../../features/appointment/appointmentSlice";
 
-const cards = [
-  {
-    title: "Today's Appointments",
-    value: 8,
-  },
-  {
-    title: "Pending",
-    value: 3,
-  },
-  {
-    title: "Completed",
-    value: 18,
-  },
-];
+const statusColor = {
+  Pending: "bg-yellow-100 text-yellow-700",
+  Approved: "bg-green-100 text-green-700",
+  Completed: "bg-blue-100 text-blue-700",
+  Rejected: "bg-red-100 text-red-700",
+};
 
 const DoctorDashboard = () => {
+  const dispatch = useDispatch();
+
+  const { doctorAppointments, loading } = useSelector(
+    (state) => state.appointment,
+  );
+
+  useEffect(() => {
+    dispatch(fetchDoctorAppointments());
+  }, [dispatch]);
+
+  const today = new Date().toDateString();
+
+  const todayAppointments = doctorAppointments.filter(
+    (appointment) =>
+      new Date(appointment.appointmentDateTime).toDateString() === today,
+  );
+
+  const cards = [
+    {
+      title: "Today's Appointments",
+      value: todayAppointments.length,
+    },
+    {
+      title: "Pending",
+      value: doctorAppointments.filter(
+        (appointment) => appointment.status === "Pending",
+      ).length,
+    },
+    {
+      title: "Completed",
+      value: doctorAppointments.filter(
+        (appointment) => appointment.status === "Completed",
+      ).length,
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-lg text-[#5C6B73]">Loading Dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <>
+      {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-[#253237]">
           Welcome, Doctor 👨‍⚕️
@@ -79,30 +99,42 @@ const DoctorDashboard = () => {
             </thead>
 
             <tbody>
-              {todayAppointments.map((appointment) => (
-                <tr
-                  key={appointment.id}
-                  className="border-b hover:bg-[#F8FBFC]"
-                >
-                  <td className="px-6 py-4">{appointment.patient}</td>
+              {todayAppointments.length > 0 ? (
+                todayAppointments.map((appointment) => (
+                  <tr
+                    key={appointment._id}
+                    className="border-b hover:bg-[#F8FBFC]"
+                  >
+                    <td className="px-6 py-4">{appointment.patientName}</td>
 
-                  <td className="px-6 py-4">{appointment.time}</td>
+                    <td className="px-6 py-4">
+                      {new Date(
+                        appointment.appointmentDateTime,
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
 
-                  <td className="px-6 py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-sm font-medium ${
-                        appointment.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : appointment.status === "Approved"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {appointment.status}
-                    </span>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-sm font-medium ${
+                          statusColor[appointment.status] ||
+                          "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {appointment.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={3} className="py-10 text-center text-[#5C6B73]">
+                    No appointments scheduled for today.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
