@@ -22,3 +22,9 @@ export const deleteAppointment = async (id) => {
   const response = await api.delete(`/appointments/${id}`);
   return response.data;
 };
+
+export const getDoctorAppointments = async () => {
+  const response = await api.get("/appointments/doctor");
+  return response.data;
+};
+

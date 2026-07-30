@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { loginUser, getCurrentUser, logoutUser } from "./authService";
 
 const initialState = {
   user: null,
   isAuthenticated: false,
-  loading: false,
+  loading: true, // starts true: we don't know auth status until fetchCurrentUser resolves
   error: null,
 };
 
@@ -14,12 +14,7 @@ export const login = createAsyncThunk(
   async (loginData, thunkAPI) => {
     try {
       const response = await loginUser(loginData);
-
-      if (response.data.role !== "admin") {
-        return thunkAPI.rejectWithValue("Only administrators can log in here.");
-      }
-
-      return response;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Login failed",
@@ -28,12 +23,13 @@ export const login = createAsyncThunk(
   },
 );
 
-// Get Current User
+// Get Current User (e.g. on app load / refresh)
 export const fetchCurrentUser = createAsyncThunk(
-  "auth/getCurrentUser",
+  "auth/fetchCurrentUser",
   async (_, thunkAPI) => {
     try {
-      return await getCurrentUser();
+      const response = await getCurrentUser();
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to fetch user",
@@ -45,7 +41,8 @@ export const fetchCurrentUser = createAsyncThunk(
 // Logout
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
-    return await logoutUser();
+    await logoutUser();
+    return true;
   } catch (error) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Logout failed",
@@ -63,7 +60,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       // Login
       .addCase(login.pending, (state) => {
         state.loading = true;
@@ -72,36 +68,37 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.data;
+        state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
       })
 
-      // Get Current User
+      // Fetch Current User
       .addCase(fetchCurrentUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.data;
+        state.user = action.payload;
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
         state.loading = false;
-        state.user = null;
         state.isAuthenticated = false;
+        state.user = null;
       })
 
       // Logout
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
-        state.loading = false;
       });
   },
 });
 
 export const { clearError } = authSlice.actions;
+
 export default authSlice.reducer;

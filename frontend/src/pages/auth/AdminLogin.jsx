@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { login, clearError } from "../../features/auth/authSlice";
+import { login, logout, clearError } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
 
 const AdminLogin = () => {
