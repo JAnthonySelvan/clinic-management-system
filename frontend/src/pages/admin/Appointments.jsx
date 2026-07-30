@@ -1,29 +1,9 @@
-const appointments = [
-  {
-    id: 1,
-    patient: "John Doe",
-    doctor: "Dr. John Smith",
-    date: "30 Jul 2026",
-    time: "10:30 AM",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    patient: "Sarah Wilson",
-    doctor: "Dr. Priya Kumar",
-    date: "30 Jul 2026",
-    time: "11:00 AM",
-    status: "Approved",
-  },
-  {
-    id: 3,
-    patient: "David Joseph",
-    doctor: "Dr. Smith",
-    date: "31 Jul 2026",
-    time: "09:30 AM",
-    status: "Completed",
-  },
-];
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  fetchAppointments,
+  removeAppointment,
+} from "../../features/appointment/appointmentSlice";
 
 const statusClasses = {
   Pending: "bg-yellow-100 text-yellow-700",
@@ -33,6 +13,28 @@ const statusClasses = {
 };
 
 const Appointments = () => {
+  const dispatch = useAppDispatch();
+
+  const { appointments, loading } = useAppSelector(
+    (state) => state.appointment,
+  );
+
+  useEffect(() => {
+    dispatch(fetchAppointments());
+  }, [dispatch]);
+
+  const handleDelete = (id) => {
+    if (window.confirm("Delete this appointment?")) {
+      dispatch(removeAppointment(id));
+    }
+  };
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <p className="text-lg text-[#5C6B73]">Loading appointments...</p>
+      </div>
+    );
+  }
   return (
     <>
       {/* Header */}
@@ -67,13 +69,14 @@ const Appointments = () => {
 
       {/* Table */}
       <div className="overflow-x-auto rounded-3xl bg-white shadow-lg">
-        <table className="w-full">
+        <table className="min-w-full">
           <thead className="bg-[#253237] text-white">
             <tr>
               <th className="px-6 py-4 text-left">Patient</th>
+              <th className="px-6 py-4 text-left">Email</th>
+              <th className="px-6 py-4 text-left">Phone</th>
               <th className="px-6 py-4 text-left">Doctor</th>
-              <th className="px-6 py-4 text-left">Date</th>
-              <th className="px-6 py-4 text-left">Time</th>
+              <th className="px-6 py-4 text-left">Date & Time</th>
               <th className="px-6 py-4 text-left">Status</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
@@ -82,18 +85,32 @@ const Appointments = () => {
           <tbody>
             {appointments.map((appointment) => (
               <tr
-                key={appointment.id}
+                key={appointment._id}
                 className="border-b transition hover:bg-[#F8FBFC]"
               >
-                <td className="px-6 py-4">{appointment.patient}</td>
-                <td className="px-6 py-4">{appointment.doctor}</td>
-                <td className="px-6 py-4">{appointment.date}</td>
-                <td className="px-6 py-4">{appointment.time}</td>
+                <td className="px-6 py-4">{appointment.patientName}</td>
+
+                <td className="px-6 py-4">{appointment.patientEmail}</td>
+
+                <td className="px-6 py-4">{appointment.patientPhone}</td>
+
+                <td className="px-6 py-4">{appointment.doctor?.fullName}</td>
+
+                <td className="px-6 py-4">
+                  {new Date(appointment.appointmentDateTime).toLocaleString(
+                    "en-IN",
+                    {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    },
+                  )}
+                </td>
 
                 <td className="px-6 py-4">
                   <span
                     className={`rounded-full px-3 py-1 text-sm font-medium ${
-                      statusClasses[appointment.status]
+                      statusClasses[appointment.status] ??
+                      "bg-gray-100 text-gray-700"
                     }`}
                   >
                     {appointment.status}
@@ -101,22 +118,25 @@ const Appointments = () => {
                 </td>
 
                 <td className="px-6 py-4">
-                  <div className="flex justify-center gap-2">
-                    <button className="rounded-lg bg-green-600 px-3 py-2 text-sm text-white hover:bg-green-700">
-                      Approve
-                    </button>
-
-                    <button className="rounded-lg bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700">
-                      Complete
-                    </button>
-
-                    <button className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white hover:bg-red-700">
+                  <div className="flex justify-center">
+                    <button
+                      onClick={() => handleDelete(appointment._id)}
+                      className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                    >
                       Delete
                     </button>
                   </div>
                 </td>
               </tr>
             ))}
+
+            {appointments.length === 0 && (
+              <tr>
+                <td colSpan={7} className="py-10 text-center text-[#5C6B73]">
+                  No appointments found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
