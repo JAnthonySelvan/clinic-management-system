@@ -1,119 +1,137 @@
-const stats = [
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const statConfig = [
   {
+    key: "totalDoctors",
     title: "Total Doctors",
-    value: 12,
     icon: "👨‍⚕️",
     color: "bg-[#253237]",
   },
   {
+    key: "totalAppointments",
     title: "Appointments",
-    value: 156,
     icon: "📅",
     color: "bg-[#5C6B73]",
   },
   {
+    key: "totalContacts",
     title: "Messages",
-    value: 48,
     icon: "💬",
     color: "bg-[#9DB4C0]",
   },
   {
-    title: "Today's Bookings",
-    value: 18,
+    key: "pendingAppointments",
+    title: "Pending",
     icon: "🩺",
     color: "bg-[#253237]",
   },
 ];
 
+const statusStyles = {
+  Pending: "bg-yellow-100 text-yellow-800",
+  Approved: "bg-blue-100 text-blue-800",
+  Rejected: "bg-red-100 text-red-800",
+  Completed: "bg-green-100 text-green-800",
+};
+
 const Dashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const { data } = await axios.get(
+          "http://localhost:5000/api/dashboard/stats",
+          { withCredentials: true },
+        );
+
+        setStats(data.data);
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "Failed to load dashboard statistics",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <>
       {/* Page Header */}
       <div className="mb-10">
         <h1 className="text-4xl font-bold text-[#253237]">Dashboard</h1>
-
         <p className="mt-2 text-[#5C6B73]">
           Welcome back! Here's an overview of your clinic.
         </p>
       </div>
 
+      {error && (
+        <div className="mb-6 rounded-xl bg-red-50 p-4 text-red-700">
+          {error}
+        </div>
+      )}
+
       {/* Statistics Cards */}
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
-          <div
-            key={item.title}
-            className="rounded-3xl bg-white p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div
-              className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-3xl text-white ${item.color}`}
-            >
-              {item.icon}
-            </div>
-
-            <h3 className="text-lg font-semibold text-[#5C6B73]">
-              {item.title}
-            </h3>
-
-            <p className="mt-3 text-4xl font-bold text-[#253237]">
-              {item.value}
-            </p>
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-40 animate-pulse rounded-3xl bg-white/60 shadow-lg"
+              />
+            ))
+          : statConfig.map((item) => (
+              <div
+                key={item.key}
+                className="rounded-3xl bg-white p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div
+                  className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-3xl text-white ${item.color}`}
+                >
+                  {item.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-[#5C6B73]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-4xl font-bold text-[#253237]">
+                  {stats?.[item.key] ?? 0}
+                </p>
+              </div>
+            ))}
       </div>
 
-      {/* Recent Appointments */}
-      <div className="mt-12 rounded-3xl bg-white p-8 shadow-lg">
-        <h2 className="mb-6 text-2xl font-bold text-[#253237]">
-          Recent Appointments
-        </h2>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="py-4">Patient</th>
-                <th className="py-4">Doctor</th>
-                <th className="py-4">Date</th>
-                <th className="py-4">Status</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {[
-                {
-                  patient: "John Doe",
-                  doctor: "Dr. Smith",
-                  date: "30 Jul 2026",
-                  status: "Pending",
-                },
-                {
-                  patient: "Sarah",
-                  doctor: "Dr. Kumar",
-                  date: "30 Jul 2026",
-                  status: "Approved",
-                },
-                {
-                  patient: "David",
-                  doctor: "Dr. Joseph",
-                  date: "31 Jul 2026",
-                  status: "Completed",
-                },
-              ].map((appointment, index) => (
-                <tr key={index} className="border-b">
-                  <td className="py-4">{appointment.patient}</td>
-                  <td>{appointment.doctor}</td>
-                  <td>{appointment.date}</td>
-                  <td>
-                    <span className="rounded-full bg-[#E0FBFC] px-4 py-2 text-sm font-medium text-[#253237]">
-                      {appointment.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Appointment Status Breakdown */}
+      {!loading && stats && (
+        <div className="mt-12 grid gap-6 sm:grid-cols-3">
+          {[
+            "approvedAppointments",
+            "rejectedAppointments",
+            "completedAppointments",
+          ].map((key) => {
+            const label = key.replace("Appointments", "");
+            const displayLabel = label.charAt(0).toUpperCase() + label.slice(1);
+            return (
+              <div key={key} className="rounded-3xl bg-white p-6 shadow-lg">
+                <h3 className="text-sm font-medium text-[#5C6B73]">
+                  {displayLabel} Appointments
+                </h3>
+                <p className="mt-2 text-3xl font-bold text-[#253237]">
+                  {stats[key]}
+                </p>
+              </div>
+            );
+          })}
         </div>
-      </div>
+      )}
     </>
   );
 };
