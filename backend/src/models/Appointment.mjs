@@ -21,13 +21,25 @@ const appointmentSchema = new mongoose.Schema(
       trim: true,
     },
 
+    patientAge: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
+    gender: {
+      type: String,
+      required: true,
+      enum: ["Male", "Female", "Other"],
+    },
+
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    appointmentDate: {
+    appointmentDateTime: {
       type: Date,
       required: true,
     },

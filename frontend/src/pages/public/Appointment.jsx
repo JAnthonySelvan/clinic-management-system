@@ -1,5 +1,59 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+
+import { fetchDoctors } from "../../features/doctor/doctorSlice";
+
+import {
+  createAppointment,
+  clearAppointmentError,
+  resetAppointmentSuccess,
+} from "../../features/appointment/appointmentSlice";
 const Appointment = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { doctors } = useAppSelector((state) => state.doctor);
+
+  const { loading, success, error } = useAppSelector(
+    (state) => state.appointment,
+  );
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  useEffect(() => {
+    dispatch(fetchDoctors());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Appointment booked successfully");
+
+      reset();
+
+      dispatch(resetAppointmentSuccess());
+
+      navigate("/");
+    }
+
+    if (error) {
+      toast.error(error);
+      dispatch(clearAppointmentError());
+    }
+  }, [success, error, dispatch, navigate, reset]);
+
+  const onSubmit = async (data) => {
+    console.log("Form Data:", data);
+    await dispatch(createAppointment(data));
+  };
+
   return (
     <>
       {/* ================= HERO ================= */}
@@ -42,78 +96,183 @@ const Appointment = () => {
           </div>
 
           <div className="rounded-3xl bg-white p-8 shadow-2xl">
-            <form className="grid gap-6 md:grid-cols-2">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="grid gap-6 md:grid-cols-2"
+            >
+              {/* Patient Name */}
+              <div>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  {...register("patientName", {
+                    required: "Patient name is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientName && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientName.message}
+                  </p>
+                )}
+              </div>
 
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+              {/* Email */}
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  {...register("patientEmail", {
+                    required: "Email is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientEmail && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientEmail.message}
+                  </p>
+                )}
+              </div>
 
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+              {/* Phone */}
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  {...register("patientPhone", {
+                    required: "Phone number is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientPhone && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientPhone.message}
+                  </p>
+                )}
+              </div>
 
-              <input
-                type="number"
-                placeholder="Age"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+              {/* Age */}
+              <div>
+                <input
+                  type="number"
+                  placeholder="Age"
+                  {...register("patientAge", {
+                    required: "Age is required",
+                    valueAsNumber: true,
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientAge && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientAge.message}
+                  </p>
+                )}
+              </div>
 
-              <select className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]">
-                <option>Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
+              {/* Gender */}
+              <div>
+                <select
+                  {...register("gender", {
+                    required: "Gender is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
 
-              <select className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]">
-                <option>Select Department</option>
-                <option>Cardiology</option>
-                <option>Neurology</option>
-                <option>Orthopedics</option>
-                <option>Pediatrics</option>
-                <option>Dental Care</option>
-              </select>
+                {errors.gender && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.gender.message}
+                  </p>
+                )}
+              </div>
 
-              <select className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]">
-                <option>Select Doctor</option>
-                <option>Dr. John Smith</option>
-                <option>Dr. Sarah Wilson</option>
-                <option>Dr. David Lee</option>
-                <option>Dr. Emily Brown</option>
-              </select>
+              {/* Doctor */}
+              <div>
+                <select
+                  {...register("doctor", {
+                    required: "Doctor is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                >
+                  <option value="">Select Doctor</option>
 
-              <input
-                type="date"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+                  {doctors.map((doctor) => (
+                    <option key={doctor._id} value={doctor._id}>
+                      {doctor.fullName}
+                    </option>
+                  ))}
+                </select>
 
-              <input
-                type="time"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+                {errors.doctor && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.doctor.message}
+                  </p>
+                )}
+              </div>
 
-              <div></div>
+              {/* Appointment Date */}
+              <div>
+                <input
+                  type="date"
+                  {...register("appointmentDate", {
+                    required: "Appointment date is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
 
-              <textarea
-                rows="5"
-                placeholder="Describe your health concern..."
-                className="md:col-span-2 rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              ></textarea>
+                {errors.appointmentDate && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.appointmentDate.message}
+                  </p>
+                )}
+              </div>
 
+              {/* Appointment Time */}
+              <div>
+                <input
+                  type="time"
+                  {...register("appointmentTime", {
+                    required: "Appointment time is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+
+                {errors.appointmentTime && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.appointmentTime.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Reason */}
+              <div className="md:col-span-2">
+                <textarea
+                  rows={5}
+                  placeholder="Describe your health concern..."
+                  {...register("reason", {
+                    required: "Reason is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+
+                {errors.reason && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.reason.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
-                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73]"
+                disabled={loading}
+                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Book Appointment
+                {loading ? "Booking..." : "Book Appointment"}
               </button>
             </form>
           </div>

@@ -18,8 +18,11 @@ export const bookAppointment = async (req, res) => {
       patientName,
       patientEmail,
       patientPhone,
+      patientAge,
+      gender,
       doctor,
       appointmentDate,
+      appointmentTime,
       reason,
     } = req.body;
 
@@ -35,12 +38,33 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
+    // Combine separate date + time inputs into the single Date field the schema expects
+    const appointmentDateTime = new Date(
+      `${appointmentDate}T${appointmentTime}`,
+    );
+
+    if (isNaN(appointmentDateTime.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid appointment date or time",
+      });
+    }
+
+    if (appointmentDateTime.getTime() < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "Appointment date/time cannot be in the past",
+      });
+    }
+
     const appointment = await Appointment.create({
       patientName,
       patientEmail,
       patientPhone,
+      patientAge,
+      gender,
       doctor,
-      appointmentDate,
+      appointmentDateTime,
       reason,
     });
 
@@ -61,7 +85,7 @@ export const getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
       .populate("doctor", "fullName specialization email")
-      .sort({ createdAt: -1 });
+      .sort({ appointmentDateTime: 1 });
 
     return res.status(200).json({
       success: true,
@@ -80,7 +104,9 @@ export const getDoctorAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({
       doctor: req.user._id,
-    }).sort({ appointmentDate: 1 });
+    })
+      .populate("doctor", "fullName specialization")
+      .sort({ appointmentDateTime: 1 });
 
     return res.status(200).json({
       success: true,
@@ -117,7 +143,6 @@ export const updateAppointmentStatus = async (req, res) => {
       });
     }
 
-    // Doctor can update only their own appointments
     if (
       req.user.role === "doctor" &&
       appointment.doctor.toString() !== req.user._id.toString()
@@ -167,4 +192,3 @@ export const deleteAppointment = async (req, res) => {
     });
   }
 };
-
