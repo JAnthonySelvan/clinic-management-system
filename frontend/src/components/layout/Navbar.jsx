@@ -127,7 +127,7 @@ function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`overflow-hidden transition-all duration-300 lg:hidden ${
-          isOpen ? "max-h-[36rem]" : "max-h-0"
+          isOpen ? "max-h-144" : "max-h-0"
         }`}
       >
         <div className="space-y-2 border-t bg-white px-6 py-4 shadow-lg">
