@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-
+import CountUpPkg from "react-countup";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
 import AnimatedSection from "../../components/AnimatedSection";
@@ -9,10 +9,20 @@ import {
   HERO_IMAGES,
   SPECIALTY_IMAGES,
   FEATURE_IMAGES,
+  CTA_IMAGES,
 } from "../../constants/images";
+
+const CountUp = CountUpPkg.default || CountUpPkg;
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+
+const STATS_DATA = [
+  { value: 25, suffix: "+", label: "Specialist Doctors" },
+  { value: 12000, suffix: "+", label: "Happy Patients" },
+  { value: 15, suffix: "+", label: "Medical Departments" },
+  { value: "24/7", label: "Emergency Support", noCountUp: true },
+];
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -29,7 +39,6 @@ function Home() {
   return (
     <>
       {/* ================= HERO SECTION ================= */}
-
       <section className="relative overflow-hidden">
         {/* Background image */}
         <img
@@ -84,32 +93,36 @@ function Home() {
       </section>
 
       {/* ================= STATISTICS ================= */}
-      <AnimatedSection as="section" className="bg-[#c2dfe3] py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { value: "25+", label: "Specialist Doctors" },
-              { value: "12,000+", label: "Happy Patients" },
-              { value: "15+", label: "Medical Departments" },
-              { value: "24/7", label: "Emergency Support" },
-            ].map((stat, index) => (
-              <AnimatedSection
+      <section className="relative z-20 px-6 py-16">
+        <div className="mx-auto max-w-7xl rounded-3xl bg-linear-to-r from-[#253237] via-[#3e515b] to-[#5C6B73] py-16 shadow-2xl">
+          <div className="grid gap-8 px-8 sm:grid-cols-2 lg:grid-cols-4">
+            {STATS_DATA.map((stat, index) => (
+              <div
                 key={index}
-                delay={index * 100}
-                className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="rounded-3xl border border-white/20 bg-white/10 p-8 text-center backdrop-blur-md transition duration-300 hover:-translate-y-2 hover:bg-white/20"
               >
-                <h2 className="text-4xl font-bold text-[#253237]">
-                  {stat.value}
+                <h2 className="text-5xl font-extrabold text-white">
+                  {typeof stat.value === "number" ? (
+                    <CountUp
+                      end={stat.value}
+                      duration={2.5}
+                      separator=","
+                      suffix={stat.suffix}
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  ) : (
+                    stat.value
+                  )}
                 </h2>
-                <p className="mt-2 text-[#5c6b73]">{stat.label}</p>
-              </AnimatedSection>
+                <p className="mt-4 text-lg text-gray-200">{stat.label}</p>
+              </div>
             ))}
           </div>
         </div>
-      </AnimatedSection>
+      </section>
 
       {/* ================= SERVICES ================= */}
-
       <AnimatedSection as="section" className="bg-white py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
@@ -195,7 +208,6 @@ function Home() {
       </AnimatedSection>
 
       {/* ================= WHY CHOOSE US ================= */}
-
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
@@ -280,7 +292,6 @@ function Home() {
       </AnimatedSection>
 
       {/* ================= FEATURED DOCTORS ================= */}
-
       <AnimatedSection as="section" className="bg-white py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
@@ -363,7 +374,6 @@ function Home() {
       </AnimatedSection>
 
       {/* ================= TESTIMONIALS ================= */}
-
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
@@ -429,34 +439,46 @@ function Home() {
       </AnimatedSection>
 
       {/* ================= CALL TO ACTION ================= */}
-
       <AnimatedSection as="section" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
-            <h2 className="text-4xl font-bold text-white md:text-5xl">
-              Your Health Is Our Priority
-            </h2>
+          <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
+            {/* Background Image */}
+            <img
+              src={CTA_IMAGES.background}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-linear-to-r from-[#253237]/90 via-[#5C6B73]/85 to-[#9DB4C0]/90" />
 
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-              Book your appointment today and receive expert medical care from
-              our experienced healthcare professionals. We're here to provide
-              the best treatment with compassion and excellence.
-            </p>
+            {/* Content */}
+            <div className="relative z-10">
+              <h2 className="text-4xl font-bold text-white md:text-5xl">
+                Your Health Is Our Priority
+              </h2>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
-              >
-                Book Appointment
-              </Link>
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+                Book your appointment today and receive expert medical care from
+                our experienced healthcare professionals. We're here to provide
+                the best treatment with compassion and excellence.
+              </p>
 
-              <Link
-                to="/doctors"
-                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
-              >
-                Meet Our Doctors
-              </Link>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link
+                  to="/appointment"
+                  className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  Book Appointment
+                </Link>
+
+                <Link
+                  to="/doctors"
+                  className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
+                >
+                  Meet Our Doctors
+                </Link>
+              </div>
             </div>
           </div>
         </div>

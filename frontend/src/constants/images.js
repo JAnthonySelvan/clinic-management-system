@@ -15,6 +15,8 @@ export const HERO_IMAGES = {
     "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=1600&q=80",
   contact:
     "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1600&q=80",
+
+  cta: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1600&q=80",
 };
 
 export const SPECIALTY_IMAGES = {
@@ -82,4 +84,10 @@ export const GUIDELINE_IMAGES = {
     "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=400&q=80",
   medicalHistory:
     "https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&q=80",
+};
+
+// Added specifically for the Call To Action section backgrounds
+export const CTA_IMAGES = {
+  background:
+    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80",
 };

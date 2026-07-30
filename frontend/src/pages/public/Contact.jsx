@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import { submitContactMessage } from "../../features/contact/contactService";
 import AnimatedSection from "../../components/AnimatedSection";
-import { HERO_IMAGES, CONTACT_IMAGES } from "../../constants/images";
+import { HERO_IMAGES, CONTACT_IMAGES ,CTA_IMAGES} from "../../constants/images";
 
 const Contact = () => {
   const [loading, setLoading] = useState(false);
@@ -355,36 +355,46 @@ const Contact = () => {
       {/* ================= FINAL CTA ================= */}
 
       <AnimatedSection as="section" className="py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
-            <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
-              Let's Connect
-            </span>
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
+            {/* Background Image */}
+            <img
+              src={CTA_IMAGES.background}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-linear-to-r from-[#253237]/90 via-[#5C6B73]/85 to-[#9DB4C0]/90" />
 
-            <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-              Your Health Is Our Priority
-            </h2>
+            {/* Content */}
+            <div className="relative z-10">
+              <h2 className="text-4xl font-bold text-white md:text-5xl">
+                Your Health Is Our Priority
+              </h2>
 
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-              Whether you need a routine consultation, have questions about our
-              services, or want to book an appointment, our team is ready to
-              assist you. We look forward to caring for you and your family.
-            </p>
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+                Whether you need a routine consultation, have questions about
+                our services, or want to book an appointment, our team is ready
+                to assist you. We look forward to caring for you and your
+                family.
+              </p>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105"
-              >
-                Book Appointment
-              </Link>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link
+                  to="/appointment"
+                  className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  Book Appointment
+                </Link>
 
-              <a
-                href="#contact-form"
-                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
-              >
-                Send a Message
-              </a>
+                <Link
+                  to="/doctors"
+                  className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
+                >
+                  Meet Our Doctors
+                </Link>
+              </div>
             </div>
           </div>
         </div>

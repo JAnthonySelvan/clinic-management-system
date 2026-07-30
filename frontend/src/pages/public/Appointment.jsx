@@ -13,7 +13,7 @@ import {
   resetAppointmentSuccess,
 } from "../../features/appointment/appointmentSlice";
 import AnimatedSection from "../../components/AnimatedSection";
-import { HERO_IMAGES, GUIDELINE_IMAGES } from "../../constants/images";
+import { HERO_IMAGES, GUIDELINE_IMAGES,CTA_IMAGES } from "../../constants/images";
 
 const Appointment = () => {
   const dispatch = useAppDispatch();
@@ -427,33 +427,46 @@ const Appointment = () => {
 
       {/* ================= APPOINTMENT CTA ================= */}
 
-      <AnimatedSection as="section" id="appointment-form" className="py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
-            <h2 className="text-4xl font-bold text-white md:text-5xl">
-              Your Health Can't Wait
-            </h2>
+      <AnimatedSection as="section" className="py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
+            {/* Background Image */}
+            <img
+              src={CTA_IMAGES.background}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-linear-to-r from-[#253237]/90 via-[#5C6B73]/85 to-[#9DB4C0]/90" />
 
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-              Our experienced doctors are here to provide trusted medical care
-              for you and your family. Book your appointment today and take the
-              first step toward better health.
-            </p>
+            {/* Content */}
+            <div className="relative z-10">
+              <h2 className="text-4xl font-bold text-white md:text-5xl">
+                Your Health Is Our Priority
+              </h2>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="#appointment-form"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105"
-              >
-                Book Now
-              </a>
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+                Our experienced doctors are here to provide trusted medical care
+                for you and your family. Book your appointment today and take
+                the first step toward better health.
+              </p>
 
-              <Link
-                to="/contact"
-                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
-              >
-                Contact Us
-              </Link>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link
+                  to="/appointment"
+                  className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  Book Appointment
+                </Link>
+
+                <Link
+                  to="/doctors"
+                  className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
+                >
+                  Meet Our Doctors
+                </Link>
+              </div>
             </div>
           </div>
         </div>

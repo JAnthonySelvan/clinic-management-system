@@ -8,6 +8,7 @@ import {
   HERO_IMAGES,
   FEATURE_IMAGES,
   MISSION_IMAGES,
+  CTA_IMAGES,
 } from "../../constants/images";
 
 const DEFAULT_AVATAR =
@@ -346,31 +347,44 @@ const About = () => {
 
       <AnimatedSection as="section" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
-            <h2 className="text-4xl font-bold text-white md:text-5xl">
-              Ready to Experience Quality Healthcare?
-            </h2>
+          <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
+            {/* Background Image */}
+            <img
+              src={CTA_IMAGES.background}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-linear-to-r from-[#253237]/90 via-[#5C6B73]/85 to-[#9DB4C0]/90" />
 
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-              Our dedicated team is ready to provide compassionate care and
-              expert medical services. Schedule your appointment today and let
-              us help you achieve better health.
-            </p>
+            {/* Content */}
+            <div className="relative z-10">
+              <h2 className="text-4xl font-bold text-white md:text-5xl">
+                Your Health Is Our Priority
+              </h2>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
-              >
-                Book Appointment
-              </Link>
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+                Our dedicated team is ready to provide compassionate care and
+                expert medical services. Schedule your appointment today and let
+                us help you achieve better health.
+              </p>
 
-              <Link
-                to="/contact"
-                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
-              >
-                Contact Us
-              </Link>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link
+                  to="/appointment"
+                  className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  Book Appointment
+                </Link>
+
+                <Link
+                  to="/doctors"
+                  className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
+                >
+                  Meet Our Doctors
+                </Link>
+              </div>
             </div>
           </div>
         </div>
