@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
-app.use("/api/contacts", contactRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 export default app;

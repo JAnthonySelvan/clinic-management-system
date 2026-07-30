@@ -1,5 +1,33 @@
-import {Link} from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
+import { submitContactMessage } from "../../features/contact/contactService";
+
 const Contact = () => {
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      await submitContactMessage(data);
+      toast.success("Message sent successfully");
+      reset();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send message");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* ================= HERO ================= */}
@@ -126,42 +154,97 @@ const Contact = () => {
           </div>
 
           <div className="rounded-3xl bg-white p-8 shadow-2xl">
-            <form className="grid gap-6 md:grid-cols-2">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="grid gap-6 md:grid-cols-2"
+            >
+              <div>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  {...register("name", {
+                    required: "Name is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
 
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
 
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email address",
+                    },
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
 
-              <input
-                type="text"
-                placeholder="Subject"
-                className="rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
 
-              <textarea
-                rows="6"
-                placeholder="Write your message..."
-                className="md:col-span-2 rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
-              ></textarea>
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  {...register("phone")}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Subject"
+                  {...register("subject", {
+                    required: "Subject is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+
+                {errors.subject && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.subject.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="md:col-span-2">
+                <textarea
+                  rows="6"
+                  placeholder="Write your message..."
+                  {...register("message", {
+                    required: "Message is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                ></textarea>
+
+                {errors.message && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.message.message}
+                  </p>
+                )}
+              </div>
 
               <button
                 type="submit"
-                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73]"
+                disabled={loading}
+                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
