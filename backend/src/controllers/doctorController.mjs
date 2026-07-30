@@ -1,5 +1,9 @@
 import { validationResult } from "express-validator";
 import User from "../models/User.mjs";
+import {
+  uploadImageBuffer,
+  DEFAULT_PROFILE_IMAGE,
+} from "../utils/uploadToCloudinary.mjs";
 
 // @desc Create Doctor
 // @route POST /api/doctors
@@ -35,6 +39,19 @@ export const createDoctor = async (req, res) => {
       });
     }
 
+    // Try to upload image if provided, otherwise fall back to static image
+    let profileImage = DEFAULT_PROFILE_IMAGE;
+
+    if (req.file) {
+      try {
+        profileImage = await uploadImageBuffer(req.file.buffer, "doctors");
+      } catch (uploadErr) {
+        console.error("Cloudinary upload failed:", uploadErr.message);
+        // Keep default image instead of failing the whole request
+        profileImage = DEFAULT_PROFILE_IMAGE;
+      }
+    }
+
     const doctor = await User.create({
       fullName,
       email,
@@ -43,6 +60,7 @@ export const createDoctor = async (req, res) => {
       specialization,
       qualification,
       experience,
+      profileImage,
       role: "doctor",
     });
 
@@ -86,12 +104,27 @@ export const getAllDoctors = async (req, res) => {
 // @access Admin
 export const updateDoctor = async (req, res) => {
   try {
+    const updateData = { ...req.body };
+
+    if (req.file) {
+      try {
+        updateData.profileImage = await uploadImageBuffer(
+          req.file.buffer,
+          "doctors",
+        );
+      } catch (uploadErr) {
+        console.error("Cloudinary upload failed:", uploadErr.message);
+        // Don't overwrite existing image if upload fails
+        delete updateData.profileImage;
+      }
+    }
+
     const doctor = await User.findOneAndUpdate(
       {
         _id: req.params.id,
         role: "doctor",
       },
-      req.body,
+      updateData,
       {
         new: true,
         runValidators: true,

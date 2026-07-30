@@ -6,6 +6,7 @@ import {
   deleteDoctor,
 } from "../controllers/doctorController.mjs";
 import validate from "../middleware/validationMiddleware.mjs";
+import upload from "../middleware/uploadMiddleware.mjs";
 
 import { protect, authorize } from "../middleware/authMiddleware.mjs";
 
@@ -13,18 +14,23 @@ import { createDoctorValidation } from "../validators/doctorValidator.mjs";
 
 const router = express.Router();
 
-// All doctor routes are accessible only by Admin
 router.use(protect);
 router.use(authorize("admin"));
 
-// Create Doctor
-router.post("/", createDoctorValidation, validate, createDoctor);
+// Create Doctor (with optional profile image)
+router.post(
+  "/",
+  upload.single("profileImage"),
+  createDoctorValidation,
+  validate,
+  createDoctor,
+);
 
 // Get All Doctors
 router.get("/", getAllDoctors);
 
-// Update Doctor
-router.put("/:id", updateDoctor);
+// Update Doctor (with optional profile image)
+router.put("/:id", upload.single("profileImage"), updateDoctor);
 
 // Delete Doctor
 router.delete("/:id", deleteDoctor);

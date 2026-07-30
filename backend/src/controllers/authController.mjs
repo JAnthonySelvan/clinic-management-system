@@ -1,5 +1,9 @@
 import User from "../models/User.mjs";
 import generateToken from "../utils/generateToken.mjs";
+import {
+  uploadImageBuffer,
+  DEFAULT_PROFILE_IMAGE,
+} from "../utils/uploadToCloudinary.mjs";
 
 // @desc Login (Admin / Doctor)
 // @route POST /api/auth/login
@@ -159,6 +163,10 @@ export const changePassword = async (req, res) => {
 };
 // @route PATCH /api/auth/profile
 // @access Private
+
+// @desc Update logged-in user's profile (fullName, phone, specialization, etc.)
+// @route PATCH /api/auth/profile
+// @access Private
 export const updateProfile = async (req, res) => {
   try {
     // Whitelist updatable fields — email/password/role must NOT be
@@ -179,8 +187,25 @@ export const updateProfile = async (req, res) => {
       }
     }
 
+    // Only touch profileImage if a new file was actually uploaded.
+    // If Cloudinary upload fails, leave the field out entirely so the
+    // user's existing image (or the schema default) is left untouched.
     if (req.file) {
-      updates.profileImage = `/uploads/profile-images/${req.file.filename}`;
+      try {
+        updates.profileImage = await uploadImageBuffer(
+          req.file.buffer,
+          "doctors",
+        );
+      } catch (uploadErr) {
+        console.error("Cloudinary upload failed:", uploadErr.message);
+        // Don't fail the whole profile update just because the image
+        // upload failed — fall back to the static default only if the
+        // user currently has no image at all.
+        const existingUser = await User.findById(req.user.id);
+        if (!existingUser?.profileImage) {
+          updates.profileImage = DEFAULT_PROFILE_IMAGE;
+        }
+      }
     }
 
     const user = await User.findByIdAndUpdate(req.user.id, updates, {

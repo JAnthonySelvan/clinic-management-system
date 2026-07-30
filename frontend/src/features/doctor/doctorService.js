@@ -6,12 +6,16 @@ export const getDoctors = async () => {
 };
 
 export const createDoctor = async (doctorData) => {
-  const response = await api.post("/doctors", doctorData);
+  const response = await api.post("/doctors", doctorData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return response.data;
 };
 
 export const updateDoctor = async (id, doctorData) => {
-  const response = await api.put(`/doctors/${id}`, doctorData);
+  const response = await api.put(`/doctors/${id}`, doctorData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return response.data;
 };
 

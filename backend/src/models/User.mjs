@@ -52,7 +52,8 @@ const userSchema = new mongoose.Schema(
 
     profileImage: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png",
     },
 
     isActive: {
