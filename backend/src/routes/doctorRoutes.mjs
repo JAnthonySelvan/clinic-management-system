@@ -2,6 +2,7 @@ import express from "express";
 import {
   createDoctor,
   getAllDoctors,
+  getPublicDoctors,
   updateDoctor,
   deleteDoctor,
 } from "../controllers/doctorController.mjs";
@@ -14,6 +15,12 @@ import { createDoctorValidation } from "../validators/doctorValidator.mjs";
 
 const router = express.Router();
 
+// Public — anyone can view active doctors (website, appointment booking).
+// Must be declared BEFORE router.use(protect) below, otherwise it
+// inherits the auth requirement.
+router.get("/public", getPublicDoctors);
+
+// Everything from this point on requires an authenticated admin
 router.use(protect);
 router.use(authorize("admin"));
 
@@ -26,7 +33,7 @@ router.post(
   createDoctor,
 );
 
-// Get All Doctors
+// Get All Doctors (admin dashboard — includes inactive doctors)
 router.get("/", getAllDoctors);
 
 // Update Doctor (with optional profile image)

@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-const Services = () => {
-  {
-    /* ================= FAQ SECTION ================= */
-  }
+import {
+  FaHeartbeat,
+  FaBrain,
+  FaTooth,
+  FaBaby,
+  FaStethoscope,
+  FaBone,
+  FaHospital,
+  FaUserMd,
+  FaBolt,
+  FaHandHoldingHeart,
+} from "react-icons/fa";
 
+const Services = () => {
   const faqs = [
     {
       question: "How can I book an appointment?",
@@ -29,6 +38,7 @@ const Services = () => {
   ];
 
   const [openIndex, setOpenIndex] = useState(null);
+
   return (
     <>
       {/* Hero */}
@@ -66,37 +76,37 @@ const Services = () => {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                icon: "❤️",
+                icon: FaHeartbeat,
                 title: "Cardiology",
                 description:
                   "Advanced diagnosis and treatment for heart-related conditions.",
               },
               {
-                icon: "🧠",
+                icon: FaBrain,
                 title: "Neurology",
                 description:
                   "Comprehensive care for neurological disorders and diseases.",
               },
               {
-                icon: "🦷",
+                icon: FaTooth,
                 title: "Dental Care",
                 description:
                   "Complete dental treatments for healthy teeth and gums.",
               },
               {
-                icon: "👶",
+                icon: FaBaby,
                 title: "Pediatrics",
                 description:
                   "Specialized healthcare services for infants and children.",
               },
               {
-                icon: "🩺",
+                icon: FaStethoscope,
                 title: "General Medicine",
                 description:
                   "Routine checkups and treatment for common illnesses.",
               },
               {
-                icon: "🦴",
+                icon: FaBone,
                 title: "Orthopedics",
                 description:
                   "Diagnosis and treatment of bone, joint, and muscle conditions.",
@@ -104,10 +114,10 @@ const Services = () => {
             ].map((service, index) => (
               <div
                 key={index}
-                className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-3xl">
-                  {service.icon}
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                  <service.icon />
                 </div>
 
                 <h3 className="text-2xl font-bold text-[#253237]">
@@ -118,7 +128,7 @@ const Services = () => {
                   {service.description}
                 </p>
 
-                <button className="mt-6 font-semibold text-[#253237] transition hover:text-[#5C6B73]">
+                <button className="mt-6 font-semibold text-[#253237] transition duration-300 hover:translate-x-1 hover:text-[#5C6B73]">
                   Learn More →
                 </button>
               </div>
@@ -145,46 +155,45 @@ const Services = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 text-5xl">🏥</div>
-              <h3 className="text-xl font-bold text-[#253237]">
-                Modern Infrastructure
-              </h3>
-              <p className="mt-4 text-[#5C6B73]">
-                State-of-the-art equipment and comfortable treatment facilities.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 text-5xl">👨‍⚕️</div>
-              <h3 className="text-xl font-bold text-[#253237]">
-                Qualified Specialists
-              </h3>
-              <p className="mt-4 text-[#5C6B73]">
-                Experienced doctors across multiple medical specialties.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 text-5xl">⚡</div>
-              <h3 className="text-xl font-bold text-[#253237]">
-                Fast Diagnosis
-              </h3>
-              <p className="mt-4 text-[#5C6B73]">
-                Quick and accurate diagnosis using advanced medical technology.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 text-5xl">❤️</div>
-              <h3 className="text-xl font-bold text-[#253237]">
-                Patient-Centered Care
-              </h3>
-              <p className="mt-4 text-[#5C6B73]">
-                Every treatment plan is tailored to each patient's individual
-                needs.
-              </p>
-            </div>
+            {[
+              {
+                icon: FaHospital,
+                title: "Modern Infrastructure",
+                description:
+                  "State-of-the-art equipment and comfortable treatment facilities.",
+              },
+              {
+                icon: FaUserMd,
+                title: "Qualified Specialists",
+                description:
+                  "Experienced doctors across multiple medical specialties.",
+              },
+              {
+                icon: FaBolt,
+                title: "Fast Diagnosis",
+                description:
+                  "Quick and accurate diagnosis using advanced medical technology.",
+              },
+              {
+                icon: FaHandHoldingHeart,
+                title: "Patient-Centered Care",
+                description:
+                  "Every treatment plan is tailored to each patient's individual needs.",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              >
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                  <item.icon />
+                </div>
+                <h3 className="text-xl font-bold text-[#253237]">
+                  {item.title}
+                </h3>
+                <p className="mt-4 text-[#5C6B73]">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -235,9 +244,9 @@ const Services = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className="relative rounded-3xl border border-[#C2DFE3] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group relative rounded-3xl border border-[#C2DFE3] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="absolute -top-5 left-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#253237] text-lg font-bold text-white">
+                <div className="absolute -top-5 left-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#253237] text-lg font-bold text-white transition-transform duration-300 group-hover:scale-110">
                   {item.step}
                 </div>
 
@@ -275,28 +284,36 @@ const Services = () => {
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="overflow-hidden rounded-2xl bg-white shadow-md"
+                className="overflow-hidden rounded-2xl bg-white shadow-md transition duration-300 hover:shadow-lg"
               >
                 <button
                   onClick={() =>
                     setOpenIndex(openIndex === index ? null : index)
                   }
-                  className="flex w-full items-center justify-between px-6 py-5 text-left"
+                  className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors duration-200 hover:bg-[#F8FBFC]"
                 >
                   <span className="text-lg font-semibold text-[#253237]">
                     {faq.question}
                   </span>
 
-                  <span className="text-2xl font-bold text-[#253237]">
+                  <span
+                    className={`text-2xl font-bold text-[#253237] transition-transform duration-300 ${
+                      openIndex === index ? "rotate-180" : ""
+                    }`}
+                  >
                     {openIndex === index ? "−" : "+"}
                   </span>
                 </button>
 
-                {openIndex === index && (
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    openIndex === index ? "max-h-40" : "max-h-0"
+                  }`}
+                >
                   <div className="border-t border-[#E0FBFC] px-6 py-5 text-[#5C6B73]">
                     {faq.answer}
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
@@ -320,7 +337,7 @@ const Services = () => {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105"
+                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
               >
                 Book an Appointment
               </Link>

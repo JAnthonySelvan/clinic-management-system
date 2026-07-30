@@ -79,7 +79,30 @@ export const createDoctor = async (req, res) => {
   }
 };
 
-// @desc Get All Doctors
+// @desc Get Active Doctors (public — used by website & appointment booking)
+// @route GET /api/doctors/public
+// @access Public
+export const getPublicDoctors = async (req, res) => {
+  try {
+    const doctors = await User.find({
+      role: "doctor",
+      isActive: true,
+    }).select("fullName specialization qualification experience profileImage");
+
+    return res.status(200).json({
+      success: true,
+      message: "Doctors fetched successfully",
+      data: doctors,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// @desc Get All Doctors (admin — includes inactive doctors + full fields)
 // @route GET /api/doctors
 // @access Admin
 export const getAllDoctors = async (req, res) => {

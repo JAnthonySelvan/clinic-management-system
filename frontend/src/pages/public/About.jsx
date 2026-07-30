@@ -1,5 +1,32 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import {
+  FaBullseye,
+  FaEye,
+  FaUserMd,
+  FaHospital,
+  FaHandHoldingHeart,
+  FaClock,
+} from "react-icons/fa";
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+
+const DEFAULT_AVATAR =
+  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+
 const About = () => {
+  const dispatch = useAppDispatch();
+  const { doctors, loading } = useAppSelector((state) => state.doctor);
+
+  useEffect(() => {
+    dispatch(fetchPublicDoctors());
+  }, [dispatch]);
+
+  const teamDoctors = doctors
+    .filter((doc) => doc.isActive !== false)
+    .slice(0, 4);
+
   return (
     <>
       {/* Hero */}
@@ -28,7 +55,7 @@ const About = () => {
             <img
               src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900"
               alt="About Clinic"
-              className="rounded-4xl shadow-2xl"
+              className="rounded-4xl shadow-2xl transition duration-500 hover:scale-[1.02]"
             />
           </div>
 
@@ -80,9 +107,9 @@ const About = () => {
           <div className="grid gap-8 md:grid-cols-2">
             {/* Mission */}
 
-            <div className="rounded-3xl bg-white p-10 shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-3xl">
-                🎯
+            <div className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                <FaBullseye />
               </div>
 
               <h3 className="text-3xl font-bold text-[#253237]">Our Mission</h3>
@@ -96,9 +123,9 @@ const About = () => {
 
             {/* Vision */}
 
-            <div className="rounded-3xl bg-white p-10 shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-3xl">
-                👁️
+            <div className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                <FaEye />
               </div>
 
               <h3 className="text-3xl font-bold text-[#253237]">Our Vision</h3>
@@ -133,65 +160,47 @@ const About = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Card 1 */}
-            <div className="rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-3xl">
-                👨‍⚕️
+            {[
+              {
+                icon: FaUserMd,
+                title: "Expert Doctors",
+                description:
+                  "Highly qualified specialists with years of medical experience.",
+              },
+              {
+                icon: FaHospital,
+                title: "Modern Facilities",
+                description:
+                  "Equipped with advanced medical equipment and diagnostic tools.",
+              },
+              {
+                icon: FaHandHoldingHeart,
+                title: "Compassionate Care",
+                description:
+                  "Every patient receives personalized attention and support.",
+              },
+              {
+                icon: FaClock,
+                title: "Timely Service",
+                description:
+                  "Efficient appointment scheduling and prompt medical assistance.",
+              },
+            ].map((card, index) => (
+              <div
+                key={index}
+                className="group rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              >
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                  <card.icon />
+                </div>
+
+                <h3 className="text-xl font-bold text-[#253237]">
+                  {card.title}
+                </h3>
+
+                <p className="mt-4 text-[#5C6B73]">{card.description}</p>
               </div>
-
-              <h3 className="text-xl font-bold text-[#253237]">
-                Expert Doctors
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73]">
-                Highly qualified specialists with years of medical experience.
-              </p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-3xl">
-                🏥
-              </div>
-
-              <h3 className="text-xl font-bold text-[#253237]">
-                Modern Facilities
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73]">
-                Equipped with advanced medical equipment and diagnostic tools.
-              </p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-3xl">
-                ❤️
-              </div>
-
-              <h3 className="text-xl font-bold text-[#253237]">
-                Compassionate Care
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73]">
-                Every patient receives personalized attention and support.
-              </p>
-            </div>
-
-            {/* Card 4 */}
-            <div className="rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-xl">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-3xl">
-                ⏰
-              </div>
-
-              <h3 className="text-xl font-bold text-[#253237]">
-                Timely Service
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73]">
-                Efficient appointment scheduling and prompt medical assistance.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -215,22 +224,22 @@ const About = () => {
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center">
+            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
               <h3 className="text-5xl font-bold text-white">15+</h3>
               <p className="mt-4 text-[#E0FBFC]">Years of Experience</p>
             </div>
 
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center">
+            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
               <h3 className="text-5xl font-bold text-white">50+</h3>
               <p className="mt-4 text-[#E0FBFC]">Medical Specialists</p>
             </div>
 
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center">
+            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
               <h3 className="text-5xl font-bold text-white">10K+</h3>
               <p className="mt-4 text-[#E0FBFC]">Happy Patients</p>
             </div>
 
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center">
+            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
               <h3 className="text-5xl font-bold text-white">24/7</h3>
               <p className="mt-4 text-[#E0FBFC]">Emergency Support</p>
             </div>
@@ -257,53 +266,41 @@ const About = () => {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                name: "Dr. John Smith",
-                specialization: "Cardiologist",
-                image:
-                  "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500",
-              },
-              {
-                name: "Dr. Sarah Wilson",
-                specialization: "Neurologist",
-                image:
-                  "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=500",
-              },
-              {
-                name: "Dr. David Lee",
-                specialization: "Dentist",
-                image:
-                  "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=500",
-              },
-              {
-                name: "Dr. Emily Brown",
-                specialization: "Pediatrician",
-                image:
-                  "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500",
-              },
-            ].map((doctor, index) => (
-              <div
-                key={index}
-                className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-2 hover:shadow-2xl"
-              >
-                <img
-                  src={doctor.image}
-                  alt={doctor.name}
-                  className="h-72 w-full object-cover"
-                />
+          {loading ? (
+            <p className="text-center text-[#5C6B73]">Loading team...</p>
+          ) : teamDoctors.length === 0 ? (
+            <p className="text-center text-[#5C6B73]">
+              No team members available right now.
+            </p>
+          ) : (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {teamDoctors.map((doctor) => (
+                <div
+                  key={doctor._id}
+                  className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                  <div className="overflow-hidden">
+                    <img
+                      src={doctor.profileImage || DEFAULT_AVATAR}
+                      alt={doctor.fullName}
+                      onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
+                      className="h-72 w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
+                  </div>
 
-                <div className="p-6 text-center">
-                  <h3 className="text-xl font-bold text-[#253237]">
-                    {doctor.name}
-                  </h3>
+                  <div className="p-6 text-center">
+                    <h3 className="text-xl font-bold text-[#253237]">
+                      {doctor.fullName}
+                    </h3>
 
-                  <p className="mt-2 text-[#5C6B73]">{doctor.specialization}</p>
+                    <p className="mt-2 text-[#5C6B73]">
+                      {doctor.specialization}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -325,14 +322,14 @@ const About = () => {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition hover:scale-105"
+                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
               >
                 Book Appointment
               </Link>
 
               <Link
                 to="/contact"
-                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition hover:bg-white hover:text-[#253237]"
+                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
               >
                 Contact Us
               </Link>

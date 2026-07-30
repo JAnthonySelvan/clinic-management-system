@@ -1,7 +1,37 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaUserMd, FaHeartbeat, FaHospital, FaClock } from "react-icons/fa";
+import {
+  FaUserMd,
+  FaHeartbeat,
+  FaHospital,
+  FaClock,
+  FaBrain,
+  FaTooth,
+  FaBaby,
+  FaEye,
+  FaStethoscope,
+  FaHandHoldingHeart,
+  FaStar,
+} from "react-icons/fa";
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+
+const DEFAULT_AVATAR =
+  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
 
 function Home() {
+  const dispatch = useAppDispatch();
+  const { doctors, loading } = useAppSelector((state) => state.doctor);
+
+  useEffect(() => {
+    dispatch(fetchPublicDoctors());
+  }, [dispatch]);
+
+  const featuredDoctors = doctors
+    .filter((doc) => doc.isActive !== false)
+    .slice(0, 4);
+
   return (
     <>
       {/* ================= HERO SECTION ================= */}
@@ -32,14 +62,14 @@ function Home() {
               <div className="mx-auto flex max-w-max flex-col items-center gap-4 sm:flex-row lg:items-start">
                 <Link
                   to="/appointment"
-                  className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-[#253237] transition hover:scale-105"
+                  className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Book Appointment
                 </Link>
 
                 <Link
                   to="/doctors"
-                  className="inline-flex items-center justify-center rounded-xl border border-white bg-white/15 px-8 py-4 text-base font-semibold text-white transition hover:bg-white hover:text-[#253237]"
+                  className="inline-flex items-center justify-center rounded-xl border border-white bg-white/15 px-8 py-4 text-base font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
                 >
                   Our Doctors
                 </Link>
@@ -51,7 +81,7 @@ function Home() {
               <img
                 src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=900"
                 alt="Doctor"
-                className="w-full max-w-xl rounded-4xl shadow-[0_40px_80px_rgba(0,0,0,0.18)]"
+                className="w-full max-w-xl rounded-4xl shadow-[0_40px_80px_rgba(0,0,0,0.18)] transition duration-500 hover:scale-[1.02]"
               />
             </div>
           </div>
@@ -62,29 +92,23 @@ function Home() {
       <section className="bg-[#c2dfe3] py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-2xl">
-              <FaUserMd className="mx-auto mb-4 text-5xl text-[#253237]" />
-              <h2 className="text-4xl font-bold text-[#253237]">25+</h2>
-              <p className="mt-2 text-[#5c6b73]">Specialist Doctors</p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-2xl">
-              <FaHeartbeat className="mx-auto mb-4 text-5xl text-[#253237]" />
-              <h2 className="text-4xl font-bold text-[#253237]">12,000+</h2>
-              <p className="mt-2 text-[#5c6b73]">Happy Patients</p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-2xl">
-              <FaHospital className="mx-auto mb-4 text-5xl text-[#253237]" />
-              <h2 className="text-4xl font-bold text-[#253237]">15+</h2>
-              <p className="mt-2 text-[#5c6b73]">Medical Departments</p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-2xl">
-              <FaClock className="mx-auto mb-4 text-5xl text-[#253237]" />
-              <h2 className="text-4xl font-bold text-[#253237]">24/7</h2>
-              <p className="mt-2 text-[#5c6b73]">Emergency Support</p>
-            </div>
+            {[
+              { icon: FaUserMd, value: "25+", label: "Specialist Doctors" },
+              { icon: FaHeartbeat, value: "12,000+", label: "Happy Patients" },
+              { icon: FaHospital, value: "15+", label: "Medical Departments" },
+              { icon: FaClock, value: "24/7", label: "Emergency Support" },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <stat.icon className="mx-auto mb-4 text-5xl text-[#253237] transition-transform duration-300 hover:scale-110" />
+                <h2 className="text-4xl font-bold text-[#253237]">
+                  {stat.value}
+                </h2>
+                <p className="mt-2 text-[#5c6b73]">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -109,107 +133,61 @@ function Home() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {/* Card 1 */}
+            {[
+              {
+                icon: FaHeartbeat,
+                title: "Cardiology",
+                description:
+                  "Comprehensive heart care with experienced cardiologists and advanced diagnostic technology.",
+              },
+              {
+                icon: FaBrain,
+                title: "Neurology",
+                description:
+                  "Expert diagnosis and treatment for brain, spinal cord and nervous system disorders.",
+              },
+              {
+                icon: FaTooth,
+                title: "Dental Care",
+                description:
+                  "Modern dental treatments including preventive, cosmetic and surgical dentistry.",
+              },
+              {
+                icon: FaBaby,
+                title: "Pediatrics",
+                description:
+                  "Dedicated healthcare services focused on infants, children and adolescents.",
+              },
+              {
+                icon: FaEye,
+                title: "Eye Care",
+                description:
+                  "Advanced eye examinations, surgeries and vision correction by specialists.",
+              },
+              {
+                icon: FaStethoscope,
+                title: "General Medicine",
+                description:
+                  "Complete health checkups and personalized treatment plans for every patient.",
+              },
+            ].map((service, index) => (
+              <div
+                key={index}
+                className="group rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              >
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                  <service.icon />
+                </div>
 
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3]">
-                ❤️
+                <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
+                  {service.title}
+                </h3>
+
+                <p className="leading-7 text-[#5C6B73]">
+                  {service.description}
+                </p>
               </div>
-
-              <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
-                Cardiology
-              </h3>
-
-              <p className="leading-7 text-[#5C6B73]">
-                Comprehensive heart care with experienced cardiologists and
-                advanced diagnostic technology.
-              </p>
-            </div>
-
-            {/* Card 2 */}
-
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3]">
-                🧠
-              </div>
-
-              <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
-                Neurology
-              </h3>
-
-              <p className="leading-7 text-[#5C6B73]">
-                Expert diagnosis and treatment for brain, spinal cord and
-                nervous system disorders.
-              </p>
-            </div>
-
-            {/* Card 3 */}
-
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3]">
-                🦷
-              </div>
-
-              <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
-                Dental Care
-              </h3>
-
-              <p className="leading-7 text-[#5C6B73]">
-                Modern dental treatments including preventive, cosmetic and
-                surgical dentistry.
-              </p>
-            </div>
-
-            {/* Card 4 */}
-
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3]">
-                👶
-              </div>
-
-              <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
-                Pediatrics
-              </h3>
-
-              <p className="leading-7 text-[#5C6B73]">
-                Dedicated healthcare services focused on infants, children and
-                adolescents.
-              </p>
-            </div>
-
-            {/* Card 5 */}
-
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3]">
-                👁️
-              </div>
-
-              <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
-                Eye Care
-              </h3>
-
-              <p className="leading-7 text-[#5C6B73]">
-                Advanced eye examinations, surgeries and vision correction by
-                specialists.
-              </p>
-            </div>
-
-            {/* Card 6 */}
-
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3]">
-                🩺
-              </div>
-
-              <h3 className="mb-3 text-2xl font-semibold text-[#253237]">
-                General Medicine
-              </h3>
-
-              <p className="leading-7 text-[#5C6B73]">
-                Complete health checkups and personalized treatment plans for
-                every patient.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -225,7 +203,7 @@ function Home() {
               <img
                 src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900"
                 alt="Healthcare"
-                className="w-full max-w-xl rounded-4xl shadow-2xl"
+                className="w-full max-w-xl rounded-4xl shadow-2xl transition duration-500 hover:scale-[1.02]"
               />
             </div>
 
@@ -249,71 +227,46 @@ function Home() {
               </p>
 
               <div className="mt-10 space-y-6">
-                <div className="flex gap-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl">
-                    👨‍⚕️
+                {[
+                  {
+                    icon: FaUserMd,
+                    title: "Expert Doctors",
+                    description:
+                      "Experienced specialists providing quality healthcare.",
+                  },
+                  {
+                    icon: FaHospital,
+                    title: "Modern Equipment",
+                    description:
+                      "Advanced medical facilities for accurate diagnosis.",
+                  },
+                  {
+                    icon: FaHandHoldingHeart,
+                    title: "Patient-Centered Care",
+                    description:
+                      "Every treatment plan is tailored to individual patient needs.",
+                  },
+                  {
+                    icon: FaClock,
+                    title: "24/7 Emergency Support",
+                    description:
+                      "Immediate assistance whenever urgent medical care is required.",
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="group flex gap-5">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#C2DFE3] text-xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                      <item.icon />
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-semibold text-[#253237]">
+                        {item.title}
+                      </h3>
+
+                      <p className="mt-2 text-[#5C6B73]">{item.description}</p>
+                    </div>
                   </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#253237]">
-                      Expert Doctors
-                    </h3>
-
-                    <p className="mt-2 text-[#5C6B73]">
-                      Experienced specialists providing quality healthcare.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl">
-                    🏥
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#253237]">
-                      Modern Equipment
-                    </h3>
-
-                    <p className="mt-2 text-[#5C6B73]">
-                      Advanced medical facilities for accurate diagnosis.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl">
-                    ❤️
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#253237]">
-                      Patient-Centered Care
-                    </h3>
-
-                    <p className="mt-2 text-[#5C6B73]">
-                      Every treatment plan is tailored to individual patient
-                      needs.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl">
-                    ⏰
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#253237]">
-                      24/7 Emergency Support
-                    </h3>
-
-                    <p className="mt-2 text-[#5C6B73]">
-                      Immediate assistance whenever urgent medical care is
-                      required.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -343,104 +296,64 @@ function Home() {
 
           {/* Doctor Cards */}
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {/* Doctor 1 */}
-
-            <div className="overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800"
-                alt="Doctor"
-                className="h-80 w-full object-cover"
-              />
-
-              <div className="p-7">
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  Dr. Sarah Johnson
-                </h3>
-
-                <p className="mt-2 font-medium text-[#5C6B73]">Cardiologist</p>
-
-                <div className="mt-5 flex justify-between text-sm text-gray-500">
-                  <span>10+ Years</span>
-                  <span>★★★★★</span>
-                </div>
-
-                <Link
-                  to="/appointment"
-                  className="mt-7 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition hover:bg-[#5C6B73]"
+          {loading ? (
+            <p className="text-center text-[#5C6B73]">Loading doctors...</p>
+          ) : featuredDoctors.length === 0 ? (
+            <p className="text-center text-[#5C6B73]">
+              No doctors available right now. Please check back soon.
+            </p>
+          ) : (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredDoctors.map((doctor) => (
+                <div
+                  key={doctor._id}
+                  className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
-                  Book Appointment
-                </Link>
-              </div>
-            </div>
+                  <div className="overflow-hidden">
+                    <img
+                      src={doctor.profileImage || DEFAULT_AVATAR}
+                      alt={doctor.fullName}
+                      onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
+                      className="h-64 w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
+                  </div>
 
-            {/* Doctor 2 */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-[#253237]">
+                      {doctor.fullName}
+                    </h3>
 
-            <div className="overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=800"
-                alt="Doctor"
-                className="h-80 w-full object-cover"
-              />
+                    <p className="mt-2 font-medium text-[#5C6B73]">
+                      {doctor.specialization}
+                    </p>
 
-              <div className="p-7">
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  Dr. Michael Brown
-                </h3>
+                    <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                      <span>{doctor.experience}+ Years</span>
+                      <span className="flex text-yellow-500">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <FaStar key={i} />
+                        ))}
+                      </span>
+                    </div>
 
-                <p className="mt-2 font-medium text-[#5C6B73]">Neurologist</p>
-
-                <div className="mt-5 flex justify-between text-sm text-gray-500">
-                  <span>12+ Years</span>
-                  <span>★★★★★</span>
+                    <Link
+                      to="/appointment"
+                      className="mt-6 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition duration-300 hover:scale-105 hover:bg-[#5C6B73]"
+                    >
+                      Book Appointment
+                    </Link>
+                  </div>
                 </div>
-
-                <Link
-                  to="/appointment"
-                  className="mt-7 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition hover:bg-[#5C6B73]"
-                >
-                  Book Appointment
-                </Link>
-              </div>
+              ))}
             </div>
-
-            {/* Doctor 3 */}
-
-            <div className="overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?w=800"
-                alt="Doctor"
-                className="h-80 w-full object-cover"
-              />
-
-              <div className="p-7">
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  Dr. Emily Davis
-                </h3>
-
-                <p className="mt-2 font-medium text-[#5C6B73]">Pediatrician</p>
-
-                <div className="mt-5 flex justify-between text-sm text-gray-500">
-                  <span>9+ Years</span>
-                  <span>★★★★★</span>
-                </div>
-
-                <Link
-                  to="/appointment"
-                  className="mt-7 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition hover:bg-[#5C6B73]"
-                >
-                  Book Appointment
-                </Link>
-              </div>
-            </div>
-          </div>
+          )}
 
           {/* Button */}
 
           <div className="mt-16 text-center">
             <Link
               to="/doctors"
-              className="inline-flex items-center rounded-xl border-2 border-[#253237] px-8 py-4 font-semibold text-[#253237] transition hover:bg-[#253237] hover:text-white"
+              className="inline-flex items-center rounded-xl border-2 border-[#253237] px-8 py-4 font-semibold text-[#253237] transition duration-300 hover:bg-[#253237] hover:text-white"
             >
               View All Doctors
             </Link>
@@ -469,50 +382,48 @@ function Home() {
 
           {/* Cards */}
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {/* Testimonial 1 */}
-            <div className="rounded-3xl bg-white p-8 shadow-lg">
-              <div className="mb-4 text-3xl text-yellow-500">★★★★★</div>
+            {[
+              {
+                name: "James Wilson",
+                role: "Cardiology Patient",
+                review:
+                  "The doctors were extremely professional and caring. The booking process was smooth, and I received excellent treatment.",
+              },
+              {
+                name: "Sophia Martin",
+                role: "Neurology Patient",
+                review:
+                  "Very friendly staff and experienced doctors. I felt comfortable throughout my consultation.",
+              },
+              {
+                name: "Olivia Brown",
+                role: "General Medicine",
+                review:
+                  "Excellent service with modern facilities. Highly recommend this clinic for quality healthcare.",
+              },
+            ].map((testimonial, index) => (
+              <div
+                key={index}
+                className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <div className="mb-4 flex text-2xl text-yellow-500">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <FaStar key={i} />
+                  ))}
+                </div>
 
-              <p className="leading-7 text-[#5C6B73]">
-                "The doctors were extremely professional and caring. The booking
-                process was smooth, and I received excellent treatment."
-              </p>
+                <p className="leading-7 text-[#5C6B73]">
+                  "{testimonial.review}"
+                </p>
 
-              <div className="mt-8">
-                <h4 className="font-bold text-[#253237]">James Wilson</h4>
-                <p className="text-sm text-[#5C6B73]">Cardiology Patient</p>
+                <div className="mt-8">
+                  <h4 className="font-bold text-[#253237]">
+                    {testimonial.name}
+                  </h4>
+                  <p className="text-sm text-[#5C6B73]">{testimonial.role}</p>
+                </div>
               </div>
-            </div>
-
-            {/* Testimonial 2 */}
-            <div className="rounded-3xl bg-white p-8 shadow-lg">
-              <div className="mb-4 text-3xl text-yellow-500">★★★★★</div>
-
-              <p className="leading-7 text-[#5C6B73]">
-                "Very friendly staff and experienced doctors. I felt comfortable
-                throughout my consultation."
-              </p>
-
-              <div className="mt-8">
-                <h4 className="font-bold text-[#253237]">Sophia Martin</h4>
-                <p className="text-sm text-[#5C6B73]">Neurology Patient</p>
-              </div>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div className="rounded-3xl bg-white p-8 shadow-lg">
-              <div className="mb-4 text-3xl text-yellow-500">★★★★★</div>
-
-              <p className="leading-7 text-[#5C6B73]">
-                "Excellent service with modern facilities. Highly recommend this
-                clinic for quality healthcare."
-              </p>
-
-              <div className="mt-8">
-                <h4 className="font-bold text-[#253237]">Olivia Brown</h4>
-                <p className="text-sm text-[#5C6B73]">General Medicine</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -534,14 +445,14 @@ function Home() {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition hover:scale-105"
+                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
               >
                 Book Appointment
               </Link>
 
               <Link
                 to="/doctors"
-                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition hover:bg-white hover:text-[#253237]"
+                className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
               >
                 Meet Our Doctors
               </Link>

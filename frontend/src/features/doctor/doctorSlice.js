@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getDoctors,
+  getPublicDoctors,
   createDoctor,
   updateDoctor,
   deleteDoctor,
@@ -12,7 +13,7 @@ const initialState = {
   error: null,
 };
 
-// Get All Doctors
+// Get All Doctors (admin dashboard)
 export const fetchDoctors = createAsyncThunk(
   "doctor/fetchDoctors",
   async (_, thunkAPI) => {
@@ -26,7 +27,20 @@ export const fetchDoctors = createAsyncThunk(
   },
 );
 
-// Create Doctor
+// Get Public Doctors (website / appointment booking)
+export const fetchPublicDoctors = createAsyncThunk(
+  "doctor/fetchPublicDoctors",
+  async (_, thunkAPI) => {
+    try {
+      return await getPublicDoctors();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch doctors",
+      );
+    }
+  },
+);
+
 export const addDoctor = createAsyncThunk(
   "doctor/addDoctor",
   async (doctorData, thunkAPI) => {
@@ -40,7 +54,6 @@ export const addDoctor = createAsyncThunk(
   },
 );
 
-// Update Doctor
 export const editDoctor = createAsyncThunk(
   "doctor/editDoctor",
   async ({ id, doctorData }, thunkAPI) => {
@@ -54,7 +67,6 @@ export const editDoctor = createAsyncThunk(
   },
 );
 
-// Delete Doctor
 export const removeDoctor = createAsyncThunk(
   "doctor/removeDoctor",
   async (id, thunkAPI) => {
@@ -79,7 +91,7 @@ const doctorSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Doctors
+      // Fetch Doctors (admin)
       .addCase(fetchDoctors.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -89,6 +101,20 @@ const doctorSlice = createSlice({
         state.doctors = action.payload.data;
       })
       .addCase(fetchDoctors.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch Public Doctors (website)
+      .addCase(fetchPublicDoctors.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPublicDoctors.fulfilled, (state, action) => {
+        state.loading = false;
+        state.doctors = action.payload.data;
+      })
+      .addCase(fetchPublicDoctors.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

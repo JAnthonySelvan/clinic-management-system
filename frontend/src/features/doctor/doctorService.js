@@ -5,6 +5,12 @@ export const getDoctors = async () => {
   return response.data;
 };
 
+// Public listing — no auth required
+export const getPublicDoctors = async () => {
+  const response = await api.get("/doctors/public");
+  return response.data;
+};
+
 export const createDoctor = async (doctorData) => {
   const response = await api.post("/doctors", doctorData, {
     headers: { "Content-Type": "multipart/form-data" },

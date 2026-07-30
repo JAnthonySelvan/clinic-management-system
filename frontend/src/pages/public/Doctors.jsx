@@ -1,5 +1,59 @@
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import {
+  FaHeartbeat,
+  FaBrain,
+  FaTooth,
+  FaBaby,
+  FaBone,
+  FaEye,
+  FaLungs,
+  FaStethoscope,
+  FaGraduationCap,
+  FaHandHoldingHeart,
+  FaMicroscope,
+  FaHandshake,
+  FaStar,
+} from "react-icons/fa";
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+
+const DEFAULT_AVATAR =
+  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+
+const SPECIALIZATIONS = [
+  { icon: FaHeartbeat, title: "Cardiology", key: "Cardiologist" },
+  { icon: FaBrain, title: "Neurology", key: "Neurologist" },
+  { icon: FaTooth, title: "Dental Care", key: "Dentist" },
+  { icon: FaBaby, title: "Pediatrics", key: "Pediatrician" },
+  { icon: FaBone, title: "Orthopedics", key: "Orthopedic" },
+  { icon: FaEye, title: "Ophthalmology", key: "Ophthalmologist" },
+  { icon: FaLungs, title: "Pulmonology", key: "Pulmonologist" },
+  { icon: FaStethoscope, title: "General Medicine", key: "General Physician" },
+];
+
 const Doctors = () => {
+  const dispatch = useAppDispatch();
+  const { doctors, loading, error } = useAppSelector((state) => state.doctor);
+
+  useEffect(() => {
+    dispatch(fetchPublicDoctors());
+  }, [dispatch]);
+
+  const activeDoctors = useMemo(
+    () => doctors.filter((doc) => doc.isActive !== false),
+    [doctors],
+  );
+
+  const specializationCounts = useMemo(() => {
+    const counts = {};
+    activeDoctors.forEach((doc) => {
+      counts[doc.specialization] = (counts[doc.specialization] || 0) + 1;
+    });
+    return counts;
+  }, [activeDoctors]);
+
   return (
     <>
       {/* ================= HERO ================= */}
@@ -41,84 +95,54 @@ const Doctors = () => {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "Dr. John Smith",
-                specialization: "Cardiologist",
-                experience: "12+ Years Experience",
-                image:
-                  "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500",
-              },
-              {
-                name: "Dr. Sarah Wilson",
-                specialization: "Neurologist",
-                experience: "10+ Years Experience",
-                image:
-                  "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=500",
-              },
-              {
-                name: "Dr. David Lee",
-                specialization: "Orthopedic Surgeon",
-                experience: "15+ Years Experience",
-                image:
-                  "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=500",
-              },
-              {
-                name: "Dr. Emily Brown",
-                specialization: "Pediatrician",
-                experience: "9+ Years Experience",
-                image:
-                  "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500",
-              },
-              {
-                name: "Dr. Michael Johnson",
-                specialization: "Dentist",
-                experience: "8+ Years Experience",
-                image:
-                  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=500",
-              },
-              {
-                name: "Dr. Sophia Davis",
-                specialization: "General Physician",
-                experience: "11+ Years Experience",
-                image:
-                  "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=500",
-              },
-            ].map((doctor, index) => (
-              <div
-                key={index}
-                className="overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
-              >
-                <img
-                  src={doctor.image}
-                  alt={doctor.name}
-                  className="h-80 w-full object-cover"
-                />
+          {loading ? (
+            <p className="text-center text-[#5C6B73]">Loading doctors...</p>
+          ) : error ? (
+            <p className="text-center text-red-500">{error}</p>
+          ) : activeDoctors.length === 0 ? (
+            <p className="text-center text-[#5C6B73]">
+              No doctors available right now. Please check back soon.
+            </p>
+          ) : (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {activeDoctors.map((doctor) => (
+                <div
+                  key={doctor._id}
+                  className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                  <div className="overflow-hidden">
+                    <img
+                      src={doctor.profileImage || DEFAULT_AVATAR}
+                      alt={doctor.fullName}
+                      onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
+                      className="h-80 w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
+                  </div>
 
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-[#253237]">
-                    {doctor.name}
-                  </h3>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold text-[#253237]">
+                      {doctor.fullName}
+                    </h3>
 
-                  <p className="mt-2 font-medium text-[#5C6B73]">
-                    {doctor.specialization}
-                  </p>
+                    <p className="mt-2 font-medium text-[#5C6B73]">
+                      {doctor.specialization}
+                    </p>
 
-                  <p className="mt-3 text-sm text-[#5C6B73]">
-                    {doctor.experience}
-                  </p>
+                    <p className="mt-3 text-sm text-[#5C6B73]">
+                      {doctor.experience}+ Years Experience
+                    </p>
 
-                  <Link
-                    to="/appointment"
-                    className="mt-6 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition duration-300 hover:bg-[#5C6B73]"
-                  >
-                    Book Appointment
-                  </Link>
+                    <Link
+                      to="/appointment"
+                      className="mt-6 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition duration-300 hover:scale-105 hover:bg-[#5C6B73]"
+                    >
+                      Book Appointment
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -142,61 +166,27 @@ const Doctors = () => {
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: "❤️",
-                title: "Cardiology",
-                doctors: "5 Specialists",
-              },
-              {
-                icon: "🧠",
-                title: "Neurology",
-                doctors: "4 Specialists",
-              },
-              {
-                icon: "🦷",
-                title: "Dental Care",
-                doctors: "6 Specialists",
-              },
-              {
-                icon: "👶",
-                title: "Pediatrics",
-                doctors: "3 Specialists",
-              },
-              {
-                icon: "🦴",
-                title: "Orthopedics",
-                doctors: "4 Specialists",
-              },
-              {
-                icon: "👁️",
-                title: "Ophthalmology",
-                doctors: "2 Specialists",
-              },
-              {
-                icon: "🫁",
-                title: "Pulmonology",
-                doctors: "3 Specialists",
-              },
-              {
-                icon: "🩺",
-                title: "General Medicine",
-                doctors: "8 Specialists",
-              },
-            ].map((specialty, index) => (
-              <div
-                key={index}
-                className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
-              >
-                <div className="mb-6 text-5xl">{specialty.icon}</div>
+            {SPECIALIZATIONS.map((specialty, index) => {
+              const count = specializationCounts[specialty.key] || 0;
+              return (
+                <div
+                  key={index}
+                  className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                    <specialty.icon />
+                  </div>
 
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  {specialty.title}
-                </h3>
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    {specialty.title}
+                  </h3>
 
-                <p className="mt-3 text-[#5C6B73]">{specialty.doctors}</p>
-              </div>
-            ))}
+                  <p className="mt-3 text-[#5C6B73]">
+                    {count} {count === 1 ? "Specialist" : "Specialists"}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -221,57 +211,49 @@ const Doctors = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">🎓</div>
+            {[
+              {
+                icon: FaGraduationCap,
+                title: "Highly Qualified",
+                description:
+                  "Certified specialists with years of education, training, and clinical expertise.",
+              },
+              {
+                icon: FaHandHoldingHeart,
+                title: "Compassionate Care",
+                description:
+                  "Every patient receives personalized attention and treatment with care and respect.",
+              },
+              {
+                icon: FaMicroscope,
+                title: "Modern Technology",
+                description:
+                  "Advanced diagnostic tools and evidence-based treatments for accurate healthcare.",
+              },
+              {
+                icon: FaHandshake,
+                title: "Trusted by Patients",
+                description:
+                  "Thousands of patients trust our doctors for reliable and professional medical care.",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
+                  <item.icon />
+                </div>
 
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Highly Qualified
-              </h3>
+                <h3 className="text-2xl font-bold text-[#253237]">
+                  {item.title}
+                </h3>
 
-              <p className="mt-4 text-[#5C6B73] leading-7">
-                Certified specialists with years of education, training, and
-                clinical expertise.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">💙</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Compassionate Care
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73] leading-7">
-                Every patient receives personalized attention and treatment with
-                care and respect.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">🔬</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Modern Technology
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73] leading-7">
-                Advanced diagnostic tools and evidence-based treatments for
-                accurate healthcare.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">🤝</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Trusted by Patients
-              </h3>
-
-              <p className="mt-4 text-[#5C6B73] leading-7">
-                Thousands of patients trust our doctors for reliable and
-                professional medical care.
-              </p>
-            </div>
+                <p className="mt-4 leading-7 text-[#5C6B73]">
+                  {item.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -317,7 +299,11 @@ const Doctors = () => {
                 key={index}
                 className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mb-4 text-2xl text-yellow-500">⭐⭐⭐⭐⭐</div>
+                <div className="mb-4 flex text-2xl text-yellow-500">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <FaStar key={i} />
+                  ))}
+                </div>
 
                 <p className="leading-8 text-[#5C6B73] italic">
                   "{testimonial.review}"
@@ -353,7 +339,7 @@ const Doctors = () => {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 to="/appointment"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105"
+                className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
               >
                 Book Appointment
               </Link>
