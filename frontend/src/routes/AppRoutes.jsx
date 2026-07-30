@@ -24,6 +24,7 @@ import Doctors from "../pages/admin/Doctors";
 import Appointments from "../pages/admin/Appointments";
 import Messages from "../pages/admin/Messages";
 import AddDoctor from "../pages/admin/AddDoctor";
+import EditDoctor from "../pages/admin/EditDoctor";
 
 // Doctor Pages
 import DoctorDashboard from "../pages/doctor/DoctorDashboard";
@@ -60,6 +61,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       >
+        <Route path="doctors/edit/:id" element={<EditDoctor />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="doctors" element={<Doctors />} />
         <Route path="doctors/add" element={<AddDoctor />} />

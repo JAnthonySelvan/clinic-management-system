@@ -1,35 +1,47 @@
 import { Link } from "react-router-dom";
-const doctors = [
-  {
-    id: 1,
-    name: "Dr. John Smith",
-    specialization: "Cardiologist",
-    experience: "10 Years",
-    email: "john@example.com",
-    phone: "+91 9876543210",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Dr. Priya Kumar",
-    specialization: "Dermatologist",
-    experience: "7 Years",
-    email: "priya@example.com",
-    phone: "+91 9876543211",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Dr. David Joseph",
-    specialization: "Orthopedic",
-    experience: "12 Years",
-    email: "david@example.com",
-    phone: "+91 9876543212",
-    status: "Inactive",
-  },
-];
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchDoctors,removeDoctor,clearDoctorError } from "../../features/doctor/doctorSlice";
+import toast from "react-hot-toast";
+
 
 const Doctors = () => {
+    const dispatch = useAppDispatch();
+
+    const { doctors, loading, error } = useAppSelector((state) => state.doctor);
+
+    useEffect(() => {
+      dispatch(fetchDoctors());
+    }, [dispatch]);
+
+    useEffect(() => {
+      if (error) {
+        toast.error(error);
+        dispatch(clearDoctorError());
+      }
+    }, [error, dispatch]);
+
+    if (loading) {
+      return (
+        <div className="flex h-screen items-center justify-center">
+          <h1 className="text-xl font-semibold">Loading Doctors...</h1>
+        </div>
+      );
+    }
+    const handleDelete = async (id) => {
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this doctor?",
+      );
+
+      if (!confirmed) return;
+
+      try {
+        await dispatch(removeDoctor(id)).unwrap();
+        toast.success("Doctor deleted successfully");
+      } catch (error) {
+        toast.error(error || "Failed to delete doctor");
+      }
+    };
   return (
     <>
       {/* Header */}
@@ -77,42 +89,60 @@ const Doctors = () => {
           </thead>
 
           <tbody>
-            {doctors.map((doctor) => (
-              <tr
-                key={doctor.id}
-                className="border-b transition hover:bg-[#F8FBFC]"
-              >
-                <td className="px-6 py-4 font-medium">{doctor.name}</td>
-                <td className="px-6 py-4">{doctor.specialization}</td>
-                <td className="px-6 py-4">{doctor.experience}</td>
-                <td className="px-6 py-4">{doctor.email}</td>
-                <td className="px-6 py-4">{doctor.phone}</td>
+            {doctors.length > 0 ? (
+              doctors.map((doctor) => (
+                <tr
+                  key={doctor._id}
+                  className="border-b transition hover:bg-[#F8FBFC]"
+                >
+                  <td className="px-6 py-4 font-medium">{doctor.fullName}</td>
 
-                <td className="px-6 py-4">
-                  <span
-                    className={`rounded-full px-3 py-1 text-sm font-medium ${
-                      doctor.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {doctor.status}
-                  </span>
-                </td>
+                  <td className="px-6 py-4">{doctor.specialization || "-"}</td>
 
-                <td className="px-6 py-4">
-                  <div className="flex justify-center gap-3">
-                    <button className="rounded-lg bg-[#9DB4C0] px-4 py-2 text-sm font-medium text-[#253237] hover:opacity-90">
-                      Edit
-                    </button>
+                  <td className="px-6 py-4">{doctor.experience} Years</td>
 
-                    <button className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600">
-                      Delete
-                    </button>
-                  </div>
+                  <td className="px-6 py-4">{doctor.email}</td>
+
+                  <td className="px-6 py-4">{doctor.phone || "-"}</td>
+
+                  <td className="px-6 py-4">
+                    <span
+                      className={`rounded-full px-3 py-1 text-sm font-medium ${
+                        doctor.isActive
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {doctor.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="flex justify-center gap-3">
+                      <Link
+                        to={`/admin/doctors/edit/${doctor._id}`}
+                        className="rounded-lg bg-[#9DB4C0] px-4 py-2 text-sm font-medium text-[#253237] hover:opacity-90"
+                      >
+                        Edit
+                      </Link>
+
+                      <button
+                        onClick={() => handleDelete(doctor._id)}
+                        className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={7} className="py-8 text-center text-gray-500">
+                  No doctors found.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
