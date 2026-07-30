@@ -1,17 +1,14 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaBullseye,
-  FaEye,
-  FaUserMd,
-  FaHospital,
-  FaHandHoldingHeart,
-  FaClock,
-} from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
 import AnimatedSection from "../../components/AnimatedSection";
+import {
+  HERO_IMAGES,
+  FEATURE_IMAGES,
+  MISSION_IMAGES,
+} from "../../constants/images";
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
@@ -30,23 +27,30 @@ const About = () => {
 
   return (
     <>
-      {/* Hero */}
+      {/* ================= HERO ================= */}
 
-      <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <AnimatedSection
-          direction="up"
-          className="mx-auto w-full max-w-7xl px-4 text-center sm:px-6 lg:px-8"
-        >
-          <h1 className="text-5xl font-bold text-white">
-            About Saviours Clinic
-          </h1>
+      <section className="relative overflow-hidden">
+        <img
+          src={HERO_IMAGES.about}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5c6b73]/70" />
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-            We are committed to providing compassionate, high-quality healthcare
-            through experienced doctors, advanced medical technology, and
-            patient-centered care.
-          </p>
-        </AnimatedSection>
+        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+          <AnimatedSection direction="up" className="text-center">
+            <h1 className="text-5xl font-bold text-white">
+              About Saviours Clinic
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+              We are committed to providing compassionate, high-quality
+              healthcare through experienced doctors, advanced medical
+              technology, and patient-centered care.
+            </p>
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* About Content */}
@@ -89,6 +93,7 @@ const About = () => {
           </AnimatedSection>
         </div>
       </AnimatedSection>
+
       {/* ================= MISSION & VISION ================= */}
 
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
@@ -113,19 +118,27 @@ const About = () => {
 
             <AnimatedSection
               direction="right"
-              className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
             >
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                <FaBullseye />
+              <div className="h-56 w-full overflow-hidden">
+                <img
+                  src={MISSION_IMAGES.mission}
+                  alt="Our Mission"
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                />
               </div>
 
-              <h3 className="text-3xl font-bold text-[#253237]">Our Mission</h3>
+              <div className="p-10">
+                <h3 className="text-3xl font-bold text-[#253237]">
+                  Our Mission
+                </h3>
 
-              <p className="mt-6 leading-8 text-[#5C6B73]">
-                To deliver accessible, affordable, and high-quality healthcare
-                through experienced professionals, modern technology, and
-                personalized patient care.
-              </p>
+                <p className="mt-6 leading-8 text-[#5C6B73]">
+                  To deliver accessible, affordable, and high-quality healthcare
+                  through experienced professionals, modern technology, and
+                  personalized patient care.
+                </p>
+              </div>
             </AnimatedSection>
 
             {/* Vision */}
@@ -133,23 +146,32 @@ const About = () => {
             <AnimatedSection
               direction="left"
               delay={150}
-              className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
             >
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                <FaEye />
+              <div className="h-56 w-full overflow-hidden">
+                <img
+                  src={MISSION_IMAGES.vision}
+                  alt="Our Vision"
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                />
               </div>
 
-              <h3 className="text-3xl font-bold text-[#253237]">Our Vision</h3>
+              <div className="p-10">
+                <h3 className="text-3xl font-bold text-[#253237]">
+                  Our Vision
+                </h3>
 
-              <p className="mt-6 leading-8 text-[#5C6B73]">
-                To become one of the most trusted healthcare providers by
-                continuously improving medical services, embracing innovation,
-                and putting patients first.
-              </p>
+                <p className="mt-6 leading-8 text-[#5C6B73]">
+                  To become one of the most trusted healthcare providers by
+                  continuously improving medical services, embracing innovation,
+                  and putting patients first.
+                </p>
+              </div>
             </AnimatedSection>
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= WHY CHOOSE US ================= */}
 
       <AnimatedSection as="section" className="py-24">
@@ -173,25 +195,25 @@ const About = () => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
-                icon: FaUserMd,
+                image: FEATURE_IMAGES.expertDoctors,
                 title: "Expert Doctors",
                 description:
                   "Highly qualified specialists with years of medical experience.",
               },
               {
-                icon: FaHospital,
+                image: FEATURE_IMAGES.modernFacilities,
                 title: "Modern Facilities",
                 description:
                   "Equipped with advanced medical equipment and diagnostic tools.",
               },
               {
-                icon: FaHandHoldingHeart,
+                image: FEATURE_IMAGES.compassionateCare,
                 title: "Compassionate Care",
                 description:
                   "Every patient receives personalized attention and support.",
               },
               {
-                icon: FaClock,
+                image: FEATURE_IMAGES.timelyService,
                 title: "Timely Service",
                 description:
                   "Efficient appointment scheduling and prompt medical assistance.",
@@ -200,22 +222,29 @@ const About = () => {
               <AnimatedSection
                 key={index}
                 delay={index * 100}
-                className="group rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="group overflow-hidden rounded-3xl bg-[#F8FBFC] shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                  <card.icon />
+                <div className="h-40 w-full overflow-hidden">
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
                 </div>
 
-                <h3 className="text-xl font-bold text-[#253237]">
-                  {card.title}
-                </h3>
+                <div className="p-8 text-center">
+                  <h3 className="text-xl font-bold text-[#253237]">
+                    {card.title}
+                  </h3>
 
-                <p className="mt-4 text-[#5C6B73]">{card.description}</p>
+                  <p className="mt-4 text-[#5C6B73]">{card.description}</p>
+                </div>
               </AnimatedSection>
             ))}
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= CLINIC STATISTICS ================= */}
 
       <AnimatedSection as="section" className="bg-[#253237] py-24">

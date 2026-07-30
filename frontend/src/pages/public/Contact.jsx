@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 import { submitContactMessage } from "../../features/contact/contactService";
 import AnimatedSection from "../../components/AnimatedSection";
+import { HERO_IMAGES, CONTACT_IMAGES } from "../../constants/images";
 
 const Contact = () => {
   const [loading, setLoading] = useState(false);
@@ -29,14 +30,44 @@ const Contact = () => {
     }
   };
 
+  const contactInfo = [
+    {
+      image: CONTACT_IMAGES.address,
+      title: "Address",
+      lines: ["123 Healthcare Avenue", "Madurai, Tamil Nadu", "India"],
+    },
+    {
+      image: CONTACT_IMAGES.phone,
+      title: "Phone",
+      lines: ["+91 98765 43210", "+91 98765 12345"],
+    },
+    {
+      image: CONTACT_IMAGES.email,
+      title: "Email",
+      lines: ["info@savioursclinic.com", "support@savioursclinic.com"],
+    },
+    {
+      image: CONTACT_IMAGES.hours,
+      title: "Working Hours",
+      lines: ["Monday – Saturday", "8:00 AM – 8:00 PM", "Sunday Closed"],
+    },
+  ];
+
   return (
     <>
       {/* ================= HERO ================= */}
 
-      <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
+      <section className="relative overflow-hidden py-32">
+        <img
+          src={HERO_IMAGES.contact}
+          alt="Contact our clinic"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#5C6B73]/90 to-[#9DB4C0]/80" />
+
         <AnimatedSection
           direction="up"
-          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
         >
           <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
             Contact Us
@@ -53,6 +84,7 @@ const Contact = () => {
           </p>
         </AnimatedSection>
       </section>
+
       {/* ================= CONTACT INFO ================= */}
 
       <AnimatedSection as="section" className="py-24">
@@ -73,58 +105,34 @@ const Contact = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                emoji: "📍",
-                title: "Address",
-                lines: [
-                  "123 Healthcare Avenue",
-                  "Madurai, Tamil Nadu",
-                  "India",
-                ],
-              },
-              {
-                emoji: "📞",
-                title: "Phone",
-                lines: ["+91 98765 43210", "+91 98765 12345"],
-              },
-              {
-                emoji: "📧",
-                title: "Email",
-                lines: [
-                  "info@savioursclinic.com",
-                  "support@savioursclinic.com",
-                ],
-              },
-              {
-                emoji: "🕒",
-                title: "Working Hours",
-                lines: [
-                  "Monday – Saturday",
-                  "8:00 AM – 8:00 PM",
-                  "Sunday Closed",
-                ],
-              },
-            ].map((item, index) => (
+            {contactInfo.map((item, index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
-                className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mb-6 text-5xl">{item.emoji}</div>
+                <div className="overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="h-36 w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
+                </div>
 
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  {item.title}
-                </h3>
+                <div className="p-6 text-center">
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    {item.title}
+                  </h3>
 
-                <p className="mt-4 leading-7 text-[#5C6B73]">
-                  {item.lines.map((line, i) => (
-                    <span key={i}>
-                      {line}
-                      {i < item.lines.length - 1 && <br />}
-                    </span>
-                  ))}
-                </p>
+                  <p className="mt-4 leading-7 text-[#5C6B73]">
+                    {item.lines.map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < item.lines.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
+                </div>
               </AnimatedSection>
             ))}
           </div>

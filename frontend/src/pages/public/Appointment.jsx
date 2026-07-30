@@ -13,6 +13,7 @@ import {
   resetAppointmentSuccess,
 } from "../../features/appointment/appointmentSlice";
 import AnimatedSection from "../../components/AnimatedSection";
+import { HERO_IMAGES, GUIDELINE_IMAGES } from "../../constants/images";
 
 const Appointment = () => {
   const dispatch = useAppDispatch();
@@ -60,25 +61,33 @@ const Appointment = () => {
     <>
       {/* ================= HERO ================= */}
 
-      <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <AnimatedSection
-          direction="up"
-          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
-        >
-          <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
-            Appointment
-          </span>
+      <section className="relative overflow-hidden">
+        <img
+          src={HERO_IMAGES.appointment}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5c6b73]/70" />
 
-          <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl">
-            Book Your Appointment
-          </h1>
+        <div className="relative mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <AnimatedSection direction="up">
+            <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
+              Appointment
+            </span>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-            Schedule an appointment with our experienced medical professionals.
-            We are committed to providing timely, compassionate, and
-            personalized healthcare for you and your family.
-          </p>
-        </AnimatedSection>
+            <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl">
+              Book Your Appointment
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+              Schedule an appointment with our experienced medical
+              professionals. We are committed to providing timely,
+              compassionate, and personalized healthcare for you and your
+              family.
+            </p>
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* ================= APPOINTMENT FORM ================= */}
@@ -306,25 +315,25 @@ const Appointment = () => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
-                emoji: "📅",
+                image: GUIDELINE_IMAGES.schedule,
                 title: "Schedule in Advance",
                 description:
                   "Book your appointment early to get your preferred doctor and time slot.",
               },
               {
-                emoji: "🪪",
+                image: GUIDELINE_IMAGES.identification,
                 title: "Bring Identification",
                 description:
                   "Carry a valid ID and any previous medical reports during your visit.",
               },
               {
-                emoji: "⏰",
+                image: GUIDELINE_IMAGES.arriveEarly,
                 title: "Arrive Early",
                 description:
                   "Reach the clinic at least 15 minutes before your scheduled appointment.",
               },
               {
-                emoji: "💊",
+                image: GUIDELINE_IMAGES.medicalHistory,
                 title: "Medical History",
                 description:
                   "Inform your doctor about your medications, allergies, and medical history.",
@@ -333,17 +342,25 @@ const Appointment = () => {
               <AnimatedSection
                 key={index}
                 delay={index * 100}
-                className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mb-6 text-5xl">{item.emoji}</div>
+                <div className="h-40 w-full overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
+                </div>
 
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  {item.title}
-                </h3>
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    {item.title}
+                  </h3>
 
-                <p className="mt-4 leading-7 text-[#5C6B73]">
-                  {item.description}
-                </p>
+                  <p className="mt-4 leading-7 text-[#5C6B73]">
+                    {item.description}
+                  </p>
+                </div>
               </AnimatedSection>
             ))}
           </div>

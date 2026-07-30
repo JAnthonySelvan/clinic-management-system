@@ -1,0 +1,85 @@
+// NOTE: These are Unsplash hotlinked placeholders, following the same pattern
+// already used in your codebase (e.g. HERO_IMAGES.home, SPECIALTY_IMAGES.*).
+// Swap any of them for your own licensed/CDN-hosted images before production —
+// just keep the same keys so the pages below keep working.
+
+export const HERO_IMAGES = {
+  home: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80",
+  about:
+    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80",
+  doctors:
+    "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=1600&q=80",
+  services:
+    "https://images.unsplash.com/photo-1551076805-e1869033e561?w=1600&q=80",
+  appointment:
+    "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=1600&q=80",
+  contact:
+    "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1600&q=80",
+};
+
+export const SPECIALTY_IMAGES = {
+  cardiology:
+    "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=80",
+  neurology:
+    "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80",
+  dental:
+    "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=80",
+  pediatrics:
+    "https://res.cloudinary.com/udzftzug/image/upload/f_auto,q_auto/images_11_bodtks",
+  eyeCare:
+    "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80",
+  generalMedicine:
+    "https://res.cloudinary.com/udzftzug/image/upload/v1785430874/Gemini_Generated_Image_rxzd9drxzd9drxzd_tupkkn.png",
+  orthopedics:
+    "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80",
+  pulmonology:
+    "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&q=80",
+};
+
+export const FEATURE_IMAGES = {
+  expertDoctors:
+    "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=400&q=80",
+  modernFacilities:
+    "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=400&q=80",
+  compassionateCare:
+    "https://res.cloudinary.com/udzftzug/image/upload/v1785431211/Gemini_Generated_Image_b3uqt7b3uqt7b3uq_ryp1bg.png",
+  timelyService:
+    "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=400&q=80",
+  qualifiedSpecialists:
+    "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80",
+  modernTechnology:
+    "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=400&q=80",
+  trustedPatients:
+    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&q=80",
+  fastDiagnosis:
+    "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400&q=80",
+};
+
+export const MISSION_IMAGES = {
+  mission:
+    "https://images.unsplash.com/photo-1600959907703-125ba1374a12?w=800&q=80",
+  vision:
+    "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&q=80",
+};
+
+export const CONTACT_IMAGES = {
+  address:
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80",
+  phone:
+    "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80",
+  email:
+    "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&q=80",
+  hours:
+    "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400&q=80",
+};
+
+export const GUIDELINE_IMAGES = {
+  schedule:
+    "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&q=80",
+  identification:
+    "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&q=80",
+  arriveEarly:
+    "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=400&q=80",
+  medicalHistory:
+    "https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&q=80",
+};

@@ -1,19 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaHeartbeat,
-  FaBrain,
-  FaTooth,
-  FaBaby,
-  FaStethoscope,
-  FaBone,
-  FaHospital,
-  FaUserMd,
-  FaBolt,
-  FaHandHoldingHeart,
-} from "react-icons/fa";
 
 import AnimatedSection from "../../components/AnimatedSection";
+import {
+  HERO_IMAGES,
+  SPECIALTY_IMAGES,
+  FEATURE_IMAGES,
+} from "../../constants/images";
 
 const Services = () => {
   const faqs = [
@@ -41,13 +34,82 @@ const Services = () => {
 
   const [openIndex, setOpenIndex] = useState(null);
 
+  const services = [
+    {
+      image: SPECIALTY_IMAGES.cardiology,
+      title: "Cardiology",
+      description:
+        "Advanced diagnosis and treatment for heart-related conditions.",
+    },
+    {
+      image: SPECIALTY_IMAGES.neurology,
+      title: "Neurology",
+      description:
+        "Comprehensive care for neurological disorders and diseases.",
+    },
+    {
+      image: SPECIALTY_IMAGES.dental,
+      title: "Dental Care",
+      description: "Complete dental treatments for healthy teeth and gums.",
+    },
+    {
+      image: SPECIALTY_IMAGES.pediatrics,
+      title: "Pediatrics",
+      description: "Specialized healthcare services for infants and children.",
+    },
+    {
+      image: SPECIALTY_IMAGES.generalMedicine,
+      title: "General Medicine",
+      description: "Routine checkups and treatment for common illnesses.",
+    },
+    {
+      image: SPECIALTY_IMAGES.orthopedics,
+      title: "Orthopedics",
+      description:
+        "Diagnosis and treatment of bone, joint, and muscle conditions.",
+    },
+  ];
+
+  const whyChooseUs = [
+    {
+      image: FEATURE_IMAGES.modernFacilities,
+      title: "Modern Infrastructure",
+      description:
+        "State-of-the-art equipment and comfortable treatment facilities.",
+    },
+    {
+      image: FEATURE_IMAGES.qualifiedSpecialists,
+      title: "Qualified Specialists",
+      description: "Experienced doctors across multiple medical specialties.",
+    },
+    {
+      image: FEATURE_IMAGES.fastDiagnosis,
+      title: "Fast Diagnosis",
+      description:
+        "Quick and accurate diagnosis using advanced medical technology.",
+    },
+    {
+      image: FEATURE_IMAGES.compassionateCare,
+      title: "Patient-Centered Care",
+      description:
+        "Every treatment plan is tailored to each patient's individual needs.",
+    },
+  ];
+
   return (
     <>
       {/* Hero */}
-      <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
+      <section className="relative overflow-hidden py-32">
+        <img
+          src={HERO_IMAGES.services}
+          alt="Our medical services"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#5C6B73]/90 to-[#9DB4C0]/80" />
+
         <AnimatedSection
           direction="up"
-          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
         >
           <h1 className="text-5xl font-bold text-white">
             Our Medical Services
@@ -60,6 +122,7 @@ const Services = () => {
           </p>
         </AnimatedSection>
       </section>
+
       {/* ================= SERVICES GRID ================= */}
       <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -79,69 +142,39 @@ const Services = () => {
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                icon: FaHeartbeat,
-                title: "Cardiology",
-                description:
-                  "Advanced diagnosis and treatment for heart-related conditions.",
-              },
-              {
-                icon: FaBrain,
-                title: "Neurology",
-                description:
-                  "Comprehensive care for neurological disorders and diseases.",
-              },
-              {
-                icon: FaTooth,
-                title: "Dental Care",
-                description:
-                  "Complete dental treatments for healthy teeth and gums.",
-              },
-              {
-                icon: FaBaby,
-                title: "Pediatrics",
-                description:
-                  "Specialized healthcare services for infants and children.",
-              },
-              {
-                icon: FaStethoscope,
-                title: "General Medicine",
-                description:
-                  "Routine checkups and treatment for common illnesses.",
-              },
-              {
-                icon: FaBone,
-                title: "Orthopedics",
-                description:
-                  "Diagnosis and treatment of bone, joint, and muscle conditions.",
-              },
-            ].map((service, index) => (
+            {services.map((service, index) => (
               <AnimatedSection
                 key={index}
                 delay={(index % 3) * 100}
-                className="group rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                  <service.icon />
+                <div className="overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="h-48 w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
                 </div>
 
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  {service.title}
-                </h3>
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    {service.title}
+                  </h3>
 
-                <p className="mt-4 leading-7 text-[#5C6B73]">
-                  {service.description}
-                </p>
+                  <p className="mt-4 leading-7 text-[#5C6B73]">
+                    {service.description}
+                  </p>
 
-                <button className="mt-6 font-semibold text-[#253237] transition duration-300 hover:translate-x-1 hover:text-[#5C6B73]">
-                  Learn More →
-                </button>
+                  <button className="mt-6 font-semibold text-[#253237] transition duration-300 hover:translate-x-1 hover:text-[#5C6B73]">
+                    Learn More →
+                  </button>
+                </div>
               </AnimatedSection>
             ))}
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= WHY CHOOSE OUR SERVICES ================= */}
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -161,49 +194,31 @@ const Services = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: FaHospital,
-                title: "Modern Infrastructure",
-                description:
-                  "State-of-the-art equipment and comfortable treatment facilities.",
-              },
-              {
-                icon: FaUserMd,
-                title: "Qualified Specialists",
-                description:
-                  "Experienced doctors across multiple medical specialties.",
-              },
-              {
-                icon: FaBolt,
-                title: "Fast Diagnosis",
-                description:
-                  "Quick and accurate diagnosis using advanced medical technology.",
-              },
-              {
-                icon: FaHandHoldingHeart,
-                title: "Patient-Centered Care",
-                description:
-                  "Every treatment plan is tailored to each patient's individual needs.",
-              },
-            ].map((item, index) => (
+            {whyChooseUs.map((item, index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
-                className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                  <item.icon />
+                <div className="overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="h-40 w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-[#253237]">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-[#5C6B73]">{item.description}</p>
+                <div className="p-6 text-center">
+                  <h3 className="text-xl font-bold text-[#253237]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-[#5C6B73]">{item.description}</p>
+                </div>
               </AnimatedSection>
             ))}
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= TREATMENT PROCESS ================= */}
       <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -272,6 +287,7 @@ const Services = () => {
           </div>
         </div>
       </AnimatedSection>
+
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
@@ -328,6 +344,7 @@ const Services = () => {
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= SERVICES CTA ================= */}
 
       <AnimatedSection as="section" className="py-24">

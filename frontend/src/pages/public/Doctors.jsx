@@ -1,37 +1,78 @@
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaHeartbeat,
-  FaBrain,
-  FaTooth,
-  FaBaby,
-  FaBone,
-  FaEye,
-  FaLungs,
-  FaStethoscope,
-  FaGraduationCap,
-  FaHandHoldingHeart,
-  FaMicroscope,
-  FaHandshake,
-  FaStar,
-} from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
 import AnimatedSection from "../../components/AnimatedSection";
+import {
+  HERO_IMAGES,
+  SPECIALTY_IMAGES,
+  FEATURE_IMAGES,
+} from "../../constants/images";
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
 
 const SPECIALIZATIONS = [
-  { icon: FaHeartbeat, title: "Cardiology", key: "Cardiologist" },
-  { icon: FaBrain, title: "Neurology", key: "Neurologist" },
-  { icon: FaTooth, title: "Dental Care", key: "Dentist" },
-  { icon: FaBaby, title: "Pediatrics", key: "Pediatrician" },
-  { icon: FaBone, title: "Orthopedics", key: "Orthopedic" },
-  { icon: FaEye, title: "Ophthalmology", key: "Ophthalmologist" },
-  { icon: FaLungs, title: "Pulmonology", key: "Pulmonologist" },
-  { icon: FaStethoscope, title: "General Medicine", key: "General Physician" },
+  {
+    image: SPECIALTY_IMAGES.cardiology,
+    title: "Cardiology",
+    key: "Cardiologist",
+  },
+  { image: SPECIALTY_IMAGES.neurology, title: "Neurology", key: "Neurologist" },
+  { image: SPECIALTY_IMAGES.dental, title: "Dental Care", key: "Dentist" },
+  {
+    image: SPECIALTY_IMAGES.pediatrics,
+    title: "Pediatrics",
+    key: "Pediatrician",
+  },
+  {
+    image: SPECIALTY_IMAGES.orthopedics,
+    title: "Orthopedics",
+    key: "Orthopedic",
+  },
+  {
+    image: SPECIALTY_IMAGES.eyeCare,
+    title: "Ophthalmology",
+    key: "Ophthalmologist",
+  },
+  {
+    image: SPECIALTY_IMAGES.pulmonology,
+    title: "Pulmonology",
+    key: "Pulmonologist",
+  },
+  {
+    image: SPECIALTY_IMAGES.generalMedicine,
+    title: "General Medicine",
+    key: "General Physician",
+  },
+];
+
+const WHY_CHOOSE_US = [
+  {
+    image: FEATURE_IMAGES.qualifiedSpecialists,
+    title: "Highly Qualified",
+    description:
+      "Certified specialists with years of education, training, and clinical expertise.",
+  },
+  {
+    image: FEATURE_IMAGES.compassionateCare,
+    title: "Compassionate Care",
+    description:
+      "Every patient receives personalized attention and treatment with care and respect.",
+  },
+  {
+    image: FEATURE_IMAGES.modernTechnology,
+    title: "Modern Technology",
+    description:
+      "Advanced diagnostic tools and evidence-based treatments for accurate healthcare.",
+  },
+  {
+    image: FEATURE_IMAGES.trustedPatients,
+    title: "Trusted by Patients",
+    description:
+      "Thousands of patients trust our doctors for reliable and professional medical care.",
+  },
 ];
 
 const Doctors = () => {
@@ -59,10 +100,17 @@ const Doctors = () => {
     <>
       {/* ================= HERO ================= */}
 
-      <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
+      <section className="relative overflow-hidden py-32">
+        <img
+          src={HERO_IMAGES.doctors}
+          alt="Our medical specialists"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#5C6B73]/90 to-[#9DB4C0]/80" />
+
         <AnimatedSection
           direction="up"
-          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
         >
           <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
             Our Specialists
@@ -177,25 +225,32 @@ const Doctors = () => {
                 <AnimatedSection
                   key={index}
                   delay={index * 100}
-                  className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                  className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
-                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                    <specialty.icon />
+                  <div className="overflow-hidden">
+                    <img
+                      src={specialty.image}
+                      alt={specialty.title}
+                      className="h-44 w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-[#253237]">
-                    {specialty.title}
-                  </h3>
+                  <div className="p-6 text-center">
+                    <h3 className="text-2xl font-bold text-[#253237]">
+                      {specialty.title}
+                    </h3>
 
-                  <p className="mt-3 text-[#5C6B73]">
-                    {count} {count === 1 ? "Specialist" : "Specialists"}
-                  </p>
+                    <p className="mt-3 text-[#5C6B73]">
+                      {count} {count === 1 ? "Specialist" : "Specialists"}
+                    </p>
+                  </div>
                 </AnimatedSection>
               );
             })}
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= WHY CHOOSE OUR DOCTORS ================= */}
 
       <AnimatedSection as="section" className="py-24">
@@ -217,48 +272,29 @@ const Doctors = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: FaGraduationCap,
-                title: "Highly Qualified",
-                description:
-                  "Certified specialists with years of education, training, and clinical expertise.",
-              },
-              {
-                icon: FaHandHoldingHeart,
-                title: "Compassionate Care",
-                description:
-                  "Every patient receives personalized attention and treatment with care and respect.",
-              },
-              {
-                icon: FaMicroscope,
-                title: "Modern Technology",
-                description:
-                  "Advanced diagnostic tools and evidence-based treatments for accurate healthcare.",
-              },
-              {
-                icon: FaHandshake,
-                title: "Trusted by Patients",
-                description:
-                  "Thousands of patients trust our doctors for reliable and professional medical care.",
-              },
-            ].map((item, index) => (
+            {WHY_CHOOSE_US.map((item, index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
-                className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
-                  <item.icon />
+                <div className="overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="h-40 w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
                 </div>
 
-                <h3 className="text-2xl font-bold text-[#253237]">
-                  {item.title}
-                </h3>
+                <div className="p-6 text-center">
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    {item.title}
+                  </h3>
 
-                <p className="mt-4 leading-7 text-[#5C6B73]">
-                  {item.description}
-                </p>
+                  <p className="mt-4 leading-7 text-[#5C6B73]">
+                    {item.description}
+                  </p>
+                </div>
               </AnimatedSection>
             ))}
           </div>
@@ -307,10 +343,8 @@ const Doctors = () => {
                 delay={index * 100}
                 className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mb-4 flex text-2xl text-yellow-500">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
+                <div className="mb-4 text-2xl tracking-wider text-yellow-500">
+                  ★★★★★
                 </div>
 
                 <p className="leading-8 text-[#5C6B73] italic">
@@ -329,6 +363,7 @@ const Doctors = () => {
           </div>
         </div>
       </AnimatedSection>
+
       {/* ================= DOCTORS CTA ================= */}
 
       <AnimatedSection as="section" className="py-24">
