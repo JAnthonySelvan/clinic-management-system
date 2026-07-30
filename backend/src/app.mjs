@@ -21,6 +21,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.status(200).json({
