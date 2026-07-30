@@ -13,6 +13,8 @@ import {
   FaHandHoldingHeart,
 } from "react-icons/fa";
 
+import AnimatedSection from "../../components/AnimatedSection";
+
 const Services = () => {
   const faqs = [
     {
@@ -43,7 +45,10 @@ const Services = () => {
     <>
       {/* Hero */}
       <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+        <AnimatedSection
+          direction="up"
+          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+        >
           <h1 className="text-5xl font-bold text-white">
             Our Medical Services
           </h1>
@@ -53,10 +58,10 @@ const Services = () => {
             facilities and experienced medical professionals to ensure the best
             treatment for every patient.
           </p>
-        </div>
+        </AnimatedSection>
       </section>
       {/* ================= SERVICES GRID ================= */}
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -112,8 +117,9 @@ const Services = () => {
                   "Diagnosis and treatment of bone, joint, and muscle conditions.",
               },
             ].map((service, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={(index % 3) * 100}
                 className="group rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
@@ -131,13 +137,13 @@ const Services = () => {
                 <button className="mt-6 font-semibold text-[#253237] transition duration-300 hover:translate-x-1 hover:text-[#5C6B73]">
                   Learn More →
                 </button>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= WHY CHOOSE OUR SERVICES ================= */}
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -181,8 +187,9 @@ const Services = () => {
                   "Every treatment plan is tailored to each patient's individual needs.",
               },
             ].map((item, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
@@ -192,13 +199,13 @@ const Services = () => {
                   {item.title}
                 </h3>
                 <p className="mt-4 text-[#5C6B73]">{item.description}</p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= TREATMENT PROCESS ================= */}
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -242,8 +249,9 @@ const Services = () => {
                   "Track your recovery with regular follow-up consultations.",
               },
             ].map((item, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="group relative rounded-3xl border border-[#C2DFE3] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div className="absolute -top-5 left-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#253237] text-lg font-bold text-white transition-transform duration-300 group-hover:scale-110">
@@ -259,12 +267,12 @@ const Services = () => {
                     {item.description}
                   </p>
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
-      <section className="bg-[#F8FBFC] py-24">
+      </AnimatedSection>
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -282,8 +290,9 @@ const Services = () => {
 
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="overflow-hidden rounded-2xl bg-white shadow-md transition duration-300 hover:shadow-lg"
               >
                 <button
@@ -314,14 +323,14 @@ const Services = () => {
                     {faq.answer}
                   </div>
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= SERVICES CTA ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
             <h2 className="text-4xl font-bold text-white md:text-5xl">
@@ -351,7 +360,7 @@ const Services = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </>
   );
 };

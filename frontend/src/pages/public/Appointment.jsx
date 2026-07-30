@@ -12,6 +12,8 @@ import {
   clearAppointmentError,
   resetAppointmentSuccess,
 } from "../../features/appointment/appointmentSlice";
+import AnimatedSection from "../../components/AnimatedSection";
+
 const Appointment = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -59,7 +61,10 @@ const Appointment = () => {
       {/* ================= HERO ================= */}
 
       <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+        <AnimatedSection
+          direction="up"
+          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+        >
           <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
             Appointment
           </span>
@@ -73,12 +78,12 @@ const Appointment = () => {
             We are committed to providing timely, compassionate, and
             personalized healthcare for you and your family.
           </p>
-        </div>
+        </AnimatedSection>
       </section>
 
       {/* ================= APPOINTMENT FORM ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -277,11 +282,11 @@ const Appointment = () => {
             </form>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= APPOINTMENT GUIDELINES ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -299,64 +304,55 @@ const Appointment = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">📅</div>
+            {[
+              {
+                emoji: "📅",
+                title: "Schedule in Advance",
+                description:
+                  "Book your appointment early to get your preferred doctor and time slot.",
+              },
+              {
+                emoji: "🪪",
+                title: "Bring Identification",
+                description:
+                  "Carry a valid ID and any previous medical reports during your visit.",
+              },
+              {
+                emoji: "⏰",
+                title: "Arrive Early",
+                description:
+                  "Reach the clinic at least 15 minutes before your scheduled appointment.",
+              },
+              {
+                emoji: "💊",
+                title: "Medical History",
+                description:
+                  "Inform your doctor about your medications, allergies, and medical history.",
+              },
+            ].map((item, index) => (
+              <AnimatedSection
+                key={index}
+                delay={index * 100}
+                className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <div className="mb-6 text-5xl">{item.emoji}</div>
 
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Schedule in Advance
-              </h3>
+                <h3 className="text-2xl font-bold text-[#253237]">
+                  {item.title}
+                </h3>
 
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                Book your appointment early to get your preferred doctor and
-                time slot.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">🪪</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Bring Identification
-              </h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                Carry a valid ID and any previous medical reports during your
-                visit.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">⏰</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Arrive Early
-              </h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                Reach the clinic at least 15 minutes before your scheduled
-                appointment.
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">💊</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Medical History
-              </h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                Inform your doctor about your medications, allergies, and
-                medical history.
-              </p>
-            </div>
+                <p className="mt-4 leading-7 text-[#5C6B73]">
+                  {item.description}
+                </p>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= FAQ ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -374,57 +370,47 @@ const Appointment = () => {
           </div>
 
           <div className="mx-auto max-w-4xl space-y-6">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-[#253237]">
-                How do I book an appointment?
-              </h3>
+            {[
+              {
+                question: "How do I book an appointment?",
+                answer:
+                  "Complete the appointment form with your details, choose your preferred department, doctor, and appointment date, then submit your request.",
+              },
+              {
+                question: "Will I receive confirmation?",
+                answer:
+                  "Yes. After reviewing your request, our staff will confirm your appointment using your registered contact details.",
+              },
+              {
+                question: "Can I reschedule my appointment?",
+                answer:
+                  "Yes. Please contact our clinic before your scheduled appointment to request a new date and time.",
+              },
+              {
+                question: "What should I bring for my visit?",
+                answer:
+                  "Bring a valid ID, previous medical records (if any), prescriptions, and insurance details if applicable.",
+              },
+            ].map((faq, index) => (
+              <AnimatedSection
+                key={index}
+                delay={index * 100}
+                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md"
+              >
+                <h3 className="text-xl font-semibold text-[#253237]">
+                  {faq.question}
+                </h3>
 
-              <p className="mt-3 leading-7 text-[#5C6B73]">
-                Complete the appointment form with your details, choose your
-                preferred department, doctor, and appointment date, then submit
-                your request.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-[#253237]">
-                Will I receive confirmation?
-              </h3>
-
-              <p className="mt-3 leading-7 text-[#5C6B73]">
-                Yes. After reviewing your request, our staff will confirm your
-                appointment using your registered contact details.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-[#253237]">
-                Can I reschedule my appointment?
-              </h3>
-
-              <p className="mt-3 leading-7 text-[#5C6B73]">
-                Yes. Please contact our clinic before your scheduled appointment
-                to request a new date and time.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-[#253237]">
-                What should I bring for my visit?
-              </h3>
-
-              <p className="mt-3 leading-7 text-[#5C6B73]">
-                Bring a valid ID, previous medical records (if any),
-                prescriptions, and insurance details if applicable.
-              </p>
-            </div>
+                <p className="mt-3 leading-7 text-[#5C6B73]">{faq.answer}</p>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= APPOINTMENT CTA ================= */}
 
-      <section id="appointment-form" className="py-24">
+      <AnimatedSection as="section" id="appointment-form" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
             <h2 className="text-4xl font-bold text-white md:text-5xl">
@@ -454,7 +440,7 @@ const Appointment = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </>
   );
 };

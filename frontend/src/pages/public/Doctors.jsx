@@ -18,6 +18,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+import AnimatedSection from "../../components/AnimatedSection";
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
@@ -59,7 +60,10 @@ const Doctors = () => {
       {/* ================= HERO ================= */}
 
       <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+        <AnimatedSection
+          direction="up"
+          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+        >
           <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
             Our Specialists
           </span>
@@ -73,12 +77,12 @@ const Doctors = () => {
             compassionate, personalized, and advanced healthcare for every
             patient.
           </p>
-        </div>
+        </AnimatedSection>
       </section>
 
       {/* ================= DOCTORS GRID ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -105,9 +109,10 @@ const Doctors = () => {
             </p>
           ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {activeDoctors.map((doctor) => (
-                <div
+              {activeDoctors.map((doctor, index) => (
+                <AnimatedSection
                   key={doctor._id}
+                  delay={(index % 3) * 100}
                   className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   <div className="overflow-hidden">
@@ -139,16 +144,16 @@ const Doctors = () => {
                       Book Appointment
                     </Link>
                   </div>
-                </div>
+                </AnimatedSection>
               ))}
             </div>
           )}
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= DOCTOR SPECIALIZATIONS ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -169,8 +174,9 @@ const Doctors = () => {
             {SPECIALIZATIONS.map((specialty, index) => {
               const count = specializationCounts[specialty.key] || 0;
               return (
-                <div
+                <AnimatedSection
                   key={index}
+                  delay={index * 100}
                   className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
@@ -184,15 +190,15 @@ const Doctors = () => {
                   <p className="mt-3 text-[#5C6B73]">
                     {count} {count === 1 ? "Specialist" : "Specialists"}
                   </p>
-                </div>
+                </AnimatedSection>
               );
             })}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= WHY CHOOSE OUR DOCTORS ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -237,8 +243,9 @@ const Doctors = () => {
                   "Thousands of patients trust our doctors for reliable and professional medical care.",
               },
             ].map((item, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="group rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
@@ -252,15 +259,15 @@ const Doctors = () => {
                 <p className="mt-4 leading-7 text-[#5C6B73]">
                   {item.description}
                 </p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= PATIENT TESTIMONIALS ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -295,8 +302,9 @@ const Doctors = () => {
                   "Booking was easy, consultation was thorough, and the doctor explained everything clearly. Outstanding experience.",
               },
             ].map((testimonial, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div className="mb-4 flex text-2xl text-yellow-500">
@@ -316,14 +324,14 @@ const Doctors = () => {
 
                   <p className="text-[#5C6B73]">Happy Patient</p>
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= DOCTORS CTA ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
             <h2 className="text-4xl font-bold text-white md:text-5xl">
@@ -353,7 +361,7 @@ const Doctors = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </>
   );
 };

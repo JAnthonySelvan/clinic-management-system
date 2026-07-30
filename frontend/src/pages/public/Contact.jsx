@@ -2,14 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import {
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-  FaEnvelope,
-  FaClock,
-} from "react-icons/fa";
 
 import { submitContactMessage } from "../../features/contact/contactService";
+import AnimatedSection from "../../components/AnimatedSection";
 
 const Contact = () => {
   const [loading, setLoading] = useState(false);
@@ -39,7 +34,10 @@ const Contact = () => {
       {/* ================= HERO ================= */}
 
       <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+        <AnimatedSection
+          direction="up"
+          className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+        >
           <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
             Contact Us
           </span>
@@ -53,11 +51,11 @@ const Contact = () => {
             friendly team is here to help. Reach out to us using the contact
             information below or send us a message directly.
           </p>
-        </div>
+        </AnimatedSection>
       </section>
       {/* ================= CONTACT INFO ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -75,74 +73,71 @@ const Contact = () => {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Address */}
+            {[
+              {
+                emoji: "📍",
+                title: "Address",
+                lines: [
+                  "123 Healthcare Avenue",
+                  "Madurai, Tamil Nadu",
+                  "India",
+                ],
+              },
+              {
+                emoji: "📞",
+                title: "Phone",
+                lines: ["+91 98765 43210", "+91 98765 12345"],
+              },
+              {
+                emoji: "📧",
+                title: "Email",
+                lines: [
+                  "info@savioursclinic.com",
+                  "support@savioursclinic.com",
+                ],
+              },
+              {
+                emoji: "🕒",
+                title: "Working Hours",
+                lines: [
+                  "Monday – Saturday",
+                  "8:00 AM – 8:00 PM",
+                  "Sunday Closed",
+                ],
+              },
+            ].map((item, index) => (
+              <AnimatedSection
+                key={index}
+                delay={index * 100}
+                className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <div className="mb-6 text-5xl">{item.emoji}</div>
 
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">📍</div>
+                <h3 className="text-2xl font-bold text-[#253237]">
+                  {item.title}
+                </h3>
 
-              <h3 className="text-2xl font-bold text-[#253237]">Address</h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                123 Healthcare Avenue
-                <br />
-                Madurai, Tamil Nadu
-                <br />
-                India
-              </p>
-            </div>
-
-            {/* Phone */}
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">📞</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">Phone</h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                +91 98765 43210
-                <br />
-                +91 98765 12345
-              </p>
-            </div>
-
-            {/* Email */}
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">📧</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">Email</h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                info@savioursclinic.com
-                <br />
-                support@savioursclinic.com
-              </p>
-            </div>
-
-            {/* Working Hours */}
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="mb-6 text-5xl">🕒</div>
-
-              <h3 className="text-2xl font-bold text-[#253237]">
-                Working Hours
-              </h3>
-
-              <p className="mt-4 leading-7 text-[#5C6B73]">
-                Monday – Saturday
-                <br />
-                8:00 AM – 8:00 PM
-                <br />
-                Sunday Closed
-              </p>
-            </div>
+                <p className="mt-4 leading-7 text-[#5C6B73]">
+                  {item.lines.map((line, i) => (
+                    <span key={i}>
+                      {line}
+                      {i < item.lines.length - 1 && <br />}
+                    </span>
+                  ))}
+                </p>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= CONTACT FORM ================= */}
 
-      <section id="contact-form" className="bg-[#F8FBFC] py-24">
+      <AnimatedSection
+        as="section"
+        id="contact-form"
+        className="bg-[#F8FBFC] py-24"
+      >
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -255,11 +250,11 @@ const Contact = () => {
             </form>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= GOOGLE MAP ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -287,11 +282,11 @@ const Contact = () => {
             ></iframe>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= BUSINESS HOURS ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -347,11 +342,11 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= FINAL CTA ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
@@ -385,7 +380,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </>
   );
 };

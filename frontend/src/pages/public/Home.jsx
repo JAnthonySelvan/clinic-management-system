@@ -16,6 +16,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+import AnimatedSection from "../../components/AnimatedSection";
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
@@ -40,7 +41,10 @@ function Home() {
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             {/* LEFT */}
-            <div className="space-y-8 text-center text-white lg:text-left">
+            <AnimatedSection
+              direction="right"
+              className="space-y-8 text-center text-white lg:text-left"
+            >
               <span className="inline-flex rounded-full bg-white/20 px-4 py-2 text-sm font-medium tracking-wide text-white">
                 Welcome to Saviours Healthcare
               </span>
@@ -74,22 +78,26 @@ function Home() {
                   Our Doctors
                 </Link>
               </div>
-            </div>
+            </AnimatedSection>
 
             {/* RIGHT */}
-            <div className="flex justify-center lg:justify-end">
+            <AnimatedSection
+              direction="left"
+              delay={150}
+              className="flex justify-center lg:justify-end"
+            >
               <img
                 src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=900"
                 alt="Doctor"
                 className="w-full max-w-xl rounded-4xl shadow-[0_40px_80px_rgba(0,0,0,0.18)] transition duration-500 hover:scale-[1.02]"
               />
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
 
       {/* ================= STATISTICS ================= */}
-      <section className="bg-[#c2dfe3] py-20">
+      <AnimatedSection as="section" className="bg-[#c2dfe3] py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -98,8 +106,9 @@ function Home() {
               { icon: FaHospital, value: "15+", label: "Medical Departments" },
               { icon: FaClock, value: "24/7", label: "Emergency Support" },
             ].map((stat, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="rounded-3xl bg-white p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <stat.icon className="mx-auto mb-4 text-5xl text-[#253237] transition-transform duration-300 hover:scale-110" />
@@ -107,15 +116,15 @@ function Home() {
                   {stat.value}
                 </h2>
                 <p className="mt-2 text-[#5c6b73]">{stat.label}</p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= SERVICES ================= */}
 
-      <section className="bg-white py-24">
+      <AnimatedSection as="section" className="bg-white py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -171,8 +180,9 @@ function Home() {
                   "Complete health checkups and personalized treatment plans for every patient.",
               },
             ].map((service, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={(index % 3) * 100}
                 className="group rounded-3xl border border-gray-100 bg-white p-8 shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
@@ -186,30 +196,30 @@ function Home() {
                 <p className="leading-7 text-[#5C6B73]">
                   {service.description}
                 </p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= WHY CHOOSE US ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* LEFT IMAGE */}
 
-            <div className="flex justify-center">
+            <AnimatedSection direction="right" className="flex justify-center">
               <img
                 src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900"
                 alt="Healthcare"
                 className="w-full max-w-xl rounded-4xl shadow-2xl transition duration-500 hover:scale-[1.02]"
               />
-            </div>
+            </AnimatedSection>
 
             {/* RIGHT CONTENT */}
 
-            <div>
+            <AnimatedSection direction="left" delay={150}>
               <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
                 Why Choose Us
               </span>
@@ -253,7 +263,12 @@ function Home() {
                       "Immediate assistance whenever urgent medical care is required.",
                   },
                 ].map((item, index) => (
-                  <div key={index} className="group flex gap-5">
+                  <AnimatedSection
+                    key={index}
+                    delay={index * 100}
+                    direction="up"
+                    className="group flex gap-5"
+                  >
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#C2DFE3] text-xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
                       <item.icon />
                     </div>
@@ -265,17 +280,17 @@ function Home() {
 
                       <p className="mt-2 text-[#5C6B73]">{item.description}</p>
                     </div>
-                  </div>
+                  </AnimatedSection>
                 ))}
               </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= FEATURED DOCTORS ================= */}
 
-      <section className="bg-white py-24">
+      <AnimatedSection as="section" className="bg-white py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Heading */}
 
@@ -304,9 +319,10 @@ function Home() {
             </p>
           ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {featuredDoctors.map((doctor) => (
-                <div
+              {featuredDoctors.map((doctor, index) => (
+                <AnimatedSection
                   key={doctor._id}
+                  delay={index * 100}
                   className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   <div className="overflow-hidden">
@@ -343,7 +359,7 @@ function Home() {
                       Book Appointment
                     </Link>
                   </div>
-                </div>
+                </AnimatedSection>
               ))}
             </div>
           )}
@@ -359,11 +375,11 @@ function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= TESTIMONIALS ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Heading */}
           <div className="mb-16 text-center">
@@ -402,8 +418,9 @@ function Home() {
                   "Excellent service with modern facilities. Highly recommend this clinic for quality healthcare.",
               },
             ].map((testimonial, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div className="mb-4 flex text-2xl text-yellow-500">
@@ -422,14 +439,15 @@ function Home() {
                   </h4>
                   <p className="text-sm text-[#5C6B73]">{testimonial.role}</p>
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
+
       {/* ================= CALL TO ACTION ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
             <h2 className="text-4xl font-bold text-white md:text-5xl">
@@ -459,7 +477,7 @@ function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </>
   );
 }

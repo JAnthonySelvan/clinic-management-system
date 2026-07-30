@@ -11,6 +11,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+import AnimatedSection from "../../components/AnimatedSection";
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
@@ -32,7 +33,10 @@ const About = () => {
       {/* Hero */}
 
       <section className="bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+        <AnimatedSection
+          direction="up"
+          className="mx-auto w-full max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+        >
           <h1 className="text-5xl font-bold text-white">
             About Saviours Clinic
           </h1>
@@ -42,26 +46,26 @@ const About = () => {
             through experienced doctors, advanced medical technology, and
             patient-centered care.
           </p>
-        </div>
+        </AnimatedSection>
       </section>
 
       {/* About Content */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           {/* Image */}
 
-          <div>
+          <AnimatedSection direction="right">
             <img
               src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900"
               alt="About Clinic"
               className="rounded-4xl shadow-2xl transition duration-500 hover:scale-[1.02]"
             />
-          </div>
+          </AnimatedSection>
 
           {/* Content */}
 
-          <div>
+          <AnimatedSection direction="left" delay={150}>
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
               Who We Are
             </span>
@@ -82,12 +86,12 @@ const About = () => {
               every patient receives personalized treatment using modern medical
               practices and advanced technology.
             </p>
-          </div>
+          </AnimatedSection>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= MISSION & VISION ================= */}
 
-      <section className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -107,7 +111,10 @@ const About = () => {
           <div className="grid gap-8 md:grid-cols-2">
             {/* Mission */}
 
-            <div className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+            <AnimatedSection
+              direction="right"
+              className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+            >
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
                 <FaBullseye />
               </div>
@@ -119,11 +126,15 @@ const About = () => {
                 through experienced professionals, modern technology, and
                 personalized patient care.
               </p>
-            </div>
+            </AnimatedSection>
 
             {/* Vision */}
 
-            <div className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+            <AnimatedSection
+              direction="left"
+              delay={150}
+              className="group rounded-3xl bg-white p-10 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+            >
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
                 <FaEye />
               </div>
@@ -135,13 +146,13 @@ const About = () => {
                 continuously improving medical services, embracing innovation,
                 and putting patients first.
               </p>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= WHY CHOOSE US ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -186,8 +197,9 @@ const About = () => {
                   "Efficient appointment scheduling and prompt medical assistance.",
               },
             ].map((card, index) => (
-              <div
+              <AnimatedSection
                 key={index}
+                delay={index * 100}
                 className="group rounded-3xl bg-[#F8FBFC] p-8 text-center shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C2DFE3] text-2xl text-[#253237] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#253237] group-hover:text-white">
@@ -199,14 +211,14 @@ const About = () => {
                 </h3>
 
                 <p className="mt-4 text-[#5C6B73]">{card.description}</p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       {/* ================= CLINIC STATISTICS ================= */}
 
-      <section className="bg-[#253237] py-24">
+      <AnimatedSection as="section" className="bg-[#253237] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#C2DFE3]">
@@ -224,32 +236,28 @@ const About = () => {
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
-              <h3 className="text-5xl font-bold text-white">15+</h3>
-              <p className="mt-4 text-[#E0FBFC]">Years of Experience</p>
-            </div>
-
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
-              <h3 className="text-5xl font-bold text-white">50+</h3>
-              <p className="mt-4 text-[#E0FBFC]">Medical Specialists</p>
-            </div>
-
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
-              <h3 className="text-5xl font-bold text-white">10K+</h3>
-              <p className="mt-4 text-[#E0FBFC]">Happy Patients</p>
-            </div>
-
-            <div className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2">
-              <h3 className="text-5xl font-bold text-white">24/7</h3>
-              <p className="mt-4 text-[#E0FBFC]">Emergency Support</p>
-            </div>
+            {[
+              { value: "15+", label: "Years of Experience" },
+              { value: "50+", label: "Medical Specialists" },
+              { value: "10K+", label: "Happy Patients" },
+              { value: "24/7", label: "Emergency Support" },
+            ].map((stat, index) => (
+              <AnimatedSection
+                key={index}
+                delay={index * 100}
+                className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2"
+              >
+                <h3 className="text-5xl font-bold text-white">{stat.value}</h3>
+                <p className="mt-4 text-[#E0FBFC]">{stat.label}</p>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= MEET OUR TEAM ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -274,9 +282,10 @@ const About = () => {
             </p>
           ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {teamDoctors.map((doctor) => (
-                <div
+              {teamDoctors.map((doctor, index) => (
+                <AnimatedSection
                   key={doctor._id}
+                  delay={index * 100}
                   className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   <div className="overflow-hidden">
@@ -297,16 +306,16 @@ const About = () => {
                       {doctor.specialization}
                     </p>
                   </div>
-                </div>
+                </AnimatedSection>
               ))}
             </div>
           )}
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ================= ABOUT CTA ================= */}
 
-      <section className="py-24">
+      <AnimatedSection as="section" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-4xl bg-linear-to-r from-[#253237] via-[#5C6B73] to-[#9DB4C0] px-8 py-16 text-center shadow-2xl md:px-20">
             <h2 className="text-4xl font-bold text-white md:text-5xl">
@@ -336,7 +345,7 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
     </>
   );
 };
