@@ -1,6 +1,21 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { logout } from "../features/auth/authSlice";
 
 const DoctorLayout = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useAppSelector((state) => state.auth);
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    toast.success("Logged out successfully");
+    navigate("/doctor/login", { replace: true });
+  };
+
   return (
     <div className="flex min-h-screen bg-[#F8FBFC]">
       {/* Sidebar */}
@@ -66,14 +81,16 @@ const DoctorLayout = () => {
           </h2>
 
           <div className="flex items-center gap-4">
-            <span className="font-medium text-[#253237]">Dr. John Smith</span>
+            <span className="font-medium text-[#253237]">
+              {user?.fullName || "Doctor"}
+            </span>
 
-            <Link
-              to="/doctor/login"
+            <button
+              onClick={handleLogout}
               className="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             >
               Logout
-            </Link>
+            </button>
           </div>
         </header>
 

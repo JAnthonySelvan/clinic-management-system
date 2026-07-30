@@ -125,8 +125,14 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Logout
+      // Logout — always clear local auth state, even if the server
+      // request fails (expired token, network issue, etc). The user
+      // clicking "Logout" should never leave them stuck looking logged in.
       .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logout.rejected, (state) => {
         state.user = null;
         state.isAuthenticated = false;
       });
