@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Calendar, User, Phone, Mail, FileText, CheckCircle2, ShieldCheck, Stethoscope, Sparkles, Clock, ArrowRight } from "lucide-react";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
+
 import {
   createAppointment,
   clearAppointmentError,
@@ -13,7 +14,7 @@ import {
 } from "../../features/appointment/appointmentSlice";
 import AnimatedSection from "../../components/AnimatedSection";
 import SlotPicker from "../../components/SlotPicker";
-import { HERO_IMAGES, GUIDELINE_IMAGES, CTA_IMAGES } from "../../constants/images";
+import { HERO_IMAGES, GUIDELINE_IMAGES,CTA_IMAGES } from "../../constants/images";
 
 const SPECIALIZATIONS = [
   "Cardiology",
@@ -28,6 +29,8 @@ const SPECIALIZATIONS = [
 const Appointment = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { doctors } = useAppSelector((state) => state.doctor);
 
   const { loading, success, error } = useAppSelector(
     (state) => state.appointment,
@@ -46,7 +49,7 @@ const Appointment = () => {
       patientEmail: "",
       patientPhone: "",
       patientAge: "",
-      gender: "Male",
+      gender: "",
       specialization: "Cardiology",
       appointmentDate: new Date().toISOString().split("T")[0],
       appointmentTime: "",
@@ -62,13 +65,15 @@ const Appointment = () => {
     dispatch(fetchPublicDoctors());
   }, [dispatch]);
 
+
   useEffect(() => {
     if (success) {
-      toast.success("Appointment request submitted successfully!", {
-        icon: "🎉",
-      });
+      toast.success("Appointment booked successfully");
+
       reset();
+
       dispatch(resetAppointmentSuccess());
+
       navigate("/");
     }
 
@@ -78,328 +83,313 @@ const Appointment = () => {
     }
   }, [success, error, dispatch, navigate, reset]);
 
-  const onSubmit = (data) => {
-    dispatch(createAppointment(data));
+  const onSubmit = async (data) => {
+    console.log("Form Data:", data);
+    await dispatch(createAppointment(data));
   };
-
-  const todayStr = new Date().toISOString().split("T")[0];
 
   return (
     <>
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden py-32 sm:py-40">
+
+      <section className="relative overflow-hidden">
         <img
           src={HERO_IMAGES.appointment}
-          alt="Schedule Appointment"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-slate-950/95 via-slate-900/85 to-[#5C6B73]/75" />
+        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5c6b73]/70" />
 
-        <AnimatedSection
-          direction="up"
-          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
-        >
-          <span className="inline-flex items-center space-x-2 rounded-full bg-teal-500/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-teal-300 border border-teal-400/30 backdrop-blur-md mb-6">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Online Appointment Booking</span>
-          </span>
+        <div className="relative mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <AnimatedSection direction="up">
+            <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
+              Appointment
+            </span>
 
-          <h1 className="text-4xl font-extrabold text-white sm:text-6xl tracking-tight">
-            Book Your Consultation
-          </h1>
+            <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl">
+              Book Your Appointment
+            </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-200">
-            Select your medical department, date, and preferred time slot for instant doctor appointment booking.
-          </p>
-        </AnimatedSection>
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+              Schedule an appointment with our experienced medical
+              professionals. We are committed to providing timely,
+              compassionate, and personalized healthcare for you and your
+              family.
+            </p>
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* ================= APPOINTMENT FORM ================= */}
-      <AnimatedSection as="section" className="py-24 bg-slate-50/80">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-teal-600">
-              Instant Scheduling
+
+      <AnimatedSection as="section" className="py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
+              Book Appointment
             </span>
-            <h2 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">
-              Patient Registration & Slot Selection
+
+            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
+              Schedule Your Visit
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-base text-slate-600">
-              Please complete patient details and pick an available time slot below.
+
+            <p className="mx-auto mt-5 max-w-3xl text-lg text-[#5C6B73]">
+              Fill out the form below and our team will contact you to confirm
+              your appointment.
             </p>
           </div>
 
-          <div className="rounded-3xl bg-white p-8 sm:p-12 shadow-2xl ring-1 ring-slate-900/5">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-              {/* Patient Info Header */}
+          <div className="rounded-3xl bg-white p-8 shadow-2xl">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="grid gap-6 md:grid-cols-2"
+            >
+              {/* Patient Name */}
               <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center space-x-1.5">
-                  <User className="h-4 w-4 text-teal-600" />
-                  <span>1. Patient Information</span>
-                </h3>
-
-                <div className="grid gap-6 md:grid-cols-2">
-                  {/* Full Name */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-2">
-                      Full Name *
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="John Doe"
-                        {...register("patientName", {
-                          required: "Patient name is required",
-                        })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-3.5 pl-11 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                      />
-                      <User className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                    </div>
-                    {errors.patientName && (
-                      <p className="mt-1 text-xs text-red-500">{errors.patientName.message}</p>
-                    )}
-                  </div>
-
-                  {/* Email Address */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-2">
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="email"
-                        placeholder="name@example.com"
-                        {...register("patientEmail", {
-                          required: "Email is required",
-                          pattern: {
-                            value: /^\S+@\S+$/i,
-                            message: "Invalid email address",
-                          },
-                        })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-3.5 pl-11 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                      />
-                      <Mail className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                    </div>
-                    {errors.patientEmail && (
-                      <p className="mt-1 text-xs text-red-500">{errors.patientEmail.message}</p>
-                    )}
-                  </div>
-
-                  {/* Phone */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-2">
-                      Phone Number *
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="tel"
-                        placeholder="+91 98765 43210"
-                        {...register("patientPhone", {
-                          required: "Phone number is required",
-                        })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-3.5 pl-11 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                      />
-                      <Phone className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                    </div>
-                    {errors.patientPhone && (
-                      <p className="mt-1 text-xs text-red-500">{errors.patientPhone.message}</p>
-                    )}
-                  </div>
-
-                  {/* Age & Gender */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-2">
-                        Age *
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="30"
-                        {...register("patientAge", {
-                          required: "Age is required",
-                          valueAsNumber: true,
-                          min: { value: 1, message: "Age must be >= 1" },
-                        })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-3.5 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                      />
-                      {errors.patientAge && (
-                        <p className="mt-1 text-xs text-red-500">{errors.patientAge.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-2">
-                        Gender *
-                      </label>
-                      <select
-                        {...register("gender", { required: "Gender is required" })}
-                        className="w-full rounded-xl border border-slate-300 px-3 py-3.5 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                      >
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  {...register("patientName", {
+                    required: "Patient name is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientName && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientName.message}
+                  </p>
+                )}
               </div>
 
-              {/* Department & Date Selection */}
-              <div className="border-t border-slate-100 pt-8">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center space-x-1.5">
-                  <Stethoscope className="h-4 w-4 text-teal-600" />
-                  <span>2. Department & Date Selection</span>
-                </h3>
-
-                <div className="grid gap-6 md:grid-cols-2 mb-6">
-                  {/* Department */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-2">
-                      Medical Specialization / Department *
-                    </label>
-                    <select
-                      {...register("specialization", {
-                        required: "Specialization is required",
-                      })}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-3.5 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                    >
-                      {SPECIALIZATIONS.map((spec) => (
-                        <option key={spec} value={spec}>
-                          {spec}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Date */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-2">
-                      Appointment Date *
-                    </label>
-                    <input
-                      type="date"
-                      min={todayStr}
-                      {...register("appointmentDate", {
-                        required: "Appointment date is required",
-                      })}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-3.5 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                    />
-                    {errors.appointmentDate && (
-                      <p className="mt-1 text-xs text-red-500">{errors.appointmentDate.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Slot Picker */}
-                <div>
-                  <input
-                    type="hidden"
-                    {...register("appointmentTime", {
-                      required: "Please pick an available time slot",
-                    })}
-                  />
-                  <SlotPicker
-                    specialization={selectedSpecialization}
-                    selectedDate={selectedDate}
-                    selectedSlot={selectedTime || ""}
-                    onSelectSlot={(slot) =>
-                      setValue("appointmentTime", slot, { shouldValidate: true })
-                    }
-                  />
-                  {errors.appointmentTime && (
-                    <p className="mt-2 text-xs font-semibold text-red-500">
-                      {errors.appointmentTime.message}
-                    </p>
-                  )}
-                </div>
+              {/* Email */}
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  {...register("patientEmail", {
+                    required: "Email is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientEmail && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientEmail.message}
+                  </p>
+                )}
               </div>
 
-              {/* Health Concern / Reason */}
-              <div className="border-t border-slate-100 pt-8">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center space-x-1.5">
-                  <FileText className="h-4 w-4 text-teal-600" />
-                  <span>3. Clinical Reason for Visit</span>
-                </h3>
+              {/* Phone */}
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  {...register("patientPhone", {
+                    required: "Phone number is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientPhone && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientPhone.message}
+                  </p>
+                )}
+              </div>
 
-                <div>
-                  <textarea
-                    rows={4}
-                    placeholder="Describe your health concern or symptoms..."
-                    {...register("reason", {
-                      required: "Reason is required",
-                    })}
-                    className="w-full rounded-xl border border-slate-300 p-4 text-sm text-slate-800 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                  />
-                  {errors.reason && (
-                    <p className="mt-1 text-xs text-red-500">{errors.reason.message}</p>
-                  )}
-                </div>
+              {/* Age */}
+              <div>
+                <input
+                  type="number"
+                  placeholder="Age"
+                  {...register("patientAge", {
+                    required: "Age is required",
+                    valueAsNumber: true,
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+                {errors.patientAge && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.patientAge.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Gender */}
+              <div>
+                <select
+                  {...register("gender", {
+                    required: "Gender is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+
+                {errors.gender && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.gender.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Specialization / Medical Department */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Medical Specialization / Department *
+                </label>
+                <select
+                  {...register("specialization", {
+                    required: "Specialization is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                >
+                  <option value="">Select Medical Department</option>
+                  {SPECIALIZATIONS.map((spec) => (
+                    <option key={spec} value={spec}>
+                      {spec}
+                    </option>
+                  ))}
+                </select>
+
+                {errors.specialization && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.specialization.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Appointment Date */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Appointment Date *
+                </label>
+                <input
+                  type="date"
+                  min={new Date().toISOString().split("T")[0]}
+                  {...register("appointmentDate", {
+                    required: "Appointment date is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+
+                {errors.appointmentDate && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.appointmentDate.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Interactive Time Slot Picker */}
+              <div className="md:col-span-2">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Select Available Time Slot *
+                </label>
+                <input
+                  type="hidden"
+                  {...register("appointmentTime", {
+                    required: "Please select an available time slot",
+                  })}
+                />
+                <SlotPicker
+                  specialization={selectedSpecialization}
+                  selectedDate={selectedDate}
+                  selectedSlot={selectedTime || ""}
+                  onSelectSlot={(slot) =>
+                    setValue("appointmentTime", slot, { shouldValidate: true })
+                  }
+                />
+                {errors.appointmentTime && (
+                  <p className="mt-2 text-sm font-semibold text-red-500">
+                    {errors.appointmentTime.message}
+                  </p>
+                )}
+              </div>
+
+
+              {/* Reason */}
+              <div className="md:col-span-2">
+                <textarea
+                  rows={5}
+                  placeholder="Describe your health concern..."
+                  {...register("reason", {
+                    required: "Reason is required",
+                  })}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                />
+
+                {errors.reason && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.reason.message}
+                  </p>
+                )}
               </div>
 
               {/* Submit Button */}
-              <div className="border-t border-slate-100 pt-6">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex items-center justify-center space-x-2 rounded-xl bg-teal-600 py-4 text-base font-bold text-white shadow-lg shadow-teal-600/20 transition duration-300 hover:bg-teal-700 disabled:opacity-70"
-                >
-                  {loading ? (
-                    <span>Submitting Appointment...</span>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="h-5 w-5" />
-                      <span>Confirm & Book Appointment</span>
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {loading ? "Booking..." : "Book Appointment"}
+              </button>
             </form>
           </div>
         </div>
       </AnimatedSection>
 
       {/* ================= APPOINTMENT GUIDELINES ================= */}
-      <AnimatedSection as="section" className="py-24 bg-white">
+
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-teal-600">
-              Important Information
+            <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
+              Appointment Information
             </span>
-            <h2 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">
-              Appointment Guidelines
+
+            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
+              Before You Book
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600">
-              Please follow these steps for a smooth consultation experience.
+
+            <p className="mx-auto mt-5 max-w-3xl text-lg text-[#5C6B73]">
+              Please review these guidelines to ensure a smooth appointment
+              experience.
             </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
-                image: GUIDELINE_IMAGES.arriveEarly,
-                title: "Arrive 15 Mins Early",
-                description: "Allows time for reception check-in and vital signs evaluation.",
+                image: GUIDELINE_IMAGES.schedule,
+                title: "Schedule in Advance",
+                description:
+                  "Book your appointment early to get your preferred doctor and time slot.",
               },
               {
                 image: GUIDELINE_IMAGES.identification,
-                title: "Bring Government ID",
-                description: "Carry valid photo identification for registration verification.",
+                title: "Bring Identification",
+                description:
+                  "Carry a valid ID and any previous medical reports during your visit.",
+              },
+              {
+                image: GUIDELINE_IMAGES.arriveEarly,
+                title: "Arrive Early",
+                description:
+                  "Reach the clinic at least 15 minutes before your scheduled appointment.",
               },
               {
                 image: GUIDELINE_IMAGES.medicalHistory,
-                title: "Medical Records",
-                description: "Bring past prescriptions, lab reports, and current medication details.",
-              },
-              {
-                image: GUIDELINE_IMAGES.schedule,
-                title: "Rescheduling Policy",
-                description: "Notify us at least 4 hours in advance if you need to reschedule.",
+                title: "Medical History",
+                description:
+                  "Inform your doctor about your medications, allergies, and medical history.",
               },
             ].map((item, index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
-                className="group overflow-hidden rounded-3xl border border-slate-200/80 bg-linear-to-b from-slate-50/50 to-white shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div className="h-40 w-full overflow-hidden">
                   <img
@@ -408,12 +398,123 @@ const Appointment = () => {
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                   />
                 </div>
-                <div className="p-6 text-center">
-                  <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-4 leading-7 text-[#5C6B73]">
+                    {item.description}
+                  </p>
                 </div>
               </AnimatedSection>
             ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* ================= FAQ ================= */}
+
+      <AnimatedSection as="section" className="py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
+              Frequently Asked Questions
+            </span>
+
+            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
+              Have Questions?
+            </h2>
+
+            <p className="mx-auto mt-5 max-w-3xl text-lg text-[#5C6B73]">
+              Find answers to some of the most common questions about booking an
+              appointment at our clinic.
+            </p>
+          </div>
+
+          <div className="mx-auto max-w-4xl space-y-6">
+            {[
+              {
+                question: "How do I book an appointment?",
+                answer:
+                  "Complete the appointment form with your details, choose your preferred department, doctor, and appointment date, then submit your request.",
+              },
+              {
+                question: "Will I receive confirmation?",
+                answer:
+                  "Yes. After reviewing your request, our staff will confirm your appointment using your registered contact details.",
+              },
+              {
+                question: "Can I reschedule my appointment?",
+                answer:
+                  "Yes. Please contact our clinic before your scheduled appointment to request a new date and time.",
+              },
+              {
+                question: "What should I bring for my visit?",
+                answer:
+                  "Bring a valid ID, previous medical records (if any), prescriptions, and insurance details if applicable.",
+              },
+            ].map((faq, index) => (
+              <AnimatedSection
+                key={index}
+                delay={index * 100}
+                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md"
+              >
+                <h3 className="text-xl font-semibold text-[#253237]">
+                  {faq.question}
+                </h3>
+
+                <p className="mt-3 leading-7 text-[#5C6B73]">{faq.answer}</p>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* ================= APPOINTMENT CTA ================= */}
+
+      <AnimatedSection as="section" className="py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
+            {/* Background Image */}
+            <img
+              src={CTA_IMAGES.background}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-linear-to-r from-[#253237]/90 via-[#5C6B73]/85 to-[#9DB4C0]/90" />
+
+            {/* Content */}
+            <div className="relative z-10">
+              <h2 className="text-4xl font-bold text-white md:text-5xl">
+                Your Health Is Our Priority
+              </h2>
+
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+                Our experienced doctors are here to provide trusted medical care
+                for you and your family. Book your appointment today and take
+                the first step toward better health.
+              </p>
+
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link
+                  to="/appointment"
+                  className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  Book Appointment
+                </Link>
+
+                <Link
+                  to="/doctors"
+                  className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
+                >
+                  Meet Our Doctors
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </AnimatedSection>
