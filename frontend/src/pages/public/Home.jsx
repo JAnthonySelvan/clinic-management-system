@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaHeartbeat, FaUserFriends, FaHospitalAlt, FaClock } from "react-icons/fa";
 import CountUpPkg from "react-countup";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
 import AnimatedSection from "../../components/AnimatedSection";
 import {
@@ -14,27 +14,71 @@ import {
 
 const CountUp = CountUpPkg.default || CountUpPkg;
 
-const DEFAULT_AVATAR =
-  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
-
 const STATS_DATA = [
-  { value: 25, suffix: "+", label: "Specialist Doctors" },
-  { value: 12000, suffix: "+", label: "Happy Patients" },
-  { value: 15, suffix: "+", label: "Medical Departments" },
-  { value: "24/7", label: "Emergency Support", noCountUp: true },
+  { value: 25, suffix: "+", label: "Specialist Doctors", icon: FaUserFriends },
+  { value: 12000, suffix: "+", label: "Happy Patients", icon: FaHeartbeat },
+  { value: 15, suffix: "+", label: "Medical Departments", icon: FaHospitalAlt },
+  { value: "24/7", label: "Emergency Support", noCountUp: true, icon: FaClock },
+];
+
+// Specialties shown on the homepage — hover reveals a short description.
+const SPECIALTIES = [
+  {
+    image: SPECIALTY_IMAGES.cardiology,
+    title: "Cardiology",
+    description:
+      "Comprehensive heart care — from ECGs and stress tests to advanced treatment for arrhythmia, hypertension, and coronary disease.",
+  },
+  {
+    image: SPECIALTY_IMAGES.neurology,
+    title: "Neurology",
+    description:
+      "Diagnosis and treatment for the brain, spine, and nervous system, including migraines, epilepsy, and stroke recovery.",
+  },
+  {
+    image: SPECIALTY_IMAGES.dental,
+    title: "Dental Care",
+    description:
+      "Preventive, cosmetic, and surgical dentistry — cleanings, root canals, extractions, and smile makeovers.",
+  },
+  {
+    image: SPECIALTY_IMAGES.pediatrics,
+    title: "Pediatrics",
+    description:
+      "Gentle, dedicated healthcare for infants, children, and adolescents, from checkups to vaccinations.",
+  },
+  {
+    image: SPECIALTY_IMAGES.eyeCare,
+    title: "Eye Care",
+    description:
+      "Complete eye examinations, cataract and vision correction surgery, and treatment for common eye conditions.",
+  },
+  {
+    image: SPECIALTY_IMAGES.orthopedics,
+    title: "Orthopedics",
+    description:
+      "Diagnosis and treatment of bone, joint, and muscle conditions, including sports injuries and joint replacement.",
+  },
+  {
+    image: SPECIALTY_IMAGES.pulmonology,
+    title: "Pulmonology",
+    description:
+      "Expert care for respiratory conditions such as asthma, COPD, and other lung and breathing disorders.",
+  },
+  {
+    image: SPECIALTY_IMAGES.generalMedicine,
+    title: "General Medicine",
+    description:
+      "Complete health checkups, screenings, and personalized treatment plans for everyday illnesses.",
+  },
 ];
 
 function Home() {
   const dispatch = useAppDispatch();
-  const { doctors, loading } = useAppSelector((state) => state.doctor);
 
   useEffect(() => {
     dispatch(fetchPublicDoctors());
   }, [dispatch]);
-
-  const featuredDoctors = doctors
-    .filter((doc) => doc.isActive !== false)
-    .slice(0, 4);
 
   return (
     <>
@@ -92,32 +136,58 @@ function Home() {
         </div>
       </section>
 
-      {/* ================= STATISTICS ================= */}
+      {/* ================= STATISTICS (PREMIUM) ================= */}
       <section className="relative z-20 px-6 py-16">
-        <div className="mx-auto max-w-7xl rounded-3xl bg-linear-to-r from-[#253237] via-[#3e515b] to-[#5C6B73] py-16 shadow-2xl">
-          <div className="grid gap-8 px-8 sm:grid-cols-2 lg:grid-cols-4">
-            {STATS_DATA.map((stat, index) => (
-              <div
-                key={index}
-                className="rounded-3xl border border-white/20 bg-white/10 p-8 text-center backdrop-blur-md transition duration-300 hover:-translate-y-2 hover:bg-white/20"
-              >
-                <h2 className="text-5xl font-extrabold text-white">
-                  {typeof stat.value === "number" ? (
-                    <CountUp
-                      end={stat.value}
-                      duration={2.5}
-                      separator=","
-                      suffix={stat.suffix}
-                      enableScrollSpy
-                      scrollSpyOnce
-                    />
-                  ) : (
-                    stat.value
-                  )}
-                </h2>
-                <p className="mt-4 text-lg text-gray-200">{stat.label}</p>
-              </div>
-            ))}
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-[#141b1e] py-16 shadow-[0_30px_80px_-20px_rgba(37,50,55,0.6)]">
+          {/* Decorative glow orbs */}
+          <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#9DB4C0]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#47bfff]/10 blur-3xl" />
+          {/* Subtle grid texture */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+
+          <div className="relative grid gap-6 px-6 sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
+            {STATS_DATA.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <AnimatedSection
+                  key={index}
+                  delay={index * 100}
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/4 p-8 text-center backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:bg-white/8 hover:shadow-[0_20px_50px_-15px_rgba(157,180,192,0.35)]"
+                >
+                  {/* Top accent line */}
+                  <span className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-[#9DB4C0] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-[#5C6B73] to-[#253237] text-2xl text-[#E0FBFC] shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+                    <Icon />
+                  </div>
+
+                  <h2 className="text-5xl font-extrabold tracking-tight text-white">
+                    {typeof stat.value === "number" ? (
+                      <CountUp
+                        end={stat.value}
+                        duration={2.5}
+                        separator=","
+                        suffix={stat.suffix}
+                        enableScrollSpy
+                        scrollSpyOnce
+                      />
+                    ) : (
+                      stat.value
+                    )}
+                  </h2>
+                  <p className="mt-3 text-sm font-medium uppercase tracking-widest text-[#C2DFE3]/80">
+                    {stat.label}
+                  </p>
+                </AnimatedSection>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -291,83 +361,74 @@ function Home() {
         </div>
       </AnimatedSection>
 
-      {/* ================= FEATURED DOCTORS ================= */}
+      {/* ================= SPECIALTIES (replaces Featured Doctors) ================= */}
       <AnimatedSection as="section" className="bg-white py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
-              Our Doctors
+              Explore
             </span>
 
             <h2 className="mt-4 text-4xl font-bold text-[#253237]">
-              Meet Our Specialists
+              Our Hospital Specialties
             </h2>
 
             <p className="mx-auto mt-5 max-w-2xl text-lg text-[#5C6B73]">
-              Our experienced doctors are committed to delivering personalized,
-              compassionate, and high-quality healthcare for every patient.
+              Hover over a specialty to learn more about the care we provide in
+              that department.
             </p>
           </div>
 
-          {loading ? (
-            <p className="text-center text-[#5C6B73]">Loading doctors...</p>
-          ) : featuredDoctors.length === 0 ? (
-            <p className="text-center text-[#5C6B73]">
-              No doctors available right now. Please check back soon.
-            </p>
-          ) : (
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {featuredDoctors.map((doctor, index) => (
-                <AnimatedSection
-                  key={doctor._id}
-                  delay={index * 100}
-                  className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {SPECIALTIES.map((specialty, index) => (
+              <AnimatedSection
+                key={specialty.title}
+                delay={(index % 4) * 100}
+                className="group relative h-72 overflow-hidden rounded-3xl shadow-lg transition duration-500 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                {/* Base image */}
+                <img
+                  src={specialty.image}
+                  alt={specialty.title}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                />
+
+                {/* Always-visible bottom gradient + title */}
+                <div className="absolute inset-0 bg-linear-to-t from-[#253237]/90 via-[#253237]/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-6 transition-transform duration-500 group-hover:-translate-y-2">
+                  <h3 className="text-xl font-bold text-white drop-shadow">
+                    {specialty.title}
+                  </h3>
+                </div>
+
+                {/* Hover pop-up description panel */}
+                <div
+                  className="absolute inset-x-0 bottom-0 translate-y-full bg-[#253237]/95 p-6 backdrop-blur-sm
+                             transition-transform duration-500 ease-out group-hover:translate-y-0"
                 >
-                  <div className="overflow-hidden">
-                    <img
-                      src={doctor.profileImage || DEFAULT_AVATAR}
-                      alt={doctor.fullName}
-                      onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
-                      className="h-64 w-full object-cover transition duration-500 group-hover:scale-110"
-                    />
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-[#253237]">
-                      {doctor.fullName}
-                    </h3>
-
-                    <p className="mt-2 font-medium text-[#5C6B73]">
-                      {doctor.specialization}
-                    </p>
-
-                    <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                      <span>{doctor.experience}+ Years</span>
-                      <span className="flex text-yellow-500">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <FaStar key={i} />
-                        ))}
-                      </span>
-                    </div>
-
-                    <Link
-                      to="/appointment"
-                      className="mt-6 inline-block rounded-xl bg-[#253237] px-6 py-3 font-semibold text-white transition duration-300 hover:scale-105 hover:bg-[#5C6B73]"
-                    >
-                      Book Appointment
-                    </Link>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          )}
+                  <h3 className="text-lg font-bold text-white">
+                    {specialty.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#E0FBFC]">
+                    {specialty.description}
+                  </p>
+                  <Link
+                    to="/doctors"
+                    className="mt-4 inline-flex items-center text-sm font-semibold text-[#9DB4C0] transition hover:text-white"
+                  >
+                    View Specialists →
+                  </Link>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
 
           <div className="mt-16 text-center">
             <Link
-              to="/doctors"
+              to="/services"
               className="inline-flex items-center rounded-xl border-2 border-[#253237] px-8 py-4 font-semibold text-[#253237] transition duration-300 hover:bg-[#253237] hover:text-white"
             >
-              View All Doctors
+              View All Services
             </Link>
           </div>
         </div>
