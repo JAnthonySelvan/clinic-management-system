@@ -10,6 +10,7 @@ import {
   SPECIALTY_IMAGES,
   FEATURE_IMAGES,
   CTA_IMAGES,
+  HOSPITAL_FACILITIES
 } from "../../constants/images";
 
 const CountUp = CountUpPkg.default || CountUpPkg;
@@ -137,57 +138,34 @@ function Home() {
       </section>
 
       {/* ================= STATISTICS (PREMIUM) ================= */}
-      <section className="relative z-20 px-6 py-16">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-[#141b1e] py-16 shadow-[0_30px_80px_-20px_rgba(37,50,55,0.6)]">
-          {/* Decorative glow orbs */}
-          <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#9DB4C0]/20 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#47bfff]/10 blur-3xl" />
-          {/* Subtle grid texture */}
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage:
-                "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
-
-          <div className="relative grid gap-6 px-6 sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
-            {STATS_DATA.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <AnimatedSection
-                  key={index}
-                  delay={index * 100}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/4 p-8 text-center backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:bg-white/8 hover:shadow-[0_20px_50px_-15px_rgba(157,180,192,0.35)]"
-                >
-                  {/* Top accent line */}
-                  <span className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-[#9DB4C0] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-[#5C6B73] to-[#253237] text-2xl text-[#E0FBFC] shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
-                    <Icon />
-                  </div>
-
-                  <h2 className="text-5xl font-extrabold tracking-tight text-white">
-                    {typeof stat.value === "number" ? (
-                      <CountUp
-                        end={stat.value}
-                        duration={2.5}
-                        separator=","
-                        suffix={stat.suffix}
-                        enableScrollSpy
-                        scrollSpyOnce
-                      />
-                    ) : (
-                      stat.value
-                    )}
-                  </h2>
-                  <p className="mt-3 text-sm font-medium uppercase tracking-widest text-[#C2DFE3]/80">
-                    {stat.label}
-                  </p>
-                </AnimatedSection>
-              );
-            })}
+      {/* ================= STATISTICS ================= */}
+      <section className="relative z-20 w-full bg-linear-to-r from-[#253237] via-[#3e515b] to-[#5C6B73] py-20 mt-10 shadow-2xl">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid divide-y divide-white/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+            {STATS_DATA.map((stat, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center justify-center px-8 py-10 text-center transition duration-300 hover:bg-white/5"
+              >
+                <h2 className="text-5xl tracking-tight text-white">
+                  {typeof stat.value === "number" ? (
+                    <CountUp
+                      end={stat.value}
+                      duration={2.5}
+                      separator=","
+                      suffix={stat.suffix}
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  ) : (
+                    stat.value
+                  )}
+                </h2>
+                <p className="mt-4 text-sm font-semibold uppercase tracking-[0.2em] text-gray-300">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -362,136 +340,61 @@ function Home() {
       </AnimatedSection>
 
       {/* ================= SPECIALTIES (replaces Featured Doctors) ================= */}
-      <AnimatedSection as="section" className="bg-white py-24">
+      {/* ================= FACILITIES ================= */}
+      {/* ================= HOSPITAL FACILITIES ================= */}
+      <AnimatedSection as="section" className="bg-[#253237] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-16 text-center">
-            <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
-              Explore
+          <div className="mb-16 flex flex-col items-center text-center">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[#9DB4C0]">
+              Inside Saviours
             </span>
 
-            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
-              Our Hospital Specialties
+            <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
+              World-Class Hospital Facilities
             </h2>
 
-            <p className="mx-auto mt-5 max-w-2xl text-lg text-[#5C6B73]">
-              Hover over a specialty to learn more about the care we provide in
-              that department.
+            <div className="mt-5 h-px w-16 bg-[#9DB4C0]" />
+
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-[#C2DFE3]">
+              Every facility is built with one goal — giving patients faster,
+              safer, and more comfortable care.
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {SPECIALTIES.map((specialty, index) => (
-              <AnimatedSection
-                key={specialty.title}
-                delay={(index % 4) * 100}
-                className="group relative h-72 overflow-hidden rounded-3xl shadow-lg transition duration-500 hover:-translate-y-2 hover:shadow-2xl"
-              >
-                {/* Base image */}
-                <img
-                  src={specialty.image}
-                  alt={specialty.title}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
-                />
-
-                {/* Always-visible bottom gradient + title */}
-                <div className="absolute inset-0 bg-linear-to-t from-[#253237]/90 via-[#253237]/10 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-6 transition-transform duration-500 group-hover:-translate-y-2">
-                  <h3 className="text-xl font-bold text-white drop-shadow">
-                    {specialty.title}
-                  </h3>
-                </div>
-
-                {/* Hover pop-up description panel */}
-                <div
-                  className="absolute inset-x-0 bottom-0 translate-y-full bg-[#253237]/95 p-6 backdrop-blur-sm
-                             transition-transform duration-500 ease-out group-hover:translate-y-0"
-                >
-                  <h3 className="text-lg font-bold text-white">
-                    {specialty.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-[#E0FBFC]">
-                    {specialty.description}
-                  </p>
-                  <Link
-                    to="/doctors"
-                    className="mt-4 inline-flex items-center text-sm font-semibold text-[#9DB4C0] transition hover:text-white"
-                  >
-                    View Specialists →
-                  </Link>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <Link
-              to="/services"
-              className="inline-flex items-center rounded-xl border-2 border-[#253237] px-8 py-4 font-semibold text-[#253237] transition duration-300 hover:bg-[#253237] hover:text-white"
-            >
-              View All Services
-            </Link>
-          </div>
-        </div>
-      </AnimatedSection>
-
-      {/* ================= TESTIMONIALS ================= */}
-      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-16 text-center">
-            <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
-              Testimonials
-            </span>
-
-            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
-              What Our Patients Say
-            </h2>
-
-            <p className="mx-auto mt-5 max-w-2xl text-lg text-[#5C6B73]">
-              Hear from patients who trusted us with their healthcare journey.
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "James Wilson",
-                role: "Cardiology Patient",
-                review:
-                  "The doctors were extremely professional and caring. The booking process was smooth, and I received excellent treatment.",
-              },
-              {
-                name: "Sophia Martin",
-                role: "Neurology Patient",
-                review:
-                  "Very friendly staff and experienced doctors. I felt comfortable throughout my consultation.",
-              },
-              {
-                name: "Olivia Brown",
-                role: "General Medicine",
-                review:
-                  "Excellent service with modern facilities. Highly recommend this clinic for quality healthcare.",
-              },
-            ].map((testimonial, index) => (
+          <div className="grid gap-px overflow-hidden bg-[#5C6B73]/30 sm:grid-cols-2 lg:grid-cols-3">
+            {HOSPITAL_FACILITIES.map((facility, index) => (
               <AnimatedSection
                 key={index}
-                delay={index * 100}
-                className="rounded-3xl bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                delay={(index % 3) * 100}
+                className="group relative isolate h-96 overflow-hidden bg-[#253237]"
               >
-                <div className="mb-4 flex text-2xl text-yellow-500">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
-                </div>
+                {/* Background image */}
+                <img
+                  src={facility.image}
+                  alt={facility.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
 
-                <p className="leading-7 text-[#5C6B73]">
-                  "{testimonial.review}"
-                </p>
+                {/* Base gradient — always visible for legibility */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/95 group-hover:via-black/60" />
 
-                <div className="mt-8">
-                  <h4 className="font-bold text-[#253237]">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-sm text-[#5C6B73]">{testimonial.role}</p>
+                {/* Accent top border on hover */}
+                <div className="absolute inset-x-0 top-0 h-0.75 origin-left scale-x-0 bg-[#9DB4C0] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+
+                {/* Tag — visible by default, fades on hover */}
+                <span className="absolute left-6 top-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#090909] opacity-100 transition-opacity duration-300 group-hover:opacity-0">
+                  {facility.tag}
+                </span>
+
+                {/* Content block — title always visible; description slides/fades up on hover */}
+                <div className="absolute inset-x-0 bottom-0 p-7">
+                  <h3 className="text-2xl font-bold text-white transition-transform duration-500 ease-out group-hover:-translate-y-2">
+                    {facility.title}
+                  </h3>
+
+                  <p className="mt-3 max-h-0 translate-y-4 text-sm leading-6 text-[#E0FBFC] opacity-0 transition-all duration-500 ease-out group-hover:max-h-32 group-hover:translate-y-0 group-hover:opacity-100">
+                    {facility.description}
+                  </p>
                 </div>
               </AnimatedSection>
             ))}
@@ -501,7 +404,7 @@ function Home() {
 
       {/* ================= CALL TO ACTION ================= */}
       <AnimatedSection as="section" className="py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 hover:-translate-y-2 hover:-translate-x-0.5 transition duration-300">
           <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
             {/* Background Image */}
             <img

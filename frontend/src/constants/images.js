@@ -91,3 +91,54 @@ export const CTA_IMAGES = {
   background:
     "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80",
 };
+
+export const HOSPITAL_FACILITIES = [
+  {
+    image:
+      "https://res.cloudinary.com/udzftzug/image/upload/v1785479622/Gemini_Generated_Image_19ta0o19ta0o19ta_intuqn.png",
+    title: "Emergency & Trauma Care",
+    tag: "24/7 Available",
+    description:
+      "Round-the-clock emergency response with a dedicated trauma team ready for critical cases at any hour.",
+  },
+  {
+    image:
+      "https://res.cloudinary.com/udzftzug/image/upload/v1785479892/Gemini_Generated_Image_j0yfwkj0yfwkj0yf_jvyd0m.png",
+    title: "ICU & Critical Care",
+    tag: "Advanced Monitoring",
+    description:
+      "Fully-equipped intensive care units with continuous monitoring and a dedicated critical care team.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1551076805-e1869033e561?w=900&q=80",
+    title: "Modern Operation Theatres",
+    tag: "Precision Surgery",
+    description:
+      "State-of-the-art operation theatres equipped with the latest surgical technology for safer outcomes.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=900&q=80",
+    title: "Diagnostic & Imaging Center",
+    tag: "Fast, Accurate Results",
+    description:
+      "In-house labs and imaging — X-ray, MRI, CT scans — for quick, accurate diagnosis without outside referrals.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80",
+    title: "Private In-Patient Rooms",
+    tag: "Comfort-Focused",
+    description:
+      "Spacious, comfortable rooms designed for recovery, with round-the-clock nursing support.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900&q=80",
+    title: "24/7 In-House Pharmacy",
+    tag: "Always Open",
+    description:
+      "A fully-stocked pharmacy on-site, so prescriptions are filled the moment you need them — any time of day.",
+  },
+];
