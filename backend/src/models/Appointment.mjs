@@ -33,11 +33,18 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["Male", "Female", "Other"],
     },
 
+    specialization: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
     },
+
 
     appointmentDateTime: {
       type: Date,

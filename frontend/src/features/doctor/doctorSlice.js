@@ -98,7 +98,9 @@ const doctorSlice = createSlice({
       })
       .addCase(fetchDoctors.fulfilled, (state, action) => {
         state.loading = false;
-        state.doctors = action.payload.data;
+        state.doctors = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload?.data || [];
       })
       .addCase(fetchDoctors.rejected, (state, action) => {
         state.loading = false;
@@ -112,12 +114,15 @@ const doctorSlice = createSlice({
       })
       .addCase(fetchPublicDoctors.fulfilled, (state, action) => {
         state.loading = false;
-        state.doctors = action.payload.data;
+        state.doctors = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload?.data || [];
       })
       .addCase(fetchPublicDoctors.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
 
       // Add Doctor
       .addCase(addDoctor.pending, (state) => {

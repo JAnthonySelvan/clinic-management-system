@@ -26,11 +26,17 @@ export const createAppointmentValidation = [
     .isIn(["Male", "Female", "Other"])
     .withMessage("Invalid gender"),
 
-  body("doctor")
+  body("specialization")
+    .optional()
+    .trim()
     .notEmpty()
-    .withMessage("Doctor is required")
+    .withMessage("Specialization is required"),
+
+  body("doctor")
+    .optional()
     .isMongoId()
     .withMessage("Invalid doctor id"),
+
 
   body("appointmentDate")
     .notEmpty()

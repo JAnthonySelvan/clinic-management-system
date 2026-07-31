@@ -139,6 +139,7 @@ function Home() {
 
       {/* ================= STATISTICS (PREMIUM) ================= */}
       {/* ================= STATISTICS ================= */}
+<<<<<<< HEAD
       <section className="relative z-20 w-full bg-linear-to-r from-[#253237] via-[#3e515b] to-[#5C6B73] py-20 mt-10 shadow-2xl">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid divide-y divide-white/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
@@ -167,8 +168,39 @@ function Home() {
               </div>
             ))}
           </div>
+=======
+      {/* ================= STATISTICS ================= */}
+<section className="relative z-20 w-full bg-linear-to-r from-[#253237] via-[#3e515b] to-[#5C6B73] my-20 py-20 shadow-2xl">
+  <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <div className="grid divide-y divide-white/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+      {STATS_DATA.map((stat, index) => (
+        <div
+          key={index}
+          className="flex flex-col items-center justify-center px-8 py-10 text-center transition duration-300 hover:bg-white/5"
+        >
+          <h2 className="text-5xl tracking-tight text-white">
+            {typeof stat.value === "number" ? (
+              <CountUp
+                end={stat.value}
+                duration={2.5}
+                separator=","
+                suffix={stat.suffix}
+                enableScrollSpy
+                scrollSpyOnce
+              />
+            ) : (
+              stat.value
+            )}
+          </h2>
+          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.2em] text-gray-300">
+            {stat.label}
+          </p>
+>>>>>>> 9bf85af (Appointment fixed)
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ================= SERVICES ================= */}
       <AnimatedSection as="section" className="bg-white py-24">
@@ -339,6 +371,7 @@ function Home() {
         </div>
       </AnimatedSection>
 
+<<<<<<< HEAD
       {/* ================= SPECIALTIES (replaces Featured Doctors) ================= */}
       {/* ================= FACILITIES ================= */}
       {/* ================= HOSPITAL FACILITIES ================= */}
@@ -401,6 +434,69 @@ function Home() {
           </div>
         </div>
       </AnimatedSection>
+=======
+      {/* ================= FEATURED DOCTORS ================= */}
+      {/* ================= HOSPITAL FACILITIES ================= */}
+<AnimatedSection as="section" className="bg-[#253237] py-24">
+  <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mb-16 flex flex-col items-center text-center">
+      <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[#9DB4C0]">
+        Inside Saviours
+      </span>
+
+      <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
+        World-Class Hospital Facilities
+      </h2>
+
+      <div className="mt-5 h-px w-16 bg-[#9DB4C0]" />
+
+      <p className="mx-auto mt-6 max-w-2xl text-lg text-[#C2DFE3]">
+        Every facility is built with one goal — giving patients faster,
+        safer, and more comfortable care.
+      </p>
+    </div>
+
+    <div className="grid gap-px overflow-hidden bg-[#5C6B73]/30 sm:grid-cols-2 lg:grid-cols-3">
+      {HOSPITAL_FACILITIES.map((facility, index) => (
+        <AnimatedSection
+          key={index}
+          delay={(index % 3) * 100}
+          className="group relative isolate h-96 overflow-hidden bg-[#253237]"
+        >
+          {/* Background image */}
+          <img
+            src={facility.image}
+            alt={facility.title}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          />
+
+          {/* Base gradient — always visible for legibility */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/95 group-hover:via-black/60" />
+
+          {/* Accent top border on hover */}
+          <div className="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-[#9DB4C0] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+
+          {/* Tag — visible by default, fades on hover */}
+          <span className="absolute left-6 top-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#9DB4C0] opacity-100 transition-opacity duration-300 group-hover:opacity-0">
+            {facility.tag}
+          </span>
+
+          {/* Content block — title always visible; description slides/fades up on hover */}
+          <div className="absolute inset-x-0 bottom-0 p-7">
+            <h3 className="text-2xl font-bold text-white transition-transform duration-500 ease-out group-hover:-translate-y-2">
+              {facility.title}
+            </h3>
+
+            <p className="mt-3 max-h-0 translate-y-4 text-sm leading-6 text-[#E0FBFC] opacity-0 transition-all duration-500 ease-out group-hover:max-h-32 group-hover:translate-y-0 group-hover:opacity-100">
+              {facility.description}
+            </p>
+          </div>
+        </AnimatedSection>
+      ))}
+    </div>
+  </div>
+</AnimatedSection>
+>>>>>>> 9bf85af (Appointment fixed)
 
       {/* ================= CALL TO ACTION ================= */}
       <AnimatedSection as="section" className="py-24">

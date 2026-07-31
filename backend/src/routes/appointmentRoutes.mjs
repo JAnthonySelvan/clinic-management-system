@@ -1,6 +1,7 @@
 import express from "express";
 import {
   bookAppointment,
+  getBookedSlots,
   getAllAppointments,
   getDoctorAppointments,
   updateAppointmentStatus,
@@ -14,7 +15,9 @@ import { createAppointmentValidation } from "../validators/appointmentValidator.
 const router = express.Router();
 
 // Public
+router.get("/booked-slots", getBookedSlots);
 router.post("/", createAppointmentValidation, validate, bookAppointment);
+
 
 // Admin
 router.get("/", protect, authorize("admin"), getAllAppointments);

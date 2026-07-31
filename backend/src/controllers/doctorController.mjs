@@ -86,14 +86,15 @@ export const getPublicDoctors = async (req, res) => {
   try {
     const doctors = await User.find({
       role: "doctor",
-      isActive: true,
-    }).select("fullName specialization qualification experience profileImage");
+      isActive: { $ne: false },
+    }).select("fullName specialization qualification experience profileImage isActive");
 
     return res.status(200).json({
       success: true,
       message: "Doctors fetched successfully",
       data: doctors,
     });
+
   } catch (error) {
     return res.status(500).json({
       success: false,
