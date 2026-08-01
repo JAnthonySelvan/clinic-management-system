@@ -87,13 +87,13 @@ export const PROCESS_IMAGES = {
 
 export const CONTACT_IMAGES = {
   address:
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80",
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80&auto=format&fit=crop",
   phone:
-    "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80",
+    "https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=800&q=80&auto=format&fit=crop",
   email:
-    "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&q=80",
+    "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&q=80&auto=format&fit=crop",
   hours:
-    "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400&q=80",
+    "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=800&q=80&auto=format&fit=crop",
 };
 
 export const GUIDELINE_IMAGES = {
