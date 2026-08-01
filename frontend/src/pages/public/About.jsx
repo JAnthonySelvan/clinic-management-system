@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
@@ -16,11 +16,23 @@ const DEFAULT_AVATAR =
 
 const About = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const { doctors, loading } = useAppSelector((state) => state.doctor);
 
   useEffect(() => {
     dispatch(fetchPublicDoctors());
   }, [dispatch]);
+
+  // Handle smooth scroll when navigating to anchor hashes like #mission, #facilities, #medical-board
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.substring(1);
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [location]);
 
   const teamDoctors = doctors
     .filter((doc) => doc.isActive !== false)
@@ -97,7 +109,7 @@ const About = () => {
 
       {/* ================= MISSION & VISION ================= */}
 
-      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" id="mission" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -175,7 +187,7 @@ const About = () => {
 
       {/* ================= WHY CHOOSE US ================= */}
 
-      <AnimatedSection as="section" className="py-24">
+      <AnimatedSection as="section" id="facilities" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
@@ -278,7 +290,7 @@ const About = () => {
                 className="rounded-3xl bg-[#5C6B73] p-10 text-center transition duration-300 hover:-translate-y-2"
               >
                 <h3 className="text-5xl font-bold text-white">{stat.value}</h3>
-                <p className="mt-4 text-[#E0FBFC]">{stat.label}</p>
+                <p className="mt-[#E0FBFC] mt-4">{stat.label}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -287,7 +299,7 @@ const About = () => {
 
       {/* ================= MEET OUR TEAM ================= */}
 
-      <AnimatedSection as="section" className="py-24">
+      <AnimatedSection as="section" id="medical-board" className="py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">

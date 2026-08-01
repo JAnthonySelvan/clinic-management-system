@@ -37,33 +37,39 @@ const Services = () => {
 
   const services = [
     {
+      slug: "cardiology",
       image: SPECIALTY_IMAGES.cardiology,
       title: "Cardiology",
       description:
         "Advanced diagnosis and treatment for heart-related conditions.",
     },
     {
+      slug: "neurology",
       image: SPECIALTY_IMAGES.neurology,
       title: "Neurology",
       description:
         "Comprehensive care for neurological disorders and diseases.",
     },
     {
+      slug: "dental",
       image: SPECIALTY_IMAGES.dental,
       title: "Dental Care",
       description: "Complete dental treatments for healthy teeth and gums.",
     },
     {
+      slug: "pediatrics",
       image: SPECIALTY_IMAGES.pediatrics,
       title: "Pediatrics",
       description: "Specialized healthcare services for infants and children.",
     },
     {
+      slug: "general-medicine",
       image: SPECIALTY_IMAGES.generalMedicine,
       title: "General Medicine",
       description: "Routine checkups and treatment for common illnesses.",
     },
     {
+      slug: "orthopedics",
       image: SPECIALTY_IMAGES.orthopedics,
       title: "Orthopedics",
       description:
@@ -147,28 +153,36 @@ const Services = () => {
               <AnimatedSection
                 key={index}
                 delay={(index % 3) * 100}
-                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between"
               >
-                <div className="overflow-hidden">
+                <Link to={`/services/${service.slug}`} className="block overflow-hidden">
                   <img
                     src={service.image}
                     alt={service.title}
                     className="h-48 w-full object-cover transition duration-500 group-hover:scale-110"
                   />
-                </div>
+                </Link>
 
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-[#253237]">
-                    {service.title}
-                  </h3>
+                <div className="p-8 flex flex-col justify-between flex-1">
+                  <div>
+                    <Link to={`/services/${service.slug}`} className="block">
+                      <h3 className="text-2xl font-bold text-[#253237] group-hover:text-[#5C6B73] transition-colors">
+                        {service.title}
+                      </h3>
+                    </Link>
 
-                  <p className="mt-4 leading-7 text-[#5C6B73]">
-                    {service.description}
-                  </p>
+                    <p className="mt-4 leading-7 text-[#5C6B73]">
+                      {service.description}
+                    </p>
+                  </div>
 
-                  <button className="mt-6 font-semibold text-[#253237] transition duration-300 hover:translate-x-1 hover:text-[#5C6B73]">
-                    Learn More →
-                  </button>
+                  <Link
+                    to={`/services/${service.slug}`}
+                    className="mt-6 inline-flex items-center gap-1.5 font-semibold text-[#253237] transition duration-300 hover:translate-x-1 hover:text-[#5C6B73]"
+                  >
+                    <span>Learn More</span>
+                    <span>→</span>
+                  </Link>
                 </div>
               </AnimatedSection>
             ))}

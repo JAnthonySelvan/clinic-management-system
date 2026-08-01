@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, User, Phone, Mail, FileText, CheckCircle2, ShieldCheck, Stethoscope } from "lucide-react";
@@ -16,9 +16,22 @@ const DEFAULT_AVATAR = "https://res.cloudinary.com/demo/image/upload/v1690000000
  * @param {boolean} isOpen - Modal visibility state
  * @param {function} onClose - Callback to close modal
  */
-const BookingModal = ({ doctor, isOpen, onClose }) => {
+const BookingModal = ({ doctor: initialDoctor, availableDoctors = [], isOpen, onClose }) => {
   const dispatch = useAppDispatch();
   const { loading, success, error } = useAppSelector((state) => state.appointment);
+
+  const [activeDoctor, setActiveDoctor] = useState(initialDoctor);
+
+  // Sync activeDoctor when initialDoctor prop changes or availableDoctors loads
+  useEffect(() => {
+    if (initialDoctor && initialDoctor._id) {
+      setActiveDoctor(initialDoctor);
+    } else if (availableDoctors && availableDoctors.length > 0) {
+      setActiveDoctor(availableDoctors[0]);
+    } else {
+      setActiveDoctor(initialDoctor);
+    }
+  }, [initialDoctor, availableDoctors]);
 
   const {
     register,
@@ -58,7 +71,7 @@ const BookingModal = ({ doctor, isOpen, onClose }) => {
   // Handle appointment creation success/error
   useEffect(() => {
     if (success) {
-      toast.success(`Appointment booked successfully with ${doctor?.fullName || "Doctor"}!`, {
+      toast.success(`Appointment booked successfully with ${activeDoctor?.fullName ? `Dr. ${activeDoctor.fullName}` : "Doctor"}!`, {
         duration: 4000,
         icon: "🎉",
       });
@@ -71,15 +84,15 @@ const BookingModal = ({ doctor, isOpen, onClose }) => {
       toast.error(error);
       dispatch(clearAppointmentError());
     }
-  }, [success, error, dispatch, doctor, onClose, reset]);
+  }, [success, error, dispatch, activeDoctor, onClose, reset]);
 
-  if (!isOpen || !doctor) return null;
+  if (!isOpen) return null;
 
   const onSubmit = async (data) => {
     const payload = {
       ...data,
-      specialization: doctor.specialization,
-      doctor: doctor._id,
+      specialization: activeDoctor?.specialization || "General Medicine",
+      doctor: activeDoctor?._id || undefined,
     };
     await dispatch(createAppointment(payload));
   };
@@ -120,8 +133,8 @@ const BookingModal = ({ doctor, isOpen, onClose }) => {
 
               <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-5">
                 <img
-                  src={doctor.profileImage || DEFAULT_AVATAR}
-                  alt={doctor.fullName}
+                  src={activeDoctor?.profileImage || DEFAULT_AVATAR}
+                  alt={activeDoctor?.fullName || "Doctor"}
                   onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
                   className="h-20 w-20 rounded-2xl object-cover ring-4 ring-white/20 shadow-md shrink-0"
                 />
@@ -129,11 +142,13 @@ const BookingModal = ({ doctor, isOpen, onClose }) => {
                 <div className="text-center sm:text-left">
                   <div className="inline-flex items-center space-x-1.5 rounded-full bg-teal-500/20 px-3 py-1 text-xs font-semibold text-teal-200 border border-teal-400/30 mb-1.5">
                     <Stethoscope className="h-3.5 w-3.5" />
-                    <span>{doctor.specialization}</span>
+                    <span>{activeDoctor?.specialization || "General Healthcare"}</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-white">{doctor.fullName}</h2>
+                  <h2 className="text-2xl font-bold text-white">
+                    {activeDoctor?.fullName ? `Dr. ${activeDoctor.fullName}` : "Saviours Clinic Specialist"}
+                  </h2>
                   <p className="text-sm text-slate-300 font-medium mt-0.5">
-                    {doctor.qualification} {doctor.experience ? `• ${doctor.experience}+ Yrs Exp` : ""}
+                    {activeDoctor?.qualification || "Expert Clinical Physician"} {activeDoctor?.experience ? `• ${activeDoctor.experience}` : ""}
                   </p>
                 </div>
               </div>
@@ -141,6 +156,29 @@ const BookingModal = ({ doctor, isOpen, onClose }) => {
 
             {/* Scrollable Form Body */}
             <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
+              {/* Doctor Selector Dropdown if multiple doctors available */}
+              {availableDoctors && availableDoctors.length > 0 && (
+                <div className="rounded-2xl bg-teal-50/80 p-4 border border-teal-100">
+                  <label className="block text-xs font-bold text-teal-900 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                    <Stethoscope className="h-4 w-4 text-teal-600" />
+                    <span>Choose Specialist / Doctor ({availableDoctors.length} Available)</span>
+                  </label>
+                  <select
+                    value={activeDoctor?._id || ""}
+                    onChange={(e) => {
+                      const found = availableDoctors.find((d) => d._id === e.target.value);
+                      if (found) setActiveDoctor(found);
+                    }}
+                    className="w-full rounded-xl border border-teal-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none shadow-xs transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
+                  >
+                    {availableDoctors.map((doc) => (
+                      <option key={doc._id} value={doc._id}>
+                        Dr. {doc.fullName} — {doc.specialization} ({doc.experience || "Specialist"})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Section 1: Patient Information */}
                 <div>
@@ -290,8 +328,8 @@ const BookingModal = ({ doctor, isOpen, onClose }) => {
                         })}
                       />
                       <SlotPicker
-                        doctorId={doctor._id}
-                        specialization={doctor.specialization}
+                        doctorId={activeDoctor?._id}
+                        specialization={activeDoctor?.specialization}
                         selectedDate={selectedDate}
                         selectedSlot={selectedTime || ""}
                         onSelectSlot={(slot) =>

@@ -10,6 +10,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Home from "../pages/public/Home";
 import About from "../pages/public/About";
 import Services from "../pages/public/Services";
+import ServiceDetailPage from "../pages/public/ServiceDetailPage";
 import PublicDoctors from "../pages/public/Doctors";
 import Appointment from "../pages/public/Appointment";
 import Contact from "../pages/public/Contact";
@@ -46,6 +47,7 @@ function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/services/:serviceSlug" element={<ServiceDetailPage />} />
         <Route path="/doctors" element={<PublicDoctors />} />
         <Route path="/appointment" element={<Appointment />} />
         <Route path="/track-appointment" element={<TrackBooking />} />

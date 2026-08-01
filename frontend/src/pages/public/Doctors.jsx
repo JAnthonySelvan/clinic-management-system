@@ -21,33 +21,57 @@ const SPECIALIZATIONS = [
     image: SPECIALTY_IMAGES.cardiology,
     title: "Cardiology",
     key: "Cardiologist",
+    slug: "cardiology",
+    description: "Advanced cardiac care, ECG screenings, and vascular health.",
   },
-  { image: SPECIALTY_IMAGES.neurology, title: "Neurology", key: "Neurologist" },
-  { image: SPECIALTY_IMAGES.dental, title: "Dental Care", key: "Dentist" },
+  {
+    image: SPECIALTY_IMAGES.neurology,
+    title: "Neurology",
+    key: "Neurologist",
+    slug: "neurology",
+    description: "Expert brain, spine, and nerve disorder diagnostics.",
+  },
+  {
+    image: SPECIALTY_IMAGES.dental,
+    title: "Dental Care",
+    key: "Dentist",
+    slug: "dental",
+    description: "Painless root canals, teeth whitening, and oral surgery.",
+  },
   {
     image: SPECIALTY_IMAGES.pediatrics,
     title: "Pediatrics",
     key: "Pediatrician",
+    slug: "pediatrics",
+    description: "Compassionate healthcare and vaccines for children.",
   },
   {
     image: SPECIALTY_IMAGES.orthopedics,
     title: "Orthopedics",
     key: "Orthopedic",
+    slug: "orthopedics",
+    description: "Joint replacement, fracture repair, and spine therapy.",
   },
   {
     image: SPECIALTY_IMAGES.eyeCare,
     title: "Ophthalmology",
     key: "Ophthalmologist",
+    slug: "eye-care",
+    description: "Vision testing, cataract checkups, and optical care.",
   },
   {
     image: SPECIALTY_IMAGES.pulmonology,
     title: "Pulmonology",
     key: "Pulmonologist",
+    slug: "pulmonology",
+    description: "Lungs, spirometry testing, and asthma management.",
   },
   {
     image: SPECIALTY_IMAGES.generalMedicine,
     title: "General Medicine",
     key: "General Physician",
+    slug: "general-medicine",
+    description: "Comprehensive primary health checkups and fever care.",
   },
 ];
 
@@ -206,7 +230,7 @@ const Doctors = () => {
         </div>
       </AnimatedSection>
 
-      {/* ================= DOCTOR SPECIALIZATIONS ================= */}
+      {/* ================= DOCTOR SPECIALIZATIONS / MEDICAL DEPARTMENTS ================= */}
 
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -232,24 +256,43 @@ const Doctors = () => {
                 <AnimatedSection
                   key={index}
                   delay={index * 100}
-                  className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                  className="group overflow-hidden rounded-3xl bg-white shadow-lg border border-gray-100 transition duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between"
                 >
-                  <div className="overflow-hidden">
+                  <Link
+                    to={`/services/${specialty.slug}`}
+                    className="block relative overflow-hidden h-48"
+                  >
                     <img
                       src={specialty.image}
                       alt={specialty.title}
-                      className="h-44 w-full object-cover transition duration-500 group-hover:scale-110"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                     />
-                  </div>
-
-                  <div className="p-6 text-center">
-                    <h3 className="text-2xl font-bold text-[#253237]">
-                      {specialty.title}
-                    </h3>
-
-                    <p className="mt-3 text-[#5C6B73]">
+                    <div className="absolute inset-0 bg-linear-to-t from-[#253237]/80 via-[#253237]/20 to-transparent" />
+                    <span className="absolute top-3 right-3 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-[#253237] shadow-xs">
                       {count} {count === 1 ? "Specialist" : "Specialists"}
-                    </p>
+                    </span>
+                  </Link>
+
+                  <div className="p-6 flex flex-col justify-between flex-1">
+                    <div>
+                      <Link to={`/services/${specialty.slug}`}>
+                        <h3 className="text-xl font-bold text-[#253237] group-hover:text-[#5C6B73] transition-colors">
+                          {specialty.title}
+                        </h3>
+                      </Link>
+
+                      <p className="mt-2 text-xs leading-relaxed text-[#5C6B73]">
+                        {specialty.description}
+                      </p>
+                    </div>
+
+                    <Link
+                      to={`/services/${specialty.slug}`}
+                      className="mt-6 flex items-center justify-between rounded-xl bg-[#F8FBFC] px-4 py-2.5 text-xs font-bold text-[#253237] border border-gray-200 transition group-hover:bg-[#253237] group-hover:text-white group-hover:border-[#253237]"
+                    >
+                      <span>View Department</span>
+                      <span>→</span>
+                    </Link>
                   </div>
                 </AnimatedSection>
               );

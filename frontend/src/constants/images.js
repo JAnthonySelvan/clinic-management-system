@@ -143,3 +143,100 @@ export const HOSPITAL_FACILITIES = [
       "A fully-stocked pharmacy on-site, so prescriptions are filled the moment you need them — any time of day.",
   },
 ];
+
+export const ABOUT_THUMBNAILS = {
+  mission:
+    "https://images.unsplash.com/photo-1600959907703-125ba1374a12?w=200&q=80",
+  facilities:
+    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=200&q=80",
+  medicalBoard:
+    "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&q=80",
+};
+
+export const SERVICE_DETAIL_IMAGES = {
+  cardiology: {
+    hero: "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  neurology: {
+    hero: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  orthopedics: {
+    hero: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  pediatrics: {
+    hero: "https://res.cloudinary.com/udzftzug/image/upload/f_auto,q_auto/images_11_bodtks",
+    overview: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  dental: {
+    hero: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  eyeCare: {
+    hero: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  pulmonology: {
+    hero: "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+  generalMedicine: {
+    hero: "https://res.cloudinary.com/udzftzug/image/upload/v1785430874/Gemini_Generated_Image_rxzd9drxzd9drxzd_tupkkn.png",
+    overview: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+};
+
+// Aliases for kebab-case slugs
+SERVICE_DETAIL_IMAGES["dental-care"] = SERVICE_DETAIL_IMAGES.dental;
+SERVICE_DETAIL_IMAGES["eye-care"] = SERVICE_DETAIL_IMAGES.eyeCare;
+SERVICE_DETAIL_IMAGES["general-medicine"] = SERVICE_DETAIL_IMAGES.generalMedicine;
