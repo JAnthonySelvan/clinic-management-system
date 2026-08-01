@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FaClipboardCheck } from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
@@ -14,7 +15,7 @@ import {
 } from "../../features/appointment/appointmentSlice";
 import AnimatedSection from "../../components/AnimatedSection";
 import SlotPicker from "../../components/SlotPicker";
-import { HERO_IMAGES, GUIDELINE_IMAGES,CTA_IMAGES } from "../../constants/images";
+import { HERO_IMAGES, GUIDELINE_IMAGES, CTA_IMAGES } from "../../constants/images";
 
 const SPECIALIZATIONS = [
   "Cardiology",
@@ -65,7 +66,6 @@ const Appointment = () => {
     dispatch(fetchPublicDoctors());
   }, [dispatch]);
 
-
   useEffect(() => {
     if (success) {
       toast.success("Appointment booked successfully");
@@ -88,6 +88,37 @@ const Appointment = () => {
     await dispatch(createAppointment(data));
   };
 
+  const guidelines = [
+    {
+      badge: "Step 1",
+      image: GUIDELINE_IMAGES.schedule,
+      title: "Schedule in Advance",
+      description:
+        "Book your appointment early to get your preferred doctor and time slot.",
+    },
+    {
+      badge: "Step 2",
+      image: GUIDELINE_IMAGES.identification,
+      title: "Bring Identification",
+      description:
+        "Carry a valid ID and any previous medical reports during your visit.",
+    },
+    {
+      badge: "Step 3",
+      image: GUIDELINE_IMAGES.arriveEarly,
+      title: "Arrive Early",
+      description:
+        "Reach the clinic at least 15 minutes before your scheduled appointment.",
+    },
+    {
+      badge: "Step 4",
+      image: GUIDELINE_IMAGES.medicalHistory,
+      title: "Medical History",
+      description:
+        "Inform your doctor about your medications, allergies, and medical history.",
+    },
+  ];
+
   return (
     <>
       {/* ================= HERO ================= */}
@@ -107,7 +138,7 @@ const Appointment = () => {
               Appointment
             </span>
 
-            <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl">
+            <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl font-poppins">
               Book Your Appointment
             </h1>
 
@@ -130,7 +161,7 @@ const Appointment = () => {
               Book Appointment
             </span>
 
-            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
+            <h2 className="mt-4 text-4xl font-bold text-[#253237] font-poppins">
               Schedule Your Visit
             </h2>
 
@@ -140,7 +171,7 @@ const Appointment = () => {
             </p>
           </div>
 
-          <div className="rounded-3xl bg-white p-8 shadow-2xl">
+          <div className="rounded-3xl bg-white p-8 shadow-2xl border border-gray-100">
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="grid gap-6 md:grid-cols-2"
@@ -308,7 +339,6 @@ const Appointment = () => {
                 )}
               </div>
 
-
               {/* Reason */}
               <div className="md:col-span-2">
                 <textarea
@@ -331,7 +361,7 @@ const Appointment = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-70"
+                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
               >
                 {loading ? "Booking..." : "Book Appointment"}
               </button>
@@ -340,16 +370,16 @@ const Appointment = () => {
         </div>
       </AnimatedSection>
 
-      {/* ================= APPOINTMENT GUIDELINES ================= */}
+      {/* ================= APPOINTMENT GUIDELINES ("+" PLUS/CROSS SHAPED LAYOUT) ================= */}
 
-      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24">
+      <AnimatedSection as="section" className="bg-[#F8FBFC] py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
               Appointment Information
             </span>
 
-            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
+            <h2 className="mt-4 text-4xl font-bold text-[#253237] font-poppins">
               Before You Book
             </h2>
 
@@ -359,57 +389,196 @@ const Appointment = () => {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                image: GUIDELINE_IMAGES.schedule,
-                title: "Schedule in Advance",
-                description:
-                  "Book your appointment early to get your preferred doctor and time slot.",
-              },
-              {
-                image: GUIDELINE_IMAGES.identification,
-                title: "Bring Identification",
-                description:
-                  "Carry a valid ID and any previous medical reports during your visit.",
-              },
-              {
-                image: GUIDELINE_IMAGES.arriveEarly,
-                title: "Arrive Early",
-                description:
-                  "Reach the clinic at least 15 minutes before your scheduled appointment.",
-              },
-              {
-                image: GUIDELINE_IMAGES.medicalHistory,
-                title: "Medical History",
-                description:
-                  "Inform your doctor about your medications, allergies, and medical history.",
-              },
-            ].map((item, index) => (
-              <AnimatedSection
-                key={index}
-                delay={index * 100}
-                className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
-              >
-                <div className="h-40 w-full overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
-                  />
-                </div>
+          {/* Plus / Cross Layout Wrapper */}
+          <div className="relative max-w-5xl mx-auto">
+            {/* Soft Radial Glow Background */}
+            <div className="absolute inset-0 -z-10 flex items-center justify-center">
+              <div className="h-96 w-96 rounded-full bg-[#C2DFE3]/35 blur-3xl" />
+            </div>
 
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-[#253237]">
-                    {item.title}
-                  </h3>
+            {/* Desktop Plus / Cross Formation (xl breakpoint and up) */}
+            <div className="hidden xl:grid grid-cols-3 grid-rows-3 gap-6 items-center justify-items-center relative min-h-[760px]">
+              {/* Decorative Dashed Connector Lines */}
+              <div className="absolute top-[22%] left-1/2 -translate-x-1/2 w-0.5 h-28 border-l-2 border-dashed border-[#9DB4C0]/60 z-0" />
+              <div className="absolute bottom-[22%] left-1/2 -translate-x-1/2 w-0.5 h-28 border-l-2 border-dashed border-[#9DB4C0]/60 z-0" />
+              <div className="absolute top-1/2 left-[22%] -translate-y-1/2 h-0.5 w-28 border-t-2 border-dashed border-[#9DB4C0]/60 z-0" />
+              <div className="absolute top-1/2 right-[22%] -translate-y-1/2 h-0.5 w-28 border-t-2 border-dashed border-[#9DB4C0]/60 z-0" />
 
-                  <p className="mt-4 leading-7 text-[#5C6B73]">
-                    {item.description}
-                  </p>
+              {/* Cell 1: TOP (Row 1, Col 2) - Step 1: Schedule in Advance */}
+              <div className="col-start-2 row-start-1 z-10 w-full max-w-xs">
+                <AnimatedSection direction="up" delay={100}>
+                  <div className="group relative overflow-hidden rounded-3xl bg-white shadow-lg border border-gray-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                    <div className="absolute top-3 left-3 z-10 rounded-full bg-[#253237] px-3.5 py-1 text-xs font-bold text-white shadow-md border border-white/20">
+                      {guidelines[0].badge}
+                    </div>
+                    <div className="h-36 w-full overflow-hidden bg-[#F8FBFC] relative">
+                      <img
+                        src={guidelines[0].image}
+                        alt={guidelines[0].title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-[#253237] font-poppins">
+                        {guidelines[0].title}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-[#5C6B73]">
+                        {guidelines[0].description}
+                      </p>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              </div>
+
+              {/* Cell 2: LEFT (Row 2, Col 1) - Step 2: Bring Identification */}
+              <div className="col-start-1 row-start-2 z-10 w-full max-w-xs">
+                <AnimatedSection direction="left" delay={400}>
+                  <div className="group relative overflow-hidden rounded-3xl bg-white shadow-lg border border-gray-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                    <div className="absolute top-3 left-3 z-10 rounded-full bg-[#253237] px-3.5 py-1 text-xs font-bold text-white shadow-md border border-white/20">
+                      {guidelines[1].badge}
+                    </div>
+                    <div className="h-36 w-full overflow-hidden bg-[#F8FBFC] relative">
+                      <img
+                        src={guidelines[1].image}
+                        alt={guidelines[1].title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-[#253237] font-poppins">
+                        {guidelines[1].title}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-[#5C6B73]">
+                        {guidelines[1].description}
+                      </p>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              </div>
+
+              {/* Cell 3: CENTER HUB (Row 2, Col 2) */}
+              <div className="col-start-2 row-start-2 z-20">
+                <AnimatedSection direction="up" delay={0}>
+                  <div className="relative flex flex-col items-center justify-center text-center rounded-full bg-[#253237] text-white p-6 shadow-2xl ring-4 ring-[#9DB4C0]/40 w-48 h-48 mx-auto transition-transform duration-500 hover:scale-105">
+                    {/* Subtle Pulsing Ring */}
+                    <div className="absolute inset-0 rounded-full ring-4 ring-[#9DB4C0]/50 animate-pulse" />
+                    <FaClipboardCheck className="text-4xl text-[#E0FBFC] mb-2" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-[#E0FBFC]/80">
+                      4 Simple Steps
+                    </span>
+                    <span className="text-sm font-bold font-poppins text-white mt-1 max-w-[120px] leading-tight">
+                      Your Visit Checklist
+                    </span>
+                  </div>
+                </AnimatedSection>
+              </div>
+
+              {/* Cell 4: RIGHT (Row 2, Col 3) - Step 3: Arrive Early */}
+              <div className="col-start-3 row-start-2 z-10 w-full max-w-xs">
+                <AnimatedSection direction="right" delay={200}>
+                  <div className="group relative overflow-hidden rounded-3xl bg-white shadow-lg border border-gray-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                    <div className="absolute top-3 left-3 z-10 rounded-full bg-[#253237] px-3.5 py-1 text-xs font-bold text-white shadow-md border border-white/20">
+                      {guidelines[2].badge}
+                    </div>
+                    <div className="h-36 w-full overflow-hidden bg-[#F8FBFC] relative">
+                      <img
+                        src={guidelines[2].image}
+                        alt={guidelines[2].title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-[#253237] font-poppins">
+                        {guidelines[2].title}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-[#5C6B73]">
+                        {guidelines[2].description}
+                      </p>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              </div>
+
+              {/* Cell 5: BOTTOM (Row 3, Col 2) - Step 4: Medical History */}
+              <div className="col-start-2 row-start-3 z-10 w-full max-w-xs">
+                <AnimatedSection direction="down" delay={300}>
+                  <div className="group relative overflow-hidden rounded-3xl bg-white shadow-lg border border-gray-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                    <div className="absolute top-3 left-3 z-10 rounded-full bg-[#253237] px-3.5 py-1 text-xs font-bold text-white shadow-md border border-white/20">
+                      {guidelines[3].badge}
+                    </div>
+                    <div className="h-36 w-full overflow-hidden bg-[#F8FBFC] relative">
+                      <img
+                        src={guidelines[3].image}
+                        alt={guidelines[3].title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-[#253237] font-poppins">
+                        {guidelines[3].title}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-[#5C6B73]">
+                        {guidelines[3].description}
+                      </p>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              </div>
+            </div>
+
+            {/* Mobile / Tablet Responsive Fallback (< xl breakpoint) */}
+            <div className="xl:hidden space-y-8">
+              {/* Central Hub Header for Mobile */}
+              <div className="flex flex-col items-center text-center mb-8">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#253237] text-white shadow-xl ring-4 ring-[#9DB4C0]/40 mb-3 animate-pulse">
+                  <FaClipboardCheck className="text-2xl text-[#E0FBFC]" />
                 </div>
-              </AnimatedSection>
-            ))}
+                <span className="text-xs font-bold uppercase tracking-widest text-[#5C6B73]">
+                  4 Simple Steps
+                </span>
+                <h3 className="text-xl font-bold text-[#253237] font-poppins mt-1">
+                  Your Visit Checklist
+                </h3>
+              </div>
+
+              {/* Cards Grid for Mobile & Tablet */}
+              <div className="grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+                {guidelines.map((item, index) => (
+                  <AnimatedSection key={index} delay={index * 100}>
+                    <div className="group relative overflow-hidden rounded-3xl bg-white shadow-lg border border-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                      <div className="absolute top-3 left-3 z-10 rounded-full bg-[#253237] px-3.5 py-1 text-xs font-bold text-white shadow-md border border-white/20">
+                        {item.badge}
+                      </div>
+                      <div className="h-40 w-full overflow-hidden bg-[#F8FBFC] relative">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold text-[#253237] font-poppins">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-xs leading-relaxed text-[#5C6B73]">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </AnimatedSection>
@@ -423,7 +592,7 @@ const Appointment = () => {
               Frequently Asked Questions
             </span>
 
-            <h2 className="mt-4 text-4xl font-bold text-[#253237]">
+            <h2 className="mt-4 text-4xl font-bold text-[#253237] font-poppins">
               Have Questions?
             </h2>
 
@@ -461,7 +630,7 @@ const Appointment = () => {
                 delay={index * 100}
                 className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md"
               >
-                <h3 className="text-xl font-semibold text-[#253237]">
+                <h3 className="text-xl font-semibold text-[#253237] font-poppins">
                   {faq.question}
                 </h3>
 
@@ -489,7 +658,7 @@ const Appointment = () => {
 
             {/* Content */}
             <div className="relative z-10">
-              <h2 className="text-4xl font-bold text-white md:text-5xl">
+              <h2 className="text-4xl font-bold text-white md:text-5xl font-poppins">
                 Your Health Is Our Priority
               </h2>
 
