@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
+import ChatWidget from "../components/HealthAssistant/ChatWidget";
 
 function PublicLayout() {
   return (
@@ -12,6 +13,8 @@ function PublicLayout() {
       </main>
 
       <Footer />
+
+      <ChatWidget />
     </>
   );
 }
