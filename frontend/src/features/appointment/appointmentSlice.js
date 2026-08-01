@@ -156,11 +156,14 @@ const appointmentSlice = createSlice({
 
       .addCase(changeAppointmentStatus.fulfilled, (state, action) => {
         state.loading = false;
+        const updated = action.payload.data;
 
         state.appointments = state.appointments.map((appointment) =>
-          appointment._id === action.payload.data._id
-            ? action.payload.data
-            : appointment,
+          appointment._id === updated._id ? updated : appointment,
+        );
+
+        state.doctorAppointments = state.doctorAppointments.map((appointment) =>
+          appointment._id === updated._id ? updated : appointment,
         );
       })
 

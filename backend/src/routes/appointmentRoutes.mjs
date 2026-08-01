@@ -2,6 +2,7 @@ import express from "express";
 import {
   bookAppointment,
   getBookedSlots,
+  trackAppointment,
   getAllAppointments,
   getDoctorAppointments,
   updateAppointmentStatus,
@@ -10,11 +11,16 @@ import {
 
 import { protect, authorize } from "../middleware/authMiddleware.mjs";
 import validate from "../middleware/validationMiddleware.mjs";
-import { createAppointmentValidation } from "../validators/appointmentValidator.mjs";
+import { trackLimiter } from "../middleware/rateLimitMiddleware.mjs";
+import {
+  createAppointmentValidation,
+  trackAppointmentValidation,
+} from "../validators/appointmentValidator.mjs";
 
 const router = express.Router();
 
 // Public
+router.get("/track", trackLimiter, trackAppointmentValidation, validate, trackAppointment);
 router.get("/booked-slots", getBookedSlots);
 router.post("/", createAppointmentValidation, validate, bookAppointment);
 

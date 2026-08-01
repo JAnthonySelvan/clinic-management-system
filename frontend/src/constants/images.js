@@ -15,6 +15,8 @@ export const HERO_IMAGES = {
     "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=1600&q=80",
   contact:
     "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1600&q=80",
+  track:
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80",
 
   cta: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1600&q=80",
 };

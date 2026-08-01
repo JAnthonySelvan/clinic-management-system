@@ -7,6 +7,7 @@ import doctorRoutes from "./routes/doctorRoutes.mjs";
 import appointmentRoutes from "./routes/appointmentRoutes.mjs";
 import contactRoutes from "./routes/contactRoutes.mjs";
 import dashboardRoutes from "./routes/dashboardRoutes.mjs";
+import scheduleRoutes from "./routes/scheduleRoutes.mjs";
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/schedule", scheduleRoutes);
 
 export default app;

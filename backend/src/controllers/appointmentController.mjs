@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Appointment from "../models/Appointment.mjs";
 import User from "../models/User.mjs";
+import Schedule from "../models/Schedule.mjs";
 import { validationResult } from "express-validator";
 
 
@@ -44,9 +45,24 @@ export const bookAppointment = async (req, res) => {
     }
 
     if (!assignedDoctorId && assignedSpecialization) {
+      const cleanSpec = assignedSpecialization.trim();
+      const specStem = cleanSpec
+        .replace(/(ologist|ology|ist|y|ics|ian|al|care)$/i, "")
+        .trim();
+
+      const doctorQueryConditions = [
+        { specialization: new RegExp(cleanSpec, "i") },
+      ];
+
+      if (specStem && specStem.length >= 3) {
+        doctorQueryConditions.push({
+          specialization: new RegExp(specStem, "i"),
+        });
+      }
+
       const matchedDoctor = await User.findOne({
         role: "doctor",
-        specialization: new RegExp(assignedSpecialization, "i"),
+        $or: doctorQueryConditions,
       });
       if (matchedDoctor) {
         assignedDoctorId = matchedDoctor._id;
@@ -224,10 +240,75 @@ export const getBookedSlots = async (req, res) => {
       formatSlotTime(new Date(app.appointmentDateTime))
     );
 
+    // Determine Doctor Schedule details if doctorId or specialization available
+    let targetDoctorId = doctorId;
+    if (!targetDoctorId && specialization) {
+      const doc = await User.findOne({
+        role: "doctor",
+        specialization: new RegExp(specialization, "i"),
+      });
+      if (doc) targetDoctorId = doc._id;
+    }
+
+    let isBlocked = false;
+    let blockedReason = "";
+    let isAvailable = true;
+    let startTime = "09:00";
+    let endTime = "18:00";
+
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+
+    const dayIndex = startOfDay.getUTCDay();
+    const dayName = daysOfWeek[dayIndex];
+
+    if (targetDoctorId) {
+      const docSchedule = await Schedule.findOne({ doctor: targetDoctorId });
+      if (docSchedule) {
+        // Check blocked dates (only Approved leaves block booking)
+        const dateStr = startOfDay.toISOString().split("T")[0];
+        const blockedMatch = docSchedule.blockedDates.find((b) => {
+          const bStr = new Date(b.date).toISOString().split("T")[0];
+          return bStr === dateStr && b.status === "Approved";
+        });
+
+        if (blockedMatch) {
+          isBlocked = true;
+          blockedReason = blockedMatch.reason || "Leave / Holiday";
+        }
+
+        // Check weekly availability
+        if (
+          docSchedule.weeklyAvailability &&
+          docSchedule.weeklyAvailability[dayName]
+        ) {
+          const dayConfig = docSchedule.weeklyAvailability[dayName];
+          isAvailable = dayConfig.isAvailable !== false;
+          startTime = dayConfig.startTime || "09:00";
+          endTime = dayConfig.endTime || "18:00";
+        }
+      }
+    }
+
     return res.status(200).json({
       success: true,
       message: "Booked time slots retrieved successfully",
       data: bookedSlots,
+      schedule: {
+        isBlocked,
+        blockedReason,
+        isAvailable,
+        startTime,
+        endTime,
+        dayName,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -260,16 +341,29 @@ export const getAllAppointments = async (req, res) => {
 export const getDoctorAppointments = async (req, res) => {
   try {
     const doctorId = req.user._id;
-    const doctorSpec = req.user.specialization;
+    const doctorSpec = req.user.specialization || "";
+
+    const queryConditions = [{ doctor: doctorId }];
+
+    if (doctorSpec && typeof doctorSpec === "string" && doctorSpec.trim()) {
+      const cleanSpec = doctorSpec.trim();
+      const specStem = cleanSpec
+        .replace(/(ologist|ology|ist|y|ics|ian|al|care)$/i, "")
+        .trim();
+
+      queryConditions.push({
+        specialization: new RegExp(cleanSpec, "i"),
+      });
+
+      if (specStem && specStem.length >= 3) {
+        queryConditions.push({
+          specialization: new RegExp(specStem, "i"),
+        });
+      }
+    }
 
     const appointments = await Appointment.find({
-      $or: [
-        { doctor: doctorId },
-        {
-          specialization: new RegExp(doctorSpec, "i"),
-          status: "Pending",
-        },
-      ],
+      $or: queryConditions,
     })
       .populate("doctor", "fullName specialization")
       .sort({ appointmentDateTime: 1 });
@@ -310,9 +404,7 @@ export const updateAppointmentStatus = async (req, res) => {
     }
 
     if (req.user.role === "doctor") {
-      if (status === "Approved") {
-        appointment.doctor = req.user._id;
-      } else if (
+      if (
         appointment.doctor &&
         appointment.doctor.toString() !== req.user._id.toString() &&
         appointment.status !== "Pending"
@@ -322,6 +414,7 @@ export const updateAppointmentStatus = async (req, res) => {
           message: "Unauthorized",
         });
       }
+      appointment.doctor = req.user._id;
     }
 
     appointment.status = status;
@@ -360,6 +453,63 @@ export const deleteAppointment = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Track appointments by patient phone number (public)
+ * @route   GET /api/appointments/track?phone={phone}
+ * @access  Public
+ */
+export const trackAppointment = async (req, res) => {
+  try {
+    const { phone } = req.query;
+
+    if (!phone || typeof phone !== "string" || !phone.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid phone number",
+      });
+    }
+
+    const cleanPhone = phone.trim();
+
+    const appointments = await Appointment.find({ patientPhone: cleanPhone })
+      .populate("doctor", "fullName specialization")
+      .sort({ appointmentDateTime: -1 });
+
+    const safeAppointments = appointments.map((app) => ({
+      _id: app._id,
+      specialization: app.specialization,
+      doctor: app.doctor
+        ? {
+            fullName: app.doctor.fullName,
+            specialization: app.doctor.specialization,
+          }
+        : null,
+      appointmentDateTime: app.appointmentDateTime,
+      reason: app.reason,
+      status: app.status,
+    }));
+
+    if (safeAppointments.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No appointments found for this phone number",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Appointments retrieved successfully",
+      data: safeAppointments,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Server error while tracking appointments",
     });
   }
 };

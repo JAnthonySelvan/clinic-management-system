@@ -88,6 +88,7 @@ const SlotPicker = ({
   onSelectSlot,
 }) => {
   const [bookedSlots, setBookedSlots] = useState([]);
+  const [scheduleInfo, setScheduleInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -95,6 +96,7 @@ const SlotPicker = ({
   useEffect(() => {
     if ((!doctorId && !specialization) || !selectedDate) {
       setBookedSlots([]);
+      setScheduleInfo(null);
       setLoading(false);
       setError(null);
       return;
@@ -113,8 +115,10 @@ const SlotPicker = ({
         if (isMounted) {
           if (response.data && response.data.success) {
             setBookedSlots(response.data.data || []);
+            setScheduleInfo(response.data.schedule || null);
           } else {
             setBookedSlots([]);
+            setScheduleInfo(null);
           }
         }
       } catch (err) {
@@ -124,6 +128,7 @@ const SlotPicker = ({
             err.response?.data?.message || "Unable to fetch booked slots."
           );
           setBookedSlots([]);
+          setScheduleInfo(null);
         }
       } finally {
         if (isMounted) {
@@ -139,11 +144,49 @@ const SlotPicker = ({
     };
   }, [doctorId, specialization, selectedDate]);
 
-  // Helper check if a slot is already taken
-  const isBooked = (slot) => {
-    return bookedSlots.some(
+  // Helper to parse "09:30 AM" into minutes from midnight
+  const parseSlotToMinutes = (slotStr) => {
+    if (!slotStr) return null;
+    const match = slotStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+    if (!match) return null;
+    let [, hStr, mStr, period] = match;
+    let h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
+    period = period.toUpperCase();
+    if (period === "PM" && h < 12) h += 12;
+    if (period === "AM" && h === 12) h = 0;
+    return h * 60 + m;
+  };
+
+  // Helper to parse "09:00" or "18:00" into minutes from midnight
+  const parseTimeToMinutes = (timeStr) => {
+    if (!timeStr) return null;
+    const [hStr, mStr] = timeStr.split(":");
+    return parseInt(hStr, 10) * 60 + parseInt(mStr, 10);
+  };
+
+  // Helper check slot availability status
+  const getSlotStatus = (slot) => {
+    const isBooked = bookedSlots.some(
       (b) => b.trim().toUpperCase() === slot.trim().toUpperCase()
     );
+    if (isBooked) {
+      return { disabled: true, reason: "Already Booked" };
+    }
+
+    if (scheduleInfo?.startTime && scheduleInfo?.endTime) {
+      const slotMins = parseSlotToMinutes(slot);
+      const startMins = parseTimeToMinutes(scheduleInfo.startTime);
+      const endMins = parseTimeToMinutes(scheduleInfo.endTime);
+
+      if (slotMins !== null && startMins !== null && endMins !== null) {
+        if (slotMins < startMins || slotMins > endMins) {
+          return { disabled: true, reason: "Outside Doctor Hours" };
+        }
+      }
+    }
+
+    return { disabled: false, reason: "" };
   };
 
   // EMPTY STATE: No Doctor/Specialization or Date selected
@@ -235,91 +278,120 @@ const SlotPicker = ({
         </div>
       )}
 
-      {/* Shift Containers */}
-      <div className="mt-5 space-y-6">
-        {SHIFTS.map((shift) => {
-          const IconComponent = shift.icon;
-          return (
-            <div key={shift.id} className="space-y-3">
-              {/* Shift Title & Badge */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div
-                    className={`flex h-7 w-7 items-center justify-center rounded-lg ${shift.badgeBg}`}
-                  >
-                    <IconComponent className={`h-4 w-4 ${shift.iconColor}`} />
+      {/* Doctor Leave Notice Banner */}
+      {scheduleInfo?.isBlocked && (
+        <div className="mt-5 flex flex-col items-center justify-center rounded-2xl bg-red-50 p-6 text-center border border-red-200 shadow-xs">
+          <AlertCircle className="h-8 w-8 text-red-500 mb-2" />
+          <h4 className="text-base font-bold text-red-800">
+            Doctor is on Leave / Unavailable on this Date
+          </h4>
+          <p className="mt-1 text-xs font-medium text-red-600">
+            Reason: {scheduleInfo.blockedReason || "Scheduled Leave"}. Please pick a different date.
+          </p>
+        </div>
+      )}
+
+      {/* Doctor Day Off Banner */}
+      {!scheduleInfo?.isBlocked && scheduleInfo?.isAvailable === false && (
+        <div className="mt-5 flex flex-col items-center justify-center rounded-2xl bg-amber-50 p-6 text-center border border-amber-200 shadow-xs">
+          <AlertCircle className="h-8 w-8 text-amber-500 mb-2" />
+          <h4 className="text-base font-bold text-amber-800">
+            Doctor Non-Working Day
+          </h4>
+          <p className="mt-1 text-xs font-medium text-amber-700">
+            The doctor is not scheduled for consultations on {scheduleInfo.dayName || "this day"}s. Please select a working day.
+          </p>
+        </div>
+      )}
+
+      {/* Shift Containers (Hidden if Doctor is Blocked or Day Off) */}
+      {!scheduleInfo?.isBlocked && scheduleInfo?.isAvailable !== false && (
+        <div className="mt-5 space-y-6">
+          {SHIFTS.map((shift) => {
+            const IconComponent = shift.icon;
+            return (
+              <div key={shift.id} className="space-y-3">
+                {/* Shift Title & Badge */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className={`flex h-7 w-7 items-center justify-center rounded-lg ${shift.badgeBg}`}
+                    >
+                      <IconComponent className={`h-4 w-4 ${shift.iconColor}`} />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-700">
+                      {shift.name}
+                    </span>
                   </div>
-                  <span className="text-sm font-semibold text-slate-700">
-                    {shift.name}
+                  <span className="text-xs text-slate-400 font-medium">
+                    {shift.timeRange}
                   </span>
                 </div>
-                <span className="text-xs text-slate-400 font-medium">
-                  {shift.timeRange}
-                </span>
-              </div>
 
-              {/* Slot Chips Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {shift.slots.map((slot) => {
-                  const booked = isBooked(slot);
-                  const selected = selectedSlot === slot;
+                {/* Slot Chips Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {shift.slots.map((slot) => {
+                    const status = getSlotStatus(slot);
+                    const booked = status.disabled;
+                    const selected = selectedSlot === slot;
 
-                  return (
-                    <motion.button
-                      key={slot}
-                      type="button"
-                      disabled={booked}
-                      onClick={() => !booked && onSelectSlot(slot)}
-                      whileHover={booked ? {} : { scale: 1.03 }}
-                      whileTap={booked ? {} : { scale: 0.97 }}
-                      animate={selected ? { scale: 1.03 } : { scale: 1 }}
-                      transition={{ duration: 0.15, ease: "easeOut" }}
-                      className={`relative flex items-center justify-center rounded-xl px-3 py-3 text-xs font-semibold transition-all duration-200 select-none ${
-                        booked
-                          ? "cursor-not-allowed bg-slate-100 text-slate-400 border border-slate-200/80 line-through opacity-75 group"
-                          : selected
-                          ? "bg-teal-600 text-white border border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20"
-                          : "bg-white text-slate-700 border border-slate-200 shadow-2xs hover:border-teal-500 hover:text-teal-700 hover:shadow-sm"
-                      }`}
-                    >
-                      {/* Left icon for selected / booked */}
-                      {selected && (
-                        <motion.span
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          className="mr-1.5 inline-flex items-center"
-                        >
-                          <Check className="h-3.5 w-3.5 stroke-[3]" />
-                        </motion.span>
-                      )}
+                    return (
+                      <motion.button
+                        key={slot}
+                        type="button"
+                        disabled={booked}
+                        onClick={() => !booked && onSelectSlot(slot)}
+                        whileHover={booked ? {} : { scale: 1.03 }}
+                        whileTap={booked ? {} : { scale: 0.97 }}
+                        animate={selected ? { scale: 1.03 } : { scale: 1 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className={`relative flex items-center justify-center rounded-xl px-3 py-3 text-xs font-semibold transition-all duration-200 select-none ${
+                          booked
+                            ? "cursor-not-allowed bg-slate-100 text-slate-400 border border-slate-200/80 line-through opacity-75 group"
+                            : selected
+                            ? "bg-teal-600 text-white border border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20"
+                            : "bg-white text-slate-700 border border-slate-200 shadow-2xs hover:border-teal-500 hover:text-teal-700 hover:shadow-sm"
+                        }`}
+                      >
+                        {/* Left icon for selected / booked */}
+                        {selected && (
+                          <motion.span
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="mr-1.5 inline-flex items-center"
+                          >
+                            <Check className="h-3.5 w-3.5 stroke-[3]" />
+                          </motion.span>
+                        )}
 
-                      {booked && (
-                        <span className="mr-1.5 inline-flex items-center text-slate-400">
-                          <Lock className="h-3 w-3" />
-                        </span>
-                      )}
+                        {booked && (
+                          <span className="mr-1.5 inline-flex items-center text-slate-400">
+                            <Lock className="h-3 w-3" />
+                          </span>
+                        )}
 
-                      <span>{slot}</span>
+                        <span>{slot}</span>
 
-                      {/* Tooltip on Hover for Booked Slots */}
-                      {booked && (
-                        <div className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-20">
-                          <div className="flex items-center space-x-1 rounded-md bg-slate-800 px-2 py-1 text-[10px] font-medium text-white shadow-md whitespace-nowrap">
-                            <Lock className="h-2.5 w-2.5 text-amber-400" />
-                            <span>Already Booked</span>
+                        {/* Tooltip on Hover for Disabled Slots */}
+                        {booked && (
+                          <div className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-20">
+                            <div className="flex items-center space-x-1 rounded-md bg-slate-800 px-2 py-1 text-[10px] font-medium text-white shadow-md whitespace-nowrap">
+                              <Lock className="h-2.5 w-2.5 text-amber-400" />
+                              <span>{status.reason || "Unavailable"}</span>
+                            </div>
+                            {/* Caret */}
+                            <div className="mx-auto h-1 w-2 border-x-4 border-t-4 border-x-transparent border-t-slate-800" />
                           </div>
-                          {/* Caret */}
-                          <div className="mx-auto h-1 w-2 border-x-4 border-t-4 border-x-transparent border-t-slate-800" />
-                        </div>
-                      )}
-                    </motion.button>
-                  );
-                })}
+                        )}
+                      </motion.button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Selected Slot Summary Footer */}
       <AnimatePresence>

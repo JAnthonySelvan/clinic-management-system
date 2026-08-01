@@ -27,6 +27,11 @@ const AdminLayout = () => {
       icon: "📅",
     },
     {
+      name: "Doctor Leaves",
+      path: "/admin/leaves",
+      icon: "🏖️",
+    },
+    {
       name: "Messages",
       path: "/admin/messages",
       icon: "💬",

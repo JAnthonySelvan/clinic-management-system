@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { FaCalendarAlt } from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { logout } from "../features/auth/authSlice";
@@ -46,6 +47,18 @@ const DoctorLayout = () => {
             }
           >
             My Appointments
+          </NavLink>
+
+          <NavLink
+            to="/doctor/schedule"
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 ${
+                isActive ? "bg-[#5C6B73]" : "hover:bg-[#5C6B73]"
+              }`
+            }
+          >
+            <FaCalendarAlt className="text-sm" />
+            Schedule
           </NavLink>
 
           <NavLink

@@ -21,6 +21,7 @@ function Navbar() {
     { name: "Services", path: "/services" },
     { name: "Doctors", path: "/doctors" },
     { name: "Appointment", path: "/appointment" },
+    { name: "Track", path: "/track-appointment" },
     { name: "Contact", path: "/contact" },
   ];
 

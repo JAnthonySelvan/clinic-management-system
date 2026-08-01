@@ -28,3 +28,10 @@ export const getDoctorAppointments = async () => {
   return response.data;
 };
 
+export const trackAppointmentByPhone = async (phone) => {
+  const response = await api.get("/appointments/track", {
+    params: { phone },
+  });
+  return response.data;
+};
+

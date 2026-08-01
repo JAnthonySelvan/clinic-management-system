@@ -1,4 +1,13 @@
-import { body } from "express-validator";
+import { body, query } from "express-validator";
+
+export const trackAppointmentValidation = [
+  query("phone")
+    .trim()
+    .notEmpty()
+    .withMessage("Phone number is required")
+    .isLength({ min: 5, max: 20 })
+    .withMessage("Phone number must be between 5 and 20 characters"),
+];
 
 export const createAppointmentValidation = [
   body("patientName").trim().notEmpty().withMessage("Patient name is required"),
