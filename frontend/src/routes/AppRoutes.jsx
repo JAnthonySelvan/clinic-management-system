@@ -9,6 +9,9 @@ import ProtectedRoute from "../components/ProtectedRoute";
 // Public Pages
 import Home from "../pages/public/Home";
 import About from "../pages/public/About";
+import VisionMission from "../pages/public/about/VisionMission";
+import ResearchOrganization from "../pages/public/about/ResearchOrganization";
+import MedicalCamps from "../pages/public/about/MedicalCamps";
 import Services from "../pages/public/Services";
 import ServiceDetailPage from "../pages/public/ServiceDetailPage";
 import PublicDoctors from "../pages/public/Doctors";
@@ -46,6 +49,9 @@ function AppRoutes() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/about/vision-mission" element={<VisionMission />} />
+        <Route path="/about/research-organization" element={<ResearchOrganization />} />
+        <Route path="/about/medical-camps" element={<MedicalCamps />} />
         <Route path="/services" element={<Services />} />
         <Route path="/services/:serviceSlug" element={<ServiceDetailPage />} />
         <Route path="/doctors" element={<PublicDoctors />} />

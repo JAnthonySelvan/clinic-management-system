@@ -38,10 +38,35 @@ export const getServiceBySlug = async (req, res) => {
 
     await ensureServicesSeeded();
 
-    const service = await Service.findOne({
-      slug: slug.toLowerCase(),
+    const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, "");
+
+    const SLUG_MAP = {
+      "dental-care": "dental",
+      "dentalcare": "dental",
+      "eyecare": "eye-care",
+      "ophthalmology": "eye-care",
+      "generalmedicine": "general-medicine",
+      "general-physician": "general-medicine",
+    };
+
+    const targetSlug = SLUG_MAP[cleanSlug] || cleanSlug;
+
+    let service = await Service.findOne({
+      slug: targetSlug,
       isActive: true,
     });
+
+    if (!service) {
+      // Flexible regex fallback matching slug or department name
+      const searchStem = cleanSlug.replace(/-/g, ".*");
+      service = await Service.findOne({
+        $or: [
+          { slug: new RegExp(searchStem, "i") },
+          { name: new RegExp(searchStem, "i") },
+        ],
+        isActive: true,
+      });
+    }
 
     if (!service) {
       return res.status(404).json({

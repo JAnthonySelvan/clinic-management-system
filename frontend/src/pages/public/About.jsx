@@ -9,6 +9,7 @@ import {
   FEATURE_IMAGES,
   MISSION_IMAGES,
   CTA_IMAGES,
+  ABOUT_DETAIL_IMAGES,
 } from "../../constants/images";
 
 const DEFAULT_AVATAR =
@@ -113,72 +114,136 @@ const About = () => {
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-[#5C6B73]">
-              Our Purpose
+              Institutional Pillars
             </span>
 
             <h2 className="mt-4 text-4xl font-bold text-[#253237]">
-              Mission & Vision
+              Explore Saviours Clinic
             </h2>
 
             <p className="mx-auto mt-5 max-w-2xl text-lg text-[#5C6B73]">
-              Our commitment is to improve lives by providing exceptional
-              healthcare with compassion, innovation, and excellence.
+              Discover our core purpose, research innovations, and community health outreach initiatives.
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            {/* Mission */}
-
+          <div className="grid gap-8 md:grid-cols-3">
+            {/* Card 1: Vision & Mission */}
             <AnimatedSection
-              direction="right"
-              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              direction="up"
+              delay={0}
+              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100 flex flex-col justify-between"
             >
-              <div className="h-56 w-full overflow-hidden">
-                <img
-                  src={MISSION_IMAGES.mission}
-                  alt="Our Mission"
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
-                />
+              <div>
+                <div className="h-52 w-full overflow-hidden bg-[#253237]">
+                  <img
+                    src={ABOUT_DETAIL_IMAGES.visionMission.hero}
+                    alt="Vision & Mission"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
+                </div>
+
+                <div className="p-8">
+                  <span className="inline-block rounded-full bg-[#E0FBFC] px-3 py-1 text-xs font-bold text-[#253237] mb-3">
+                    Core Identity
+                  </span>
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    Vision & Mission
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-relaxed text-[#5C6B73]">
+                    Explore our founding purpose, clinical standards, and 4 core ethical values driving patient outcomes.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-10">
-                <h3 className="text-3xl font-bold text-[#253237]">
-                  Our Mission
-                </h3>
-
-                <p className="mt-6 leading-8 text-[#5C6B73]">
-                  To deliver accessible, affordable, and high-quality healthcare
-                  through experienced professionals, modern technology, and
-                  personalized patient care.
-                </p>
+              <div className="p-8 pt-0">
+                <Link
+                  to="/about/vision-mission"
+                  className="flex w-full items-center justify-between rounded-xl bg-[#253237] px-5 py-3 text-xs font-bold text-white transition hover:bg-[#5C6B73]"
+                >
+                  <span>Read Vision & Mission</span>
+                  <span>→</span>
+                </Link>
               </div>
             </AnimatedSection>
 
-            {/* Vision */}
-
+            {/* Card 2: Research & Governance */}
             <AnimatedSection
-              direction="left"
-              delay={150}
-              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+              direction="up"
+              delay={100}
+              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100 flex flex-col justify-between"
             >
-              <div className="h-56 w-full overflow-hidden">
-                <img
-                  src={MISSION_IMAGES.vision}
-                  alt="Our Vision"
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
-                />
+              <div>
+                <div className="h-52 w-full overflow-hidden bg-[#253237]">
+                  <img
+                    src={ABOUT_DETAIL_IMAGES.research.hero}
+                    alt="Research & Governance"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
+                </div>
+
+                <div className="p-8">
+                  <span className="inline-block rounded-full bg-[#E0FBFC] px-3 py-1 text-xs font-bold text-[#253237] mb-3">
+                    Scientific Governance
+                  </span>
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    Research & Governance
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-relaxed text-[#5C6B73]">
+                    Learn about our ongoing clinical trials, laboratory studies, and medical board organizational structure.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-10">
-                <h3 className="text-3xl font-bold text-[#253237]">
-                  Our Vision
-                </h3>
+              <div className="p-8 pt-0">
+                <Link
+                  to="/about/research-organization"
+                  className="flex w-full items-center justify-between rounded-xl bg-[#253237] px-5 py-3 text-xs font-bold text-white transition hover:bg-[#5C6B73]"
+                >
+                  <span>Explore Research</span>
+                  <span>→</span>
+                </Link>
+              </div>
+            </AnimatedSection>
 
-                <p className="mt-6 leading-8 text-[#5C6B73]">
-                  To become one of the most trusted healthcare providers by
-                  continuously improving medical services, embracing innovation,
-                  and putting patients first.
-                </p>
+            {/* Card 3: Medical Camps */}
+            <AnimatedSection
+              direction="up"
+              delay={200}
+              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100 flex flex-col justify-between"
+            >
+              <div>
+                <div className="h-52 w-full overflow-hidden bg-[#253237]">
+                  <img
+                    src={ABOUT_DETAIL_IMAGES.medicalCamps.hero}
+                    alt="Medical Camps"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
+                </div>
+
+                <div className="p-8">
+                  <span className="inline-block rounded-full bg-[#E0FBFC] px-3 py-1 text-xs font-bold text-[#253237] mb-3">
+                    Social Impact
+                  </span>
+                  <h3 className="text-2xl font-bold text-[#253237]">
+                    Medical Camps & Drives
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-relaxed text-[#5C6B73]">
+                    View our community screening photo gallery, health drive schedule, and social impact statistics.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-8 pt-0">
+                <Link
+                  to="/about/medical-camps"
+                  className="flex w-full items-center justify-between rounded-xl bg-[#253237] px-5 py-3 text-xs font-bold text-white transition hover:bg-[#5C6B73]"
+                >
+                  <span>View Medical Camps</span>
+                  <span>→</span>
+                </Link>
               </div>
             </AnimatedSection>
           </div>

@@ -239,4 +239,44 @@ export const SERVICE_DETAIL_IMAGES = {
 // Aliases for kebab-case slugs
 SERVICE_DETAIL_IMAGES["dental-care"] = SERVICE_DETAIL_IMAGES.dental;
 SERVICE_DETAIL_IMAGES["eye-care"] = SERVICE_DETAIL_IMAGES.eyeCare;
-SERVICE_DETAIL_IMAGES["general-medicine"] = SERVICE_DETAIL_IMAGES.generalMedicine;
+SERVICE_DETAIL_IMAGES["general-medicine"] = SERVICE_DETAIL_IMAGES.generalMedicine;
+
+export const ABOUT_DETAIL_IMAGES = {
+  visionMission: {
+    hero: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80&auto=format&fit=crop",
+    mission: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900&q=80&auto=format&fit=crop",
+    vision: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=900&q=80&auto=format&fit=crop",
+    values: [
+      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=700&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=700&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=700&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=700&q=80&auto=format&fit=crop",
+    ],
+  },
+  research: {
+    hero: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1600&q=80&auto=format&fit=crop",
+    labImages: [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
+    ],
+    organizationChart: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=1200&q=80&auto=format&fit=crop",
+  },
+  medicalCamps: {
+    hero: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=1600&q=80&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+    ],
+  },
+};
+
+// Aliases for kebab-case lookup
+ABOUT_DETAIL_IMAGES["vision-mission"] = ABOUT_DETAIL_IMAGES.visionMission;
+ABOUT_DETAIL_IMAGES["research-organization"] = ABOUT_DETAIL_IMAGES.research;
+ABOUT_DETAIL_IMAGES["medical-camps"] = ABOUT_DETAIL_IMAGES.medicalCamps;

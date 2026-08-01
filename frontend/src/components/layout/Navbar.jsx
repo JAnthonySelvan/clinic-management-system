@@ -8,10 +8,15 @@ import {
   FaUserShield,
   FaUserMd,
   FaArrowRight,
+  FaBullseye,
+  FaFlask,
+  FaHandsHelping,
+  FaStethoscope,
 } from "react-icons/fa";
 import {
   SERVICE_DETAIL_IMAGES,
   ABOUT_THUMBNAILS,
+  ABOUT_DETAIL_IMAGES,
 } from "../../constants/images";
 
 // Standard medical icons for specialty links
@@ -23,7 +28,6 @@ import {
   FaTooth,
   FaEye,
   FaLungs,
-  FaStethoscope,
 } from "react-icons/fa";
 
 const SPECIALTY_ITEMS = [
@@ -44,7 +48,7 @@ const SPECIALTY_ITEMS = [
   {
     slug: "orthopedics",
     name: "Orthopedics",
-    description: "Joints, bones & sports rehab",
+    description: "Joints, bones & spine surgery",
     icon: FaBone,
     emoji: "🦴",
   },
@@ -87,22 +91,31 @@ const SPECIALTY_ITEMS = [
 
 const ABOUT_ITEMS = [
   {
-    name: "Our Mission & Vision",
-    path: "/about#mission",
-    description: "Our purpose & healthcare standards",
-    image: ABOUT_THUMBNAILS.mission,
+    key: "vision-mission",
+    name: "Vision & Mission",
+    path: "/about/vision-mission",
+    description: "Our purpose, core values & patient commitments",
+    icon: FaBullseye,
+    emoji: "🎯",
+    heroImage: ABOUT_DETAIL_IMAGES.visionMission.hero,
   },
   {
-    name: "Hospital Facilities",
-    path: "/about#facilities",
-    description: "ICU, Operation Theatres & modern labs",
-    image: ABOUT_THUMBNAILS.facilities,
+    key: "research-organization",
+    name: "Research & Governance",
+    path: "/about/research-organization",
+    description: "Clinical innovation & medical board leadership",
+    icon: FaFlask,
+    emoji: "🔬",
+    heroImage: ABOUT_DETAIL_IMAGES.research.hero,
   },
   {
-    name: "Medical Board",
-    path: "/about#medical-board",
-    description: "Meet our senior specialists",
-    image: ABOUT_THUMBNAILS.medicalBoard,
+    key: "medical-camps",
+    name: "Medical Camps",
+    path: "/about/medical-camps",
+    description: "Community health outreach & free screening drives",
+    icon: FaHandsHelping,
+    emoji: "🩺",
+    heroImage: ABOUT_DETAIL_IMAGES.medicalCamps.hero,
   },
 ];
 
@@ -117,6 +130,7 @@ function Navbar() {
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
 
   const [hoveredSpecialtySlug, setHoveredSpecialtySlug] = useState("cardiology");
+  const [hoveredAboutKey, setHoveredAboutKey] = useState("vision-mission");
   const [scrolled, setScrolled] = useState(false);
 
   const loginMenuRef = useRef(null);
@@ -186,117 +200,182 @@ function Navbar() {
     }, 150);
   };
 
+  // Preview Image lookups
+  const currentHoveredItem =
+    SPECIALTY_ITEMS.find((item) => item.slug === hoveredSpecialtySlug) ||
+    SPECIALTY_ITEMS[0];
+
   const currentPreviewImage =
     SERVICE_DETAIL_IMAGES[hoveredSpecialtySlug]?.hero ||
-    SERVICE_DETAIL_IMAGES.cardiology.hero;
+    "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=900";
 
-  const currentHoveredItem = SPECIALTY_ITEMS.find(
-    (item) => item.slug === hoveredSpecialtySlug,
-  ) || SPECIALTY_ITEMS[0];
+  const currentHoveredAbout =
+    ABOUT_ITEMS.find((item) => item.key === hoveredAboutKey) || ABOUT_ITEMS[0];
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white/90 backdrop-blur-md transition-shadow duration-300 ${
-        scrolled ? "shadow-lg" : "shadow-md"
+      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-md py-3"
+          : "bg-white border-b border-gray-100 py-4"
       }`}
     >
-      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link to="/" className="group flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#253237] text-lg font-bold text-white transition-all duration-300 ease-out group-hover:scale-110 group-hover:rotate-6 group-hover:bg-[#5c6b73] group-hover:shadow-lg">
-            S
-          </div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
+          {/* Brand Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#253237] text-white shadow-md transition-transform duration-300 group-hover:scale-105">
+              <FaStethoscope className="text-xl text-[#E0FBFC]" />
+            </div>
+            <div>
+              <span className="text-xl font-bold tracking-tight text-[#253237]">
+                Saviours<span className="text-[#5c6b73]">Clinic</span>
+              </span>
+              <span className="block text-[10px] font-semibold uppercase tracking-widest text-[#5c6b73]">
+                Excellence in Healthcare
+              </span>
+            </div>
+          </Link>
 
-          <div className="flex flex-col leading-tight">
-            <h1
-              className="text-2xl font-bold text-[#253237] transition-colors duration-300 group-hover:text-[#5c6b73]"
-              style={{ fontFamily: "Poppins" }}
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center space-x-7">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `group relative py-1 text-sm font-medium transition-colors duration-300 ${
+                  isActive ? "text-[#253237]" : "text-[#5c6b73] hover:text-[#253237]"
+                }`
+              }
             >
-              Saviours
-            </h1>
-            <p className="text-xs text-[#5c6b73]">Healthcare Clinic</p>
-          </div>
-        </Link>
+              {({ isActive }) => (
+                <>
+                  Home
+                  <span
+                    className={`absolute -bottom-1 left-0 h-0.5 rounded-full bg-[#253237] transition-all duration-300 ease-out ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </>
+              )}
+            </NavLink>
 
-        {/* Desktop Navigation */}
-        <div className="hidden items-center justify-end gap-7 lg:flex">
-          {/* Home Link */}
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `group relative py-1 text-sm font-medium transition-colors duration-300 ${
-                isActive ? "text-[#253237]" : "text-[#5c6b73] hover:text-[#253237]"
-              }`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                Home
-                <span
-                  className={`absolute -bottom-1 left-0 h-0.5 rounded-full bg-[#253237] transition-all duration-300 ease-out ${
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
+            {/* About Mega-Menu Trigger */}
+            <div
+              className="relative"
+              ref={aboutMenuRef}
+              onMouseEnter={handleAboutMouseEnter}
+              onMouseLeave={handleAboutMouseLeave}
+            >
+              <button
+                onClick={() => setAboutMenuOpen((prev) => !prev)}
+                className={`group flex items-center gap-1.5 py-1 text-sm font-medium transition-colors duration-300 ${
+                  aboutMenuOpen
+                    ? "text-[#253237]"
+                    : "text-[#5c6b73] hover:text-[#253237]"
+                }`}
+              >
+                About Us
+                <FaChevronDown
+                  className={`text-xs transition-transform duration-300 ${
+                    aboutMenuOpen ? "rotate-180 text-[#253237]" : "text-[#5c6b73]"
                   }`}
                 />
-              </>
-            )}
-          </NavLink>
+              </button>
 
-          {/* About Mega-Menu Trigger */}
-          <div
-            className="relative"
-            ref={aboutMenuRef}
-            onMouseEnter={handleAboutMouseEnter}
-            onMouseLeave={handleAboutMouseLeave}
-          >
-            <button
-              onClick={() => setAboutMenuOpen((prev) => !prev)}
-              className={`group flex items-center gap-1.5 py-1 text-sm font-medium transition-colors duration-300 ${
-                aboutMenuOpen ? "text-[#253237]" : "text-[#5c6b73] hover:text-[#253237]"
-              }`}
-            >
-              About Us
-              <FaChevronDown
-                className={`text-xs transition-transform duration-300 ${
-                  aboutMenuOpen ? "rotate-180 text-[#253237]" : "text-[#5c6b73]"
+              {/* About Mega-Menu Dropdown Panel (w-[600px]) */}
+              <div
+                className={`absolute -left-12 mt-3 w-[600px] origin-top-left overflow-hidden rounded-3xl bg-white p-4 shadow-2xl ring-1 ring-black/5 transition-all duration-200 ease-out ${
+                  aboutMenuOpen
+                    ? "translate-y-0 scale-100 opacity-100"
+                    : "pointer-events-none -translate-y-2 scale-95 opacity-0"
                 }`}
-              />
-            </button>
-
-            {/* About Mega-Menu Dropdown Panel */}
-            <div
-              className={`absolute left-0 mt-3 w-72 origin-top-left overflow-hidden rounded-3xl bg-white p-3 shadow-2xl ring-1 ring-black/5 transition-all duration-200 ease-out ${
-                aboutMenuOpen
-                  ? "translate-y-0 scale-100 opacity-100"
-                  : "pointer-events-none -translate-y-2 scale-95 opacity-0"
-              }`}
-            >
-              <div className="space-y-1">
-                {ABOUT_ITEMS.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setAboutMenuOpen(false)}
-                    className="flex items-center gap-3.5 rounded-2xl p-2.5 transition-all duration-200 hover:bg-[#F8FBFC] hover:pl-3.5 group"
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      loading="lazy"
-                      className="h-10 w-10 shrink-0 rounded-xl object-cover shadow-xs group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div>
-                      <h4 className="text-sm font-semibold text-[#253237] group-hover:text-[#5c6b73] transition-colors">
-                        {item.name}
-                      </h4>
-                      <p className="text-[11px] text-[#5c6b73] leading-tight mt-0.5">
-                        {item.description}
-                      </p>
+              >
+                <div className="flex gap-4">
+                  {/* Left: 3 About Sub-pages List (64% Width) */}
+                  <div className="w-[64%] space-y-1.5">
+                    <div className="mb-2 px-3 pt-1">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#5c6b73]">
+                        Clinic Purpose & Governance
+                      </span>
                     </div>
+
+                    {ABOUT_ITEMS.map((item) => {
+                      const IconComp = item.icon;
+                      return (
+                        <Link
+                          key={item.key}
+                          to={item.path}
+                          onMouseEnter={() => setHoveredAboutKey(item.key)}
+                          onClick={() => setAboutMenuOpen(false)}
+                          className={`group flex items-start gap-3 rounded-2xl p-3 transition-all duration-200 ${
+                            hoveredAboutKey === item.key
+                              ? "bg-[#F8FBFC] border-l-3 border-[#253237] pl-4"
+                              : "hover:bg-[#F8FBFC] hover:pl-4"
+                          }`}
+                        >
+                          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#253237]/10 text-[#253237] shrink-0 group-hover:bg-[#253237] group-hover:text-white transition-all">
+                            <IconComp className="text-sm" />
+                          </div>
+                          <div>
+                            <h4 className="text-xs font-bold text-[#253237] group-hover:text-[#5c6b73] transition-colors">
+                              {item.name}
+                            </h4>
+                            <p className="text-[11px] text-[#5c6b73] leading-tight mt-0.5">
+                              {item.description}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  {/* Right: Live-Updating Featured Image Panel (36% Width) */}
+                  <div className="w-[36%] relative flex flex-col overflow-hidden rounded-2xl bg-[#253237] shadow-inner min-h-[220px]">
+                    <img
+                      src={currentHoveredAbout.heroImage}
+                      alt={currentHoveredAbout.name}
+                      className="absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
+                    />
+                    {/* Scrim Overlay */}
+                    <div className="absolute inset-0 bg-linear-to-t from-[#253237]/95 via-[#253237]/40 to-transparent" />
+
+                    {/* Caption */}
+                    <div className="relative mt-auto p-4 text-white z-10">
+                      <div className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold backdrop-blur-md mb-1.5">
+                        <span>{currentHoveredAbout.emoji}</span>
+                        <span>Saviours Clinic</span>
+                      </div>
+                      <h3 className="text-sm font-bold leading-tight">
+                        {currentHoveredAbout.name}
+                      </h3>
+                      <Link
+                        to={currentHoveredAbout.path}
+                        onClick={() => setAboutMenuOpen(false)}
+                        className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#9DB4C0] hover:text-white transition-colors"
+                      >
+                        <span>Learn More</span>
+                        <FaArrowRight className="text-[10px]" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mega-Menu Footer Bar */}
+                <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3 px-3">
+                  <span className="text-xs text-[#5c6b73]">
+                    Want an overview of Saviours Clinic?
+                  </span>
+                  <Link
+                    to="/about"
+                    onClick={() => setAboutMenuOpen(false)}
+                    className="flex items-center gap-1.5 text-xs font-bold text-[#253237] transition-all hover:text-[#5c6b73] hover:translate-x-0.5"
+                  >
+                    <span>About Saviours Overview</span>
+                    <FaArrowRight className="text-[10px]" />
                   </Link>
-                ))}
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Services Mega-Menu Trigger */}
           <div
@@ -542,7 +621,7 @@ function Navbar() {
               </Link>
             </div>
           </div>
-        </div>
+        </nav>
 
         {/* Mobile Hamburger Button */}
         <button
@@ -557,7 +636,8 @@ function Navbar() {
             {isOpen ? <FaTimes /> : <FaBars />}
           </span>
         </button>
-      </nav>
+      </div>
+    </div>
 
       {/* Mobile Drawer Menu */}
       <div
@@ -601,19 +681,22 @@ function Navbar() {
             >
               {ABOUT_ITEMS.map((item) => (
                 <Link
-                  key={item.path}
+                  key={item.key}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-[#253237] hover:bg-white"
                 >
-                  <img
-                    src={item.image}
-                    alt=""
-                    className="h-6 w-6 rounded-md object-cover"
-                  />
+                  <span>{item.emoji}</span>
                   <span>{item.name}</span>
                 </Link>
               ))}
+              <Link
+                to="/about"
+                onClick={() => setIsOpen(false)}
+                className="mt-1 block rounded-xl bg-[#253237] py-2 text-center text-xs font-bold text-white"
+              >
+                About Clinic Overview →
+              </Link>
             </div>
           </div>
 

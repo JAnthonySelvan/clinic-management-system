@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -9,13 +9,31 @@ import { HERO_IMAGES, CONTACT_IMAGES ,CTA_IMAGES} from "../../constants/images";
 
 const Contact = () => {
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const initialSubject = searchParams.get("subject") || "";
+  const initialMessage = searchParams.get("message") || "";
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      subject: initialSubject,
+      message: initialMessage,
+    },
+  });
+
+  useEffect(() => {
+    if (initialSubject) setValue("subject", initialSubject);
+    if (initialMessage) setValue("message", initialMessage);
+  }, [initialSubject, initialMessage, setValue]);
 
   const onSubmit = async (data) => {
     try {
