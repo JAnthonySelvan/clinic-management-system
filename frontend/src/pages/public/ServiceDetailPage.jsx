@@ -14,6 +14,13 @@ import {
   FaImages,
   FaListUl,
   FaTags,
+  FaVial,
+  FaSyringe,
+  FaXRay,
+  FaNotesMedical,
+  FaProcedures,
+  FaPills,
+  FaMicroscope,
 } from "react-icons/fa";
 
 import AnimatedSection from "../../components/AnimatedSection";
@@ -27,6 +34,17 @@ import {
 
 const DEFAULT_AVATAR =
   "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+
+const getPricingIcon = (testName = "", index = 0) => {
+  const normalized = testName.toLowerCase();
+  if (normalized.includes("x-ray") || normalized.includes("xray") || normalized.includes("mri") || normalized.includes("ct") || normalized.includes("scan")) return FaXRay;
+  if (normalized.includes("blood") || normalized.includes("lab") || normalized.includes("cbc") || normalized.includes("urine") || normalized.includes("lipid") || normalized.includes("test")) return FaVial;
+  if (normalized.includes("ecg") || normalized.includes("echo") || normalized.includes("heart") || normalized.includes("cardio") || normalized.includes("eeg")) return FaHeartbeat;
+  if (normalized.includes("micro") || normalized.includes("patho") || normalized.includes("biopsy") || normalized.includes("culture")) return FaMicroscope;
+
+  const fallbackIcons = [FaVial, FaXRay, FaHeartbeat, FaMicroscope, FaStethoscope];
+  return fallbackIcons[index % fallbackIcons.length];
+};
 
 const ServiceDetailPage = () => {
   const { serviceSlug } = useReactParams();
@@ -88,6 +106,8 @@ const ServiceDetailPage = () => {
     "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=80&auto=format&fit=crop",
   ];
 
   // Gallery fallback
@@ -196,7 +216,7 @@ const ServiceDetailPage = () => {
               Saviours Center of Excellence
             </span>
 
-            <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl leading-tight">
+            <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl leading-tight font-poppins">
               {service.name}
             </h1>
 
@@ -208,7 +228,7 @@ const ServiceDetailPage = () => {
               <button
                 type="button"
                 onClick={() => handleOpenBooking()}
-                className="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-[#253237] shadow-xl transition-all hover:scale-105 hover:bg-[#E0FBFC]"
+                className="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-[#253237] shadow-xl transition-all hover:scale-105 hover:bg-[#E0FBFC] cursor-pointer"
               >
                 Book Consultation
               </button>
@@ -279,7 +299,7 @@ const ServiceDetailPage = () => {
                   </p>
                   <button
                     onClick={() => handleOpenBooking()}
-                    className="mt-3 w-full rounded-xl bg-[#5C6B73] py-2 text-xs font-bold text-white transition hover:bg-[#9DB4C0] hover:text-[#253237]"
+                    className="mt-3 w-full rounded-xl bg-[#5C6B73] py-2 text-xs font-bold text-white transition hover:bg-[#9DB4C0] hover:text-[#253237] cursor-pointer"
                   >
                     Quick Booking
                   </button>
@@ -296,7 +316,7 @@ const ServiceDetailPage = () => {
                     <span className="text-xs font-bold uppercase tracking-widest text-[#5C6B73]">
                       Department Overview
                     </span>
-                    <h2 className="mt-2 text-3xl font-bold text-[#253237] sm:text-4xl">
+                    <h2 className="mt-2 text-3xl font-bold text-[#253237] sm:text-4xl font-poppins">
                       Excellence in {service.name} Care
                     </h2>
                     <p className="mt-6 text-base leading-8 text-[#5C6B73]">
@@ -332,13 +352,13 @@ const ServiceDetailPage = () => {
                 </div>
               </section>
 
-              {/* ================= FACILITY SHOWCASE GALLERY STRIP (PREMIUM SHARP UNROUNDED LOOK) ================= */}
+              {/* ================= FACILITY SHOWCASE GALLERY STRIP ================= */}
               <section id="gallery" className="scroll-mt-28">
                 <div className="mb-8">
                   <span className="text-xs font-bold uppercase tracking-widest text-[#5C6B73]">
                     Hospital Infrastructure
                   </span>
-                  <h2 className="mt-2 text-3xl font-bold text-[#253237]">
+                  <h2 className="mt-2 text-3xl font-bold text-[#253237] font-poppins">
                     Facility Showcase & Environment
                   </h2>
                   <p className="mt-2 text-sm text-[#5C6B73]">
@@ -366,24 +386,25 @@ const ServiceDetailPage = () => {
                 </div>
               </section>
 
-              {/* ================= KEY TREATMENTS GRID (PREMIUM CARD UI WITH IMAGES) ================= */}
+              {/* ================= KEY TREATMENTS GRID (PREMIUM IMAGE CARDS & POPUP BOOKING MODAL) ================= */}
               <section id="treatments" className="scroll-mt-28">
                 <div className="mb-10">
                   <span className="text-xs font-bold uppercase tracking-widest text-[#5C6B73]">
-                    Clinical Services
+                    Treatments We Offer
                   </span>
-                  <h2 className="mt-2 text-3xl font-bold text-[#253237]">
+                  <h2 className="mt-2 text-3xl font-bold text-[#253237] font-poppins">
                     Key Treatments & Procedures
                   </h2>
                   <p className="mt-2 text-sm text-[#5C6B73]">
-                    Advanced medical procedures tailored for optimal recovery and patient outcomes.
+                    Comprehensive, evidence-based care tailored to your condition.
                   </p>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                   {service.keyTreatments && service.keyTreatments.length > 0 ? (
                     service.keyTreatments.map((treatment, idx) => {
                       const treatImg =
+                        treatment.image ||
                         galleryPhotos[idx % galleryPhotos.length] ||
                         defaultTreatmentImages[idx % defaultTreatmentImages.length];
 
@@ -391,40 +412,56 @@ const ServiceDetailPage = () => {
                         <AnimatedSection
                           key={idx}
                           delay={(idx % 3) * 100}
-                          className="group overflow-hidden rounded-3xl bg-white shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100 flex flex-col justify-between"
+                          className="w-full"
                         >
-                          {/* Premium Top Image Header */}
-                          <div className="relative h-48 w-full overflow-hidden bg-[#253237]">
-                            <img
-                              src={treatImg}
-                              alt={treatment.title}
-                              className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-linear-to-t from-[#253237]/90 via-[#253237]/30 to-transparent" />
-                            <span className="absolute top-3 left-3 rounded-full bg-[#253237]/80 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#E0FBFC] border border-white/10">
-                              Procedure #{idx + 1}
-                            </span>
-                          </div>
-
-                          <div className="p-6 flex flex-col justify-between flex-1">
-                            <div>
-                              <h3 className="text-lg font-bold text-[#253237] group-hover:text-[#5C6B73] transition-colors leading-snug">
-                                {treatment.title}
-                              </h3>
-
-                              <p className="mt-3 text-xs leading-relaxed text-[#5C6B73]">
-                                {treatment.description}
-                              </p>
+                          <div className="group relative block h-84 w-full overflow-hidden rounded-4xl bg-[#253237] shadow-xl transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ring-1 ring-gray-200/50 hover:ring-2 hover:ring-[#9DB4C0]/60">
+                            {/* Rich Background Treatment Image */}
+                            <div className="absolute inset-0 bg-[#253237]">
+                              <img
+                                src={treatImg}
+                                alt={treatment.title}
+                                loading="lazy"
+                                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                              />
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() => handleOpenBooking()}
-                              className="mt-6 inline-flex items-center justify-between w-full rounded-xl bg-[#F8FBFC] px-4 py-2.5 text-xs font-bold text-[#253237] border border-gray-200 transition group-hover:bg-[#253237] group-hover:text-white group-hover:border-[#253237]"
-                            >
-                              <span>Consult Doctor</span>
-                              <FaArrowRight className="text-[10px]" />
-                            </button>
+                            {/* Gradient Scrim Overlay */}
+                            <div className="absolute inset-0 bg-linear-to-t from-[#253237]/98 via-[#253237]/50 to-transparent transition-opacity duration-500 group-hover:from-[#253237]" />
+
+                            {/* Top Procedure Tag */}
+                            <div className="absolute top-5 left-5 z-10">
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1 text-xs font-bold text-[#E0FBFC] backdrop-blur-md border border-white/30 shadow-md">
+                                Procedure #{idx + 1}
+                              </span>
+                            </div>
+
+                            {/* Content Overlay at Bottom */}
+                            <div className="absolute inset-x-0 bottom-0 z-10 p-7 flex flex-col justify-end">
+                              <h3 className="text-2xl font-bold text-white font-poppins tracking-tight leading-tight">
+                                {treatment.title}
+                              </h3>
+                              <p className="mt-2 text-xs leading-relaxed text-[#E0FBFC]/90 line-clamp-3">
+                                {treatment.description}
+                              </p>
+
+                              {/* Specs & Booking Popup Button */}
+                              <div className="mt-5 flex items-center justify-between gap-3 pt-3 border-t border-white/10">
+                                <span className="text-[11px] font-semibold text-[#E0FBFC]/80">
+                                  Avg. {treatment.duration || "45 min"}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenBooking();
+                                  }}
+                                  className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-[#253237] shadow-md transition-all duration-300 hover:bg-[#E0FBFC] hover:scale-105 cursor-pointer"
+                                >
+                                  <span>Book Consultation</span>
+                                  <FaArrowRight className="text-[10px]" />
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </AnimatedSection>
                       );
@@ -437,60 +474,93 @@ const ServiceDetailPage = () => {
                 </div>
               </section>
 
-              {/* ================= DIAGNOSTIC PRICING LIST ================= */}
+              {/* ================= DIAGNOSTIC PRICING SHOWCASE ================= */}
               <section id="pricing" className="scroll-mt-28">
-                <div className="mb-8">
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#5C6B73]">
-                    Transparent Healthcare
-                  </span>
-                  <h2 className="mt-2 text-3xl font-bold text-[#253237]">
-                    Diagnostic & Test Pricing
-                  </h2>
-                  <p className="mt-2 text-sm text-[#5C6B73]">
-                    Clear, upfront cost estimations for clinical imaging, lab tests, and screenings.
-                  </p>
-                </div>
+                <div className="overflow-hidden rounded-4xl bg-white shadow-2xl border border-gray-100">
+                  {/* Header Bar */}
+                  <div className="bg-[#253237] text-white px-8 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div>
+                      <h3 className="text-2xl font-bold font-poppins">
+                        Diagnostic & Test Pricing
+                      </h3>
+                      <p className="text-xs text-[#E0FBFC]/80 mt-1">
+                        Transparent pricing, no hidden costs
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold text-[#E0FBFC] backdrop-blur-md border border-white/20 self-start sm:self-auto">
+                      <FaTags className="text-teal-300 text-xs" />
+                      Upfront Costs
+                    </span>
+                  </div>
 
-                <div className="overflow-hidden rounded-3xl bg-white p-8 shadow-xl border border-gray-100">
+                  {/* Pricing Table Rows */}
                   <div className="divide-y divide-gray-100">
-                    {service.diagnosticPricing &&
-                    service.diagnosticPricing.length > 0 ? (
-                      service.diagnosticPricing.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="flex flex-wrap items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
-                        >
-                          <div>
-                            <h4 className="text-base font-bold text-[#253237]">
-                              {item.testName}
-                            </h4>
-                            <span className="inline-flex items-center gap-1.5 text-xs text-[#5C6B73] mt-1">
-                              <FaClock className="text-[10px]" />
-                              <span>Est. Duration: {item.duration || "30 mins"}</span>
-                            </span>
-                          </div>
+                    {service.diagnosticPricing && service.diagnosticPricing.length > 0 ? (
+                      service.diagnosticPricing.map((item, idx) => {
+                        const PricingIcon = getPricingIcon(item.testName, idx);
+                        const isStandout = idx === 0 || item.testName.toLowerCase().includes("complete") || item.testName.toLowerCase().includes("mri") || item.testName.toLowerCase().includes("blood");
 
-                          <div className="text-right">
-                            <span className="text-xl font-bold text-[#253237]">
-                              ₹{item.price.toLocaleString("en-IN")}
-                            </span>
-                            <p className="text-[10px] text-gray-400">
-                              Inclusive of taxes
-                            </p>
+                        return (
+                          <div
+                            key={idx}
+                            className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-8 py-5 transition-colors duration-200 hover:bg-[#F8FBFC] ${
+                              idx % 2 === 0 ? "bg-[#F8FBFC]/50" : "bg-white"
+                            }`}
+                          >
+                            {/* Left: Test Name & Soft Icon */}
+                            <div className="flex items-center gap-4">
+                              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#C2DFE3]/40 text-[#253237] shrink-0 shadow-xs">
+                                <PricingIcon className="text-base text-[#253237]" />
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="text-base font-semibold text-[#253237]">
+                                    {item.testName}
+                                  </h4>
+                                  {isStandout && (
+                                    <span className="rounded-full bg-[#9DB4C0]/20 text-[#253237] text-[10px] font-bold px-2.5 py-0.5 border border-[#9DB4C0]/30">
+                                      Most Booked
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Middle & Right: Duration & Price */}
+                            <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-12">
+                              <span className="inline-flex items-center gap-1.5 text-xs text-[#5C6B73]">
+                                <FaClock className="text-xs text-[#9DB4C0]" />
+                                <span>~{item.duration || "20 mins"}</span>
+                              </span>
+
+                              <div className="text-right">
+                                <span className="text-xs text-[#5C6B73] mr-1 font-normal">starting at</span>
+                                <span className="text-xl font-bold text-[#253237]">
+                                  ₹{item.price ? item.price.toLocaleString("en-IN") : "N/A"}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
-                      <p className="py-4 text-sm text-[#5C6B73]">
-                        Standard consultation charges apply. Contact clinic for exact pricing.
+                      <p className="px-8 py-6 text-sm text-[#5C6B73]">
+                        Standard consultation charges apply. Contact clinic for exact diagnostic pricing.
                       </p>
                     )}
                   </div>
 
-                  <div className="mt-6 border-t border-gray-100 pt-4 text-center sm:text-left">
-                    <p className="text-xs text-[#5C6B73]">
-                      * Note: Diagnostic prices are subject to doctor recommendation during consultation.
+                  {/* Footer Disclaimer Strip */}
+                  <div className="bg-[#F8FBFC] px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-100 text-xs">
+                    <p className="text-[#5C6B73] text-center sm:text-left">
+                      * Prices may vary based on physician consultation and individual clinical requirements.
                     </p>
+                    <RouterLink
+                      to="/contact"
+                      className="font-bold text-[#253237] hover:text-[#5C6B73] transition-colors underline decoration-[#9DB4C0] underline-offset-4 whitespace-nowrap shrink-0"
+                    >
+                      Have a question about pricing? Contact us →
+                    </RouterLink>
                   </div>
                 </div>
               </section>
@@ -501,7 +571,7 @@ const ServiceDetailPage = () => {
                   <span className="text-xs font-bold uppercase tracking-widest text-[#5C6B73]">
                     Specialist Team
                   </span>
-                  <h2 className="mt-2 text-3xl font-bold text-[#253237]">
+                  <h2 className="mt-2 text-3xl font-bold text-[#253237] font-poppins">
                     Meet Our {service.name} Specialists
                   </h2>
                   <p className="mt-2 text-sm text-[#5C6B73]">
@@ -533,7 +603,7 @@ const ServiceDetailPage = () => {
                             <span className="inline-block rounded-full bg-[#E0FBFC] px-3 py-1 text-xs font-bold text-[#253237] mb-2">
                               {doc.specialization}
                             </span>
-                            <h3 className="text-xl font-bold text-[#253237]">
+                            <h3 className="text-xl font-bold text-[#253237] font-poppins">
                               Dr. {doc.fullName}
                             </h3>
                             <p className="mt-1 text-xs text-[#5C6B73]">
@@ -552,7 +622,7 @@ const ServiceDetailPage = () => {
                           <button
                             type="button"
                             onClick={() => handleOpenBooking(doc)}
-                            className="w-full rounded-xl bg-[#253237] py-3 text-xs font-bold text-white transition hover:bg-[#5C6B73]"
+                            className="w-full rounded-xl bg-[#253237] py-3 text-xs font-bold text-white transition hover:bg-[#5C6B73] cursor-pointer"
                           >
                             Book Appointment
                           </button>
@@ -564,7 +634,7 @@ const ServiceDetailPage = () => {
                   /* Empty state for doctors */
                   <div className="rounded-3xl border border-dashed border-gray-200 bg-white p-12 text-center">
                     <FaUserMd className="mx-auto text-4xl text-gray-300" />
-                    <h3 className="mt-4 text-lg font-bold text-[#253237]">
+                    <h3 className="mt-4 text-lg font-bold text-[#253237] font-poppins">
                       Specialists Coming Soon
                     </h3>
                     <p className="mt-2 text-sm text-[#5C6B73] max-w-md mx-auto">
@@ -572,7 +642,7 @@ const ServiceDetailPage = () => {
                     </p>
                     <button
                       onClick={() => handleOpenBooking()}
-                      className="mt-6 rounded-xl bg-[#253237] px-6 py-2.5 text-xs font-bold text-white transition hover:bg-[#5C6B73]"
+                      className="mt-6 rounded-xl bg-[#253237] px-6 py-2.5 text-xs font-bold text-white transition hover:bg-[#5C6B73] cursor-pointer"
                     >
                       Book General Consultation
                     </button>
@@ -591,7 +661,7 @@ const ServiceDetailPage = () => {
                   <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#5C6B73]/90 to-[#9DB4C0]/95" />
 
                   <div className="relative z-10">
-                    <h2 className="text-3xl font-bold text-white md:text-4xl">
+                    <h2 className="text-3xl font-bold text-white md:text-4xl font-poppins">
                       Need {service.name} Consultation?
                     </h2>
                     <p className="mx-auto mt-4 max-w-2xl text-base text-[#E0FBFC]">
@@ -601,7 +671,7 @@ const ServiceDetailPage = () => {
                     <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                       <button
                         onClick={() => handleOpenBooking()}
-                        className="rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-[#253237] shadow-xl transition hover:scale-105 hover:bg-[#E0FBFC]"
+                        className="rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-[#253237] shadow-xl transition hover:scale-105 hover:bg-[#E0FBFC] cursor-pointer"
                       >
                         Book Appointment Now
                       </button>
