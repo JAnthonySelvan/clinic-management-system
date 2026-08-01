@@ -42,13 +42,13 @@ export const SPECIALTY_IMAGES = {
 
 export const FEATURE_IMAGES = {
   expertDoctors:
-    "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=400&q=80",
+    "https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=500&q=80",
   modernFacilities:
-    "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=400&q=80",
+    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=500&q=80",
   compassionateCare:
-    "https://res.cloudinary.com/udzftzug/image/upload/v1785431211/Gemini_Generated_Image_b3uqt7b3uqt7b3uq_ryp1bg.png",
+    "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=500&q=80",
   timelyService:
-    "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=400&q=80",
+    "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=500&q=80",
   qualifiedSpecialists:
     "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80",
   modernTechnology:
