@@ -4,6 +4,21 @@ import User from "../models/User.mjs";
 import Schedule from "../models/Schedule.mjs";
 import { validationResult } from "express-validator";
 
+const getSpecializationRegex = (spec) => {
+  if (!spec) return /.*/i;
+  const s = spec.toLowerCase().trim();
+  if (s.includes("cardio")) return /cardio/i;
+  if (s.includes("neuro")) return /neuro/i;
+  if (s.includes("derma") || s.includes("skin")) return /derma|skin/i;
+  if (s.includes("pedia") || s.includes("child")) return /pedia|child/i;
+  if (s.includes("ortho") || s.includes("bone")) return /ortho|bone/i;
+  if (s.includes("physician") || s.includes("medicine") || s.includes("general")) return /physician|medicine|general/i;
+  if (s.includes("dent")) return /dent/i;
+  if (s.includes("eye") || s.includes("ophthalm")) return /eye|ophthalm/i;
+  if (s.includes("pulmo") || s.includes("chest") || s.includes("lung")) return /pulmo|lung|chest/i;
+  return new RegExp(spec, "i");
+};
+
 
 export const bookAppointment = async (req, res) => {
   try {
@@ -101,22 +116,7 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
-const getSpecializationRegex = (spec) => {
-  if (!spec) return /.*/i;
-  const s = spec.toLowerCase().trim();
-  if (s.includes("cardio")) return /cardio/i;
-  if (s.includes("neuro")) return /neuro/i;
-  if (s.includes("derma") || s.includes("skin")) return /derma|skin/i;
-  if (s.includes("pedia") || s.includes("child")) return /pedia|child/i;
-  if (s.includes("ortho") || s.includes("bone")) return /ortho|bone/i;
-  if (s.includes("physician") || s.includes("medicine") || s.includes("general")) return /physician|medicine|general/i;
-  if (s.includes("dent")) return /dent/i;
-  if (s.includes("eye") || s.includes("ophthalm")) return /eye|ophthalm/i;
-  if (s.includes("pulmo") || s.includes("chest") || s.includes("lung")) return /pulmo|lung|chest/i;
-  return new RegExp(spec, "i");
-};
-
-// If no specific doctor was selected, auto-assign an available doctor in the department who is free at this slot
+    // If no specific doctor was selected, auto-assign an available doctor in the department who is free at this slot
     if (!assignedDoctorId && assignedSpecialization) {
       const deptDoctors = await User.find({
         role: "doctor",

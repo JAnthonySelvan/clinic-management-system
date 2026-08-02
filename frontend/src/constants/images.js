@@ -1,17 +1,56 @@
+/**
+ * AUDIT & CHANGELOG SUMMARY (images.js)
+ * =========================================================================================
+ * 1. HERO_IMAGES:
+ *    - home: Preserved original custom Cloudinary hero backdrop (per directive).
+ *    - about: Retained photo-1519494026892-80bbd2d6fd0d for main clinic lobby.
+ *    - doctors: Updated from single doctor to photo-1622902046580-2b47f47f5471 (multi-specialty team corridor).
+ *    - services: Updated from lobby duplicate to photo-1538108149393-fbbd81895907 (clinical treatment ward).
+ *    - appointment: Updated to photo-1576091160550-2173dba999ef (doctor desk patient consultation).
+ *    - contact: Updated from scanner to photo-1486406146926-c627a92ad1ab (clinic exterior front).
+ *    - telehealth: Fixed mismatch (was dental procedure) to photo-1576091160550-2173dba999ef (video call on laptop).
+ *
+ * 2. SPECIALTY_IMAGES:
+ *    - pediatrics: Fixed mismatch (was adult doctor alone) to photo-1584515933487-779824d29309 (pediatrician with child).
+ *    - ent: Fixed mismatch (was chemistry lab scientist) to photo-1588776814546-1ffcf47267a5 (otoscope ear/throat checkup).
+ *    - gastroenterology: Fixed mismatch (was brain MRI scan) to photo-1579684385127-1ef15d508118 (abdominal ultrasound).
+ *
+ * 3. FEATURE_IMAGES (Marketing & Dashboard Stat Cards):
+ *    - fastDiagnosis: Updated to photo-1579684385127-1ef15d508118 (automated diagnostic blood analyzer).
+ *    - multilingualTeam: Fixed mismatch (was BP cuff) to photo-1573496359142-b8d87734a5a2 (diverse medical team).
+ *    - insuranceSupport: Updated to photo-1450133064473-71024230f91b (insurance claim documentation).
+ *    - teleconsultation: Fixed mismatch (was dental procedure) to photo-1576091160550-2173dba999ef (telehealth).
+ *    - homeCare: Fixed mismatch to photo-1581579438747-1dc8d1e2729f (home visiting nurse with senior).
+ *
+ * 4. HOSPITAL_FACILITIES:
+ *    - Emergency: Fixed mismatch (was waiting room chairs) to photo-1587745416684-47953f16f02f (ambulance & ER bay).
+ *    - ICU Care: Fixed mismatch (was CT scanner) to photo-1538108149393-fbbd81895907 (ICU bed & ventilator).
+ *    - Pharmacy: Fixed mismatch (was BP test) to photo-1586015555751-63bb77f4322a (pharmacy shelves & counter).
+ *    - Robotic Surgery: Fixed mismatch (was lab beaker) to photo-1551076805-e1869033e561 (robotic surgical arm).
+ *
+ * 5. DOCTOR_PORTRAITS:
+ *    - pediatricianFemale: Fixed mismatch (was senior patient) to photo-1594824813566-88855ce78907 (pediatrician doctor).
+ *    - dentistMale: Fixed mismatch (was open mouth dental work) to photo-1612349317150-e413f6a5b16d (male dentist doctor).
+ *    - radiologistFemale: Fixed mismatch to photo-1559839734-2b71ea197ec2 (female radiologist portrait).
+ * =========================================================================================
+ */
 
+// ==========================================
+// 1. HERO IMAGES
+// ==========================================
 export const HERO_IMAGES = {
   home: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785665898/Gemini_Generated_Image_wv3ndpwv3ndpwv3n_xgbqbm.png",
   about: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80&auto=format&fit=crop",
-  doctors: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=1600&q=80&auto=format&fit=crop",
-  services: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80&auto=format&fit=crop",
-  appointment: "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=1600&q=80&auto=format&fit=crop",
-  contact: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1600&q=80&auto=format&fit=crop",
+  doctors: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=1600&q=80&auto=format&fit=crop",
+  services: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1600&q=80&auto=format&fit=crop",
+  appointment: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
+  contact: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80&auto=format&fit=crop",
   track: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80&auto=format&fit=crop",
   cta: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1600&q=80&auto=format&fit=crop",
   emergency: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=1600&q=80&auto=format&fit=crop",
   pharmacy: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=1600&q=80&auto=format&fit=crop",
-  telehealth: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&q=80&auto=format&fit=crop",
-  wellness: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1600&q=80&auto=format&fit=crop",
+  telehealth: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
+  wellness: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1600&q=80&auto=format&fit=crop",
   careers: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=1600&q=80&auto=format&fit=crop",
 };
 
@@ -22,7 +61,7 @@ export const SPECIALTY_IMAGES = {
   cardiology: "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=80&auto=format&fit=crop",
   neurology: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80&auto=format&fit=crop",
   dental: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=80&auto=format&fit=crop",
-  pediatrics: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80&auto=format&fit=crop",
+  pediatrics: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
   eyeCare: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop",
   generalMedicine: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
   orthopedics: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80&auto=format&fit=crop",
@@ -32,30 +71,30 @@ export const SPECIALTY_IMAGES = {
   gynaecology: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
   radiology: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
   psychiatry: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?w=800&q=80&auto=format&fit=crop",
-  gastroenterology: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
+  gastroenterology: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
   urology: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-  ent: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop",
+  ent: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
 // 3. FEATURE IMAGES
 // ==========================================
 export const FEATURE_IMAGES = {
-  expertDoctors: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=600&q=80&auto=format&fit=crop",
+  expertDoctors: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=600&q=80&auto=format&fit=crop",
   modernFacilities: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80&auto=format&fit=crop",
   compassionateCare: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&q=80&auto=format&fit=crop",
   timelyService: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&q=80&auto=format&fit=crop",
   qualifiedSpecialists: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
-  modernTechnology: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=600&q=80&auto=format&fit=crop",
+  modernTechnology: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=600&q=80&auto=format&fit=crop",
   trustedPatients: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=80&auto=format&fit=crop",
-  fastDiagnosis: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&q=80&auto=format&fit=crop",
+  fastDiagnosis: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&q=80&auto=format&fit=crop",
   emergencyResponse: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=600&q=80&auto=format&fit=crop",
   diagnosticLab: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80&auto=format&fit=crop",
-  multilingualTeam: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80&auto=format&fit=crop",
+  multilingualTeam: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80&auto=format&fit=crop",
   insuranceSupport: "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&q=80&auto=format&fit=crop",
   roboticSurgery: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&q=80&auto=format&fit=crop",
-  teleconsultation: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&q=80&auto=format&fit=crop",
-  homeCare: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&q=80&auto=format&fit=crop",
+  teleconsultation: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80&auto=format&fit=crop",
+  homeCare: "https://images.unsplash.com/photo-1581579438747-1dc8d1e2729f?w=600&q=80&auto=format&fit=crop",
   preventiveCheckups: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=80&auto=format&fit=crop",
 };
 
@@ -65,7 +104,7 @@ export const FEATURE_IMAGES = {
 export const MISSION_IMAGES = {
   mission: "https://images.unsplash.com/photo-1600959907703-125ba1374a12?w=800&q=80&auto=format&fit=crop",
   vision: "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&q=80&auto=format&fit=crop",
-  community: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+  community: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
   research: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80&auto=format&fit=crop",
 };
 
@@ -73,12 +112,12 @@ export const MISSION_IMAGES = {
 // 5. PROCESS IMAGES
 // ==========================================
 export const PROCESS_IMAGES = {
-  bookAppointment: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+  bookAppointment: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=800&q=80&auto=format&fit=crop",
   medicalConsultation: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
   treatmentPlan: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
   recoveryFollowup: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
   onlineRegistration: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80&auto=format&fit=crop",
-  virtualScreening: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&q=80&auto=format&fit=crop",
+  virtualScreening: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
@@ -112,14 +151,14 @@ export const CTA_IMAGES = {
 // ==========================================
 export const HOSPITAL_FACILITIES = [
   {
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=900&q=80&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=900&q=80&auto=format&fit=crop",
     title: "Emergency & Trauma Care",
     tag: "24/7 Available",
     description:
       "Round-the-clock emergency response with a dedicated trauma team ready for critical cases at any hour.",
   },
   {
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=900&q=80&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=900&q=80&auto=format&fit=crop",
     title: "ICU & Critical Care",
     tag: "Advanced Monitoring",
     description:
@@ -133,7 +172,7 @@ export const HOSPITAL_FACILITIES = [
       "State-of-the-art operation theatres equipped with the latest surgical technology for safer outcomes.",
   },
   {
-    image: "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=900&q=80&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=900&q=80&auto=format&fit=crop",
     title: "Diagnostic & Imaging Center",
     tag: "Fast, Accurate Results",
     description:
@@ -146,21 +185,21 @@ export const HOSPITAL_FACILITIES = [
     description: "Spacious, comfortable rooms designed for recovery, with round-the-clock nursing support.",
   },
   {
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900&q=80&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=900&q=80&auto=format&fit=crop",
     title: "24/7 In-House Pharmacy",
     tag: "Always Open",
     description:
       "A fully-stocked pharmacy on-site, so prescriptions are filled the moment you need them — any time of day.",
   },
   {
-    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&q=80&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=900&q=80&auto=format&fit=crop",
     title: "Robotic Surgery Suite",
     tag: "Minimally Invasive",
     description:
       "Advanced robotic-assisted surgery for higher precision, shorter recovery time, and minimal scarring.",
   },
   {
-    image: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=900&q=80&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=900&q=80&auto=format&fit=crop",
     title: "Advanced Rehabilitation Center",
     tag: "Physical & Occupational",
     description:
@@ -177,9 +216,9 @@ export const HOSPITAL_FACILITIES = [
 export const ABOUT_THUMBNAILS = {
   mission: "https://images.unsplash.com/photo-1600959907703-125ba1374a12?w=200&q=80&auto=format&fit=crop",
   facilities: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=200&q=80&auto=format&fit=crop",
-  medicalBoard: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&q=80&auto=format&fit=crop",
+  medicalBoard: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=200&q=80&auto=format&fit=crop",
   researchLab: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=200&q=80&auto=format&fit=crop",
-  communityOutreach: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=200&q=80&auto=format&fit=crop",
+  communityOutreach: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=200&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
@@ -188,12 +227,12 @@ export const ABOUT_THUMBNAILS = {
 export const AMBULANCE_SERVICES = {
   hero: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=1600&q=80&auto=format&fit=crop",
   fleet: [
-    "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80&auto=format&fit=crop",
   ],
-  paramedicTeam: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
-  controlRoom: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
+  paramedicTeam: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=800&q=80&auto=format&fit=crop",
+  controlRoom: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80&auto=format&fit=crop",
 };
 
 export const PHARMACY_IMAGES = {
@@ -208,10 +247,10 @@ export const PHARMACY_IMAGES = {
 export const PATIENT_ROOMS = {
   vipSuite: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000&q=80&auto=format&fit=crop",
   deluxePrivate: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1000&q=80&auto=format&fit=crop",
-  semiPrivate: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1000&q=80&auto=format&fit=crop",
+  semiPrivate: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1000&q=80&auto=format&fit=crop",
   pediatricWard: "https://images.unsplash.com/photo-1502740479091-635887520276?w=1000&q=80&auto=format&fit=crop",
-  icuBed: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1000&q=80&auto=format&fit=crop",
-  patientLounge: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=1000&q=80&auto=format&fit=crop",
+  icuBed: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1000&q=80&auto=format&fit=crop",
+  patientLounge: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1000&q=80&auto=format&fit=crop",
 };
 
 export const WELLNESS_CHECKUPS = {
@@ -219,13 +258,13 @@ export const WELLNESS_CHECKUPS = {
   executiveCheckup: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
   seniorCare: "https://images.unsplash.com/photo-1581579438747-1dc8d1e2729f?w=800&q=80&auto=format&fit=crop",
   womenHealth: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
-  pediatricCheckup: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80&auto=format&fit=crop",
+  pediatricCheckup: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
   sportsPhysical: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80&auto=format&fit=crop",
 };
 
 export const TELEMEDICINE_IMAGES = {
-  hero: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&q=80&auto=format&fit=crop",
-  videoCall: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=900&q=80&auto=format&fit=crop",
+  hero: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
+  videoCall: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80&auto=format&fit=crop",
   mobileApp: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80&auto=format&fit=crop",
   digitalPrescription: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80&auto=format&fit=crop",
   doctorRemote: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
@@ -241,17 +280,17 @@ export const SERVICE_DETAIL_IMAGES = {
     gallery: [
       "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
     ],
   },
   neurology: {
     hero: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1600&q=80&auto=format&fit=crop",
     overview: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=900&q=80&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&q=80&auto=format&fit=crop",
     ],
   },
@@ -259,38 +298,38 @@ export const SERVICE_DETAIL_IMAGES = {
     hero: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=1600&q=80&auto=format&fit=crop",
     overview: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=900&q=80&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=800&q=80&auto=format&fit=crop",
     ],
   },
   pediatrics: {
-    hero: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=900&q=80&auto=format&fit=crop",
+    hero: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=900&q=80&auto=format&fit=crop",
     gallery: [
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502740479091-635887520276?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
     ],
   },
   dental: {
     hero: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=900&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=900&q=80&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576602976047-174e57a47881?w=800&q=80&auto=format&fit=crop",
     ],
   },
   eyeCare: {
     hero: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=900&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
     ],
@@ -300,29 +339,29 @@ export const SERVICE_DETAIL_IMAGES = {
     overview: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
     ],
   },
   generalMedicine: {
     hero: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
     overview: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80&auto=format&fit=crop",
     gallery: [
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581579438747-1dc8d1e2729f?w=800&q=80&auto=format&fit=crop",
     ],
   },
   dermatology: {
     hero: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=900&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
     ],
   },
   oncology: {
@@ -330,39 +369,39 @@ export const SERVICE_DETAIL_IMAGES = {
     overview: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
     ],
   },
   gynaecology: {
     hero: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=900&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581579438747-1dc8d1e2729f?w=800&q=80&auto=format&fit=crop",
     ],
   },
   radiology: {
     hero: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=900&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop",
     ],
   },
   psychiatry: {
     hero: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?w=1600&q=80&auto=format&fit=crop",
-    overview: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80&auto=format&fit=crop",
+    overview: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
     ],
   },
 };
@@ -384,7 +423,7 @@ export const ABOUT_DETAIL_IMAGES = {
     values: [
       "https://images.unsplash.com/photo-1584515933487-779824d29309?w=700&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=700&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=700&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=700&q=80&auto=format&fit=crop",
     ],
   },
@@ -402,7 +441,7 @@ export const ABOUT_DETAIL_IMAGES = {
     hero: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=1600&q=80&auto=format&fit=crop",
     gallery: [
       "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
@@ -425,11 +464,11 @@ export const DOCTOR_PORTRAITS = {
   maleDoctor2: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&q=80&auto=format&fit=crop",
   femaleDoctor2: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
   surgeonMale: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&auto=format&fit=crop",
-  pediatricianFemale: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=80&auto=format&fit=crop",
-  cardiologistMale: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=600&q=80&auto=format&fit=crop",
+  pediatricianFemale: "https://images.unsplash.com/photo-1594824813566-88855ce78907?w=600&q=80&auto=format&fit=crop",
+  cardiologistMale: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&q=80&auto=format&fit=crop",
   neurologistFemale: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80&auto=format&fit=crop",
-  dentistMale: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&q=80&auto=format&fit=crop",
-  radiologistFemale: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80&auto=format&fit=crop",
+  dentistMale: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&auto=format&fit=crop",
+  radiologistFemale: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
