@@ -1,42 +1,32 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
+import {
+  FaThLarge as FaThLargeIcon,
+  FaUserMd as FaUserMdIcon,
+  FaCalendarCheck as FaCalendarCheckIcon,
+  FaCalendarMinus as FaCalendarMinusIcon,
+  FaEnvelope as FaEnvelopeIcon,
+  FaBell as FaBellIcon,
+  FaSignOutAlt as FaSignOutAltIcon,
+  FaBars as FaBarsIcon,
+  FaTimes as FaTimesIcon,
+  FaStethoscope as FaStethoscopeIcon,
+} from "react-icons/fa";
 
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { logout } from "../features/auth/authSlice";
+
+const DEFAULT_AVATAR =
+  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
 
 const AdminLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { user } = useAppSelector((state) => state.auth);
-
-  const menuItems = [
-    {
-      name: "Dashboard",
-      path: "/admin/dashboard",
-      icon: "📊",
-    },
-    {
-      name: "Doctors",
-      path: "/admin/doctors",
-      icon: "👨‍⚕️",
-    },
-    {
-      name: "Appointments",
-      path: "/admin/appointments",
-      icon: "📅",
-    },
-    {
-      name: "Doctor Leaves",
-      path: "/admin/leaves",
-      icon: "🏖️",
-    },
-    {
-      name: "Messages",
-      path: "/admin/messages",
-      icon: "💬",
-    },
-  ];
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -44,71 +34,204 @@ const AdminLayout = () => {
     navigate("/admin/login", { replace: true });
   };
 
+  const getBreadcrumbTitle = () => {
+    const path = location.pathname;
+    if (path.includes("/admin/dashboard")) return "Dashboard Overview";
+    if (path.includes("/admin/doctors")) return "Doctor Management";
+    if (path.includes("/admin/appointments")) return "Appointments Management";
+    if (path.includes("/admin/leaves")) return "Doctor Leaves";
+    if (path.includes("/admin/messages")) return "Contact Messages";
+    return "Admin Panel";
+  };
+
+  const menuItems = [
+    {
+      name: "Dashboard",
+      path: "/admin/dashboard",
+      icon: FaThLargeIcon,
+    },
+    {
+      name: "Doctors",
+      path: "/admin/doctors",
+      icon: FaUserMdIcon,
+    },
+    {
+      name: "Appointments",
+      path: "/admin/appointments",
+      icon: FaCalendarCheckIcon,
+    },
+    {
+      name: "Doctor Leaves",
+      path: "/admin/leaves",
+      icon: FaCalendarMinusIcon,
+    },
+    {
+      name: "Messages",
+      path: "/admin/messages",
+      icon: FaEnvelopeIcon,
+    },
+  ];
+
   return (
     <div className="flex min-h-screen bg-[#F8FBFC]">
-      {/* Sidebar */}
-      <aside className="flex w-72 flex-col bg-[#253237] text-white shadow-xl">
-        <div className="border-b border-[#5C6B73] p-6">
-          <h1 className="text-2xl font-bold">Saviours Clinic</h1>
-          <p className="mt-1 text-sm text-[#C2DFE3]">Admin Dashboard</p>
+      {/* Mobile Drawer Overlay Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 z-40 bg-[#253237]/60 backdrop-blur-xs md:hidden"
+        />
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-linear-to-b from-[#253237] via-[#1f292d] to-[#162024] text-white shadow-2xl transition-transform duration-300 md:static md:translate-x-0 ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Brand Header */}
+        <div className="flex items-center justify-between border-b border-[#5C6B73]/30 px-6 py-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 text-[#E0FBFC]">
+              <FaStethoscopeIcon className="text-lg" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold tracking-tight text-white">Saviours</h1>
+              <p className="text-[11px] font-medium tracking-wider text-[#C2DFE3] uppercase">
+                Admin Panel
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close sidebar"
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-white/10 hover:text-white md:hidden"
+          >
+            <FaTimesIcon className="text-lg" />
+          </button>
         </div>
 
-        <nav className="mt-6 flex flex-col gap-2 px-4">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
-                  isActive
-                    ? "bg-[#9DB4C0] text-[#253237] font-semibold"
-                    : "hover:bg-[#5C6B73]"
-                }`
-              }
-            >
-              <span>{item.icon}</span>
-              {item.name}
-            </NavLink>
-          ))}
+        {/* Admin Identity Card */}
+        <div className="border-b border-[#5C6B73]/30 px-6 py-5">
+          <div className="flex items-center gap-3.5 rounded-xl bg-white/5 p-3.5 border border-white/10">
+            <div className="relative shrink-0">
+              <img
+                src={user?.profileImage || DEFAULT_AVATAR}
+                alt={user?.fullName || "Admin Profile"}
+                onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
+                className="h-11 w-11 rounded-full object-cover ring-2 ring-[#9DB4C0]/40"
+              />
+              <span
+                className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-[#253237]"
+                title="Online Status"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-sm font-bold text-white">
+                {user?.fullName || "System Admin"}
+              </h3>
+              <p className="truncate text-xs font-medium text-[#C2DFE3]/80 mt-0.5">
+                Administrator
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="flex-1 space-y-2 p-5 overflow-y-auto">
+          {menuItems.map((item) => {
+            const IconComp = item.icon;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `group relative flex items-center gap-3.5 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 overflow-hidden ${
+                    isActive
+                      ? "bg-white/10 text-white font-semibold shadow-inner before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#9DB4C0] before:rounded-r-full before:scale-y-100"
+                      : "text-[#C2DFE3]/90 hover:bg-white/5 hover:text-white before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#9DB4C0] before:rounded-r-full before:scale-y-0 hover:before:scale-y-100 before:transition-transform before:duration-300"
+                  }`
+                }
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-white transition-colors group-hover:bg-[#9DB4C0]/20">
+                  <IconComp className="text-base text-[#E0FBFC]" />
+                </div>
+                <span>{item.name}</span>
+              </NavLink>
+            );
+          })}
         </nav>
 
-        <div className="mt-auto px-4 pb-6">
-          <button
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[#E0FBFC] transition hover:bg-red-600 hover:text-white"
-          >
-            <span>🚪</span>
-            Logout
-          </button>
+        {/* Footer info inside sidebar */}
+        <div className="border-t border-[#5C6B73]/30 p-5 text-center text-xs text-[#5C6B73]">
+          <p>© 2026 Saviours Health Care</p>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className="flex flex-1 flex-col">
-        {/* Top Navbar */}
-        <header className="flex h-20 items-center justify-between bg-white px-8 shadow">
-          <h2 className="text-2xl font-bold text-[#253237]">Admin Panel</h2>
+      {/* Main Container */}
+      <div className="flex flex-1 flex-col min-w-0">
+        {/* Header Bar */}
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200/80 bg-white/95 px-6 md:px-8 py-4 backdrop-blur-md shadow-2xs">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open sidebar"
+              className="rounded-xl border border-gray-200 p-2 text-[#253237] hover:bg-gray-100 md:hidden"
+            >
+              <FaBarsIcon className="text-lg" />
+            </button>
 
-          <div className="flex items-center gap-4">
-            <span className="text-[#5C6B73]">
-              Welcome, {user?.fullName || "Admin"}
-            </span>
+            {/* Breadcrumb Title */}
+            <div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#5C6B73]">
+                <span>Admin Portal</span>
+                <span>/</span>
+                <span className="text-[#253237]">{getBreadcrumbTitle()}</span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#253237] mt-0.5">
+                {getBreadcrumbTitle()}
+              </h2>
+            </div>
+          </div>
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#253237] font-bold text-white">
-              {user?.fullName?.charAt(0).toUpperCase() || "A"}
+          {/* Right Header Actions */}
+          <div className="flex items-center gap-3 md:gap-4">
+            {/* Notification Bell */}
+            <button
+              type="button"
+              title="Notifications"
+              aria-label="View notifications"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-[#253237] shadow-2xs hover:bg-gray-50 transition"
+            >
+              <FaBellIcon className="text-sm text-[#5C6B73]" />
+              <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+            </button>
+
+            {/* Admin Avatar / Name Badge */}
+            <div className="hidden sm:flex items-center gap-2.5 border-l border-gray-200 pl-4">
+              <span className="text-sm font-bold text-[#253237]">
+                {user?.fullName || "System Admin"}
+              </span>
             </div>
 
+            {/* Icon-Only Circular Logout Button with Tooltip */}
             <button
+              type="button"
               onClick={handleLogout}
-              className="rounded-lg bg-[#253237] px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600"
+              title="Logout from admin panel"
+              aria-label="Logout"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-[#5C6B73] shadow-2xs transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 active:scale-95 cursor-pointer"
             >
-              Logout
+              <FaSignOutAltIcon className="text-sm" />
             </button>
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 p-8">
+        {/* Main Content Area */}
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
           <Outlet />
         </main>
       </div>
