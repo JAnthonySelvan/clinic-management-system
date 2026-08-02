@@ -5,6 +5,7 @@ import {
   FaTrash,
   FaChevronLeft,
   FaChevronRight,
+  FaStethoscope,
 } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
@@ -145,7 +146,7 @@ const Appointments = () => {
               <tr>
                 <th className="px-6 py-4">Patient</th>
                 <th className="px-6 py-4">Contact Info</th>
-                <th className="px-6 py-4">Assigned Doctor</th>
+                <th className="px-6 py-4">Assigned Doctor / Department</th>
                 <th className="px-6 py-4">Date & Time</th>
                 <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4 text-center">Actions</th>
@@ -170,8 +171,30 @@ const Appointments = () => {
                       </div>
                     </td>
 
-                    <td className="px-6 py-5 font-medium text-[#253237]">
-                      {appointment.doctor?.fullName || "Unassigned"}
+                    <td className="px-6 py-5">
+                      {appointment.doctor?.fullName ? (
+                        <div>
+                          <p className="font-semibold text-[#253237]">
+                            Dr. {appointment.doctor.fullName.replace(/^Dr\.\s*/i, "")}
+                          </p>
+                          <p className="text-xs text-[#5C6B73] font-medium mt-0.5">
+                            {appointment.specialization || appointment.doctor.specialization}
+                          </p>
+                          <span className="inline-block mt-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/80 px-2 py-0.5 rounded-md">
+                            Specialist-Based Booking
+                          </span>
+                        </div>
+                      ) : (
+                        <div>
+                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800 border border-amber-200/80">
+                            <FaStethoscope className="text-xs text-amber-600" />
+                            <span>{appointment.specialization || "General Department"}</span>
+                          </span>
+                          <p className="text-[11px] font-medium text-[#5C6B73] mt-1">
+                            Department-Based Booking
+                          </p>
+                        </div>
+                      )}
                     </td>
 
                     <td className="px-6 py-5 font-mono text-xs text-[#5C6B73]">

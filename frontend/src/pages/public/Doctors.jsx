@@ -178,7 +178,28 @@ const Doctors = () => {
 
   const specializationCounts = useMemo(() => {
     const counts = {};
+    const ALIAS_MAP = {
+      Dentist: ["Dentist", "Dental", "Dentistry"],
+      Cardiologist: ["Cardiologist", "Cardiology"],
+      Neurologist: ["Neurologist", "Neurology"],
+      Orthopedic: ["Orthopedic", "Orthopedics", "Orthopedist"],
+      Pediatrician: ["Pediatrician", "Pediatrics"],
+      "General Physician": ["General Physician", "General Medicine", "General"],
+      Ophthalmologist: ["Ophthalmologist", "Ophthalmology", "Eye"],
+      Pulmonologist: ["Pulmonologist", "Pulmonology"],
+    };
+
     activeDoctors.forEach((doc) => {
+      const docSpec = doc.specialization?.toLowerCase().trim() || "";
+
+      Object.entries(ALIAS_MAP).forEach(([key, aliases]) => {
+        const matches = aliases.some((a) => docSpec.includes(a.toLowerCase()));
+        if (matches) {
+          counts[key] = (counts[key] || 0) + 1;
+        }
+      });
+
+      // Also record raw specialization for fallback
       counts[doc.specialization] = (counts[doc.specialization] || 0) + 1;
     });
     return counts;

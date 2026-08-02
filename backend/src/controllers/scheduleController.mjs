@@ -1,5 +1,6 @@
 import Schedule from "../models/Schedule.mjs";
 import User from "../models/User.mjs";
+import Appointment from "../models/Appointment.mjs";
 
 /**
  * Helper to get or create schedule for a doctor
@@ -310,9 +311,66 @@ export const updateLeaveStatus = async (req, res) => {
     leave.status = status;
     await schedule.save();
 
+    let autoRejectedCount = 0;
+
+    // If leave is Approved, automatically reject all existing Pending/Approved appointments on that leave date for this doctor
+    if (status === "Approved" && leave.date && schedule.doctor) {
+      const leaveDate = new Date(leave.date);
+      const doctorId = schedule.doctor._id || schedule.doctor;
+
+      // Calculate UTC day start and end
+      const startOfDay = new Date(
+        Date.UTC(
+          leaveDate.getUTCFullYear(),
+          leaveDate.getUTCMonth(),
+          leaveDate.getUTCDate(),
+          0,
+          0,
+          0,
+          0,
+        ),
+      );
+      const endOfDay = new Date(
+        Date.UTC(
+          leaveDate.getUTCFullYear(),
+          leaveDate.getUTCMonth(),
+          leaveDate.getUTCDate(),
+          23,
+          59,
+          59,
+          999,
+        ),
+      );
+
+      // Find affected appointments for this doctor on that date
+      const affectedAppointments = await Appointment.find({
+        doctor: doctorId,
+        appointmentDateTime: { $gte: startOfDay, $lte: endOfDay },
+        status: { $in: ["Pending", "Approved"] },
+      });
+
+      if (affectedAppointments.length > 0) {
+        const updateResult = await Appointment.updateMany(
+          {
+            _id: { $in: affectedAppointments.map((app) => app._id) },
+          },
+          {
+            $set: { status: "Rejected" },
+          },
+        );
+
+        autoRejectedCount = updateResult.modifiedCount || affectedAppointments.length;
+      }
+    }
+
+    const message =
+      status === "Approved" && autoRejectedCount > 0
+        ? `Leave approved. ${autoRejectedCount} appointment(s) on this date were automatically rejected.`
+        : `Leave request ${status.toLowerCase()} successfully`;
+
     return res.status(200).json({
       success: true,
-      message: `Leave request ${status.toLowerCase()} successfully`,
+      message,
       data: {
         scheduleId: schedule._id,
         dateId: leave._id,
@@ -320,6 +378,7 @@ export const updateLeaveStatus = async (req, res) => {
         reason: leave.reason,
         status: leave.status,
         doctor: schedule.doctor,
+        autoRejectedAppointmentsCount: autoRejectedCount,
       },
     });
   } catch (error) {

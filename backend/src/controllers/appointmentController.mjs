@@ -44,31 +44,6 @@ export const bookAppointment = async (req, res) => {
       }
     }
 
-    if (!assignedDoctorId && assignedSpecialization) {
-      const cleanSpec = assignedSpecialization.trim();
-      const specStem = cleanSpec
-        .replace(/(ologist|ology|ist|y|ics|ian|al|care)$/i, "")
-        .trim();
-
-      const doctorQueryConditions = [
-        { specialization: new RegExp(cleanSpec, "i") },
-      ];
-
-      if (specStem && specStem.length >= 3) {
-        doctorQueryConditions.push({
-          specialization: new RegExp(specStem, "i"),
-        });
-      }
-
-      const matchedDoctor = await User.findOne({
-        role: "doctor",
-        $or: doctorQueryConditions,
-      });
-      if (matchedDoctor) {
-        assignedDoctorId = matchedDoctor._id;
-      }
-    }
-
     if (!assignedSpecialization) {
       return res.status(400).json({
         success: false,

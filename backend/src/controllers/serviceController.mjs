@@ -75,17 +75,46 @@ export const getServiceBySlug = async (req, res) => {
       });
     }
 
-    // Extract stem for matching doctors (e.g., "Cardiology" -> "Cardi")
-    const specStem = service.name.replace(
-      /(ologist|ology|ist|y|ics|ian|al|care|medicine)$/i,
-      "",
-    );
+    // Specialty alias map for matching department names to doctor specializations
+    const SPECIALTY_ALIAS_MAP = {
+      "dental care": ["Dentist", "Dental", "Dentistry"],
+      "dental": ["Dentist", "Dental", "Dentistry"],
+      "cardiology": ["Cardiologist", "Cardiology", "Heart"],
+      "neurology": ["Neurologist", "Neurology", "Brain"],
+      "orthopedics": ["Orthopedic", "Orthopedics", "Orthopedist"],
+      "pediatrics": ["Pediatrician", "Pediatrics", "Pediatric"],
+      "general medicine": ["General Physician", "General Medicine", "General"],
+      "general physician": ["General Physician", "General Medicine", "General"],
+      "eye care": ["Ophthalmologist", "Ophthalmology", "Eye"],
+      "ophthalmology": ["Ophthalmologist", "Ophthalmology", "Eye"],
+      "pulmonology": ["Pulmonologist", "Pulmonology"],
+    };
+
+    const serviceNameLower = service.name.toLowerCase().trim();
+    const explicitAliases = SPECIALTY_ALIAS_MAP[serviceNameLower] || [];
+
+    // Clean whitespace first before stem extraction
+    const mainWord = service.name.trim().split(/\s+/)[0];
+    const specStem = mainWord
+      .replace(/(ologist|ology|ist|y|ics|ian|al|care|medicine)$/i, "")
+      .trim();
+
+    const queryConditions = [
+      ...explicitAliases.map((alias) => ({
+        specialization: new RegExp(alias, "i"),
+      })),
+      { specialization: new RegExp(mainWord, "i") },
+    ];
+
+    if (specStem && specStem.length >= 3) {
+      queryConditions.push({ specialization: new RegExp(specStem, "i") });
+    }
 
     // Find active doctors matching department
     const doctors = await User.find({
       role: "doctor",
-      isActive: true,
-      specialization: new RegExp(specStem, "i"),
+      isActive: { $ne: false },
+      $or: queryConditions,
     }).select(
       "fullName specialization email phone profileImage experience bio consultationFee",
     );
