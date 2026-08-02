@@ -101,6 +101,62 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
+const getSpecializationRegex = (spec) => {
+  if (!spec) return /.*/i;
+  const s = spec.toLowerCase().trim();
+  if (s.includes("cardio")) return /cardio/i;
+  if (s.includes("neuro")) return /neuro/i;
+  if (s.includes("derma") || s.includes("skin")) return /derma|skin/i;
+  if (s.includes("pedia") || s.includes("child")) return /pedia|child/i;
+  if (s.includes("ortho") || s.includes("bone")) return /ortho|bone/i;
+  if (s.includes("physician") || s.includes("medicine") || s.includes("general")) return /physician|medicine|general/i;
+  if (s.includes("dent")) return /dent/i;
+  if (s.includes("eye") || s.includes("ophthalm")) return /eye|ophthalm/i;
+  if (s.includes("pulmo") || s.includes("chest") || s.includes("lung")) return /pulmo|lung|chest/i;
+  return new RegExp(spec, "i");
+};
+
+// If no specific doctor was selected, auto-assign an available doctor in the department who is free at this slot
+    if (!assignedDoctorId && assignedSpecialization) {
+      const deptDoctors = await User.find({
+        role: "doctor",
+        specialization: getSpecializationRegex(assignedSpecialization),
+        isActive: { $ne: false },
+      });
+
+      for (const doc of deptDoctors) {
+        const isBooked = await Appointment.findOne({
+          doctor: doc._id,
+          appointmentDateTime,
+          status: { $ne: "Rejected" },
+        });
+        if (!isBooked) {
+          assignedDoctorId = doc._id;
+          break;
+        }
+      }
+
+      // If all doctors in department have bookings at this slot, assign the first doctor
+      if (!assignedDoctorId && deptDoctors.length > 0) {
+        assignedDoctorId = deptDoctors[0]._id;
+      }
+    }
+
+    // Double-booking check: If a doctor is assigned, verify that doctor is free at the requested time
+    if (assignedDoctorId) {
+      const existingBooking = await Appointment.findOne({
+        doctor: assignedDoctorId,
+        appointmentDateTime,
+        status: { $ne: "Rejected" },
+      });
+
+      if (existingBooking) {
+        return res.status(400).json({
+          success: false,
+          message: "The selected doctor is already booked for this time slot. Please choose another time slot or another doctor.",
+        });
+      }
+    }
 
     const appointment = await Appointment.create({
       patientName,
@@ -177,24 +233,29 @@ export const getBookedSlots = async (req, res) => {
       { appointmentDateTime: { $gte: startOfDay, $lte: endOfDay } },
     ];
 
+    let totalDeptDoctors = 1;
     if (doctorId) {
       queryConditions.push({ doctor: doctorId });
     } else if (specialization) {
+      const specRegex = getSpecializationRegex(specialization);
       const doctorsInSpec = await User.find({
         role: "doctor",
-        specialization: new RegExp(specialization, "i"),
+        specialization: specRegex,
+        isActive: { $ne: false },
       }).select("_id");
+
       const doctorIds = doctorsInSpec.map((d) => d._id);
+      totalDeptDoctors = doctorIds.length || 1;
 
       queryConditions.push({
         $or: [
-          { specialization: new RegExp(specialization, "i") },
+          { specialization: specRegex },
           { doctor: { $in: doctorIds } },
         ],
       });
     }
 
-    // Query appointments for doctor on date where status is NOT Rejected
+    // Query appointments for doctor/specialization on date where status is NOT Rejected
     const appointments = await Appointment.find({
       $and: queryConditions,
     });
@@ -210,10 +271,30 @@ export const getBookedSlots = async (req, res) => {
       return `${formattedHours}:${minutes} ${ampm}`;
     };
 
-    // Extract formatted time string array
-    const bookedSlots = appointments.map((app) =>
-      formatSlotTime(new Date(app.appointmentDateTime))
-    );
+    let bookedSlots = [];
+
+    if (doctorId) {
+      // Specific doctor: all non-rejected booked slots for that doctor
+      bookedSlots = appointments.map((app) =>
+        formatSlotTime(new Date(app.appointmentDateTime))
+      );
+    } else {
+      // Department level: A slot is ONLY FULL if EVERY doctor in the department is booked at that slot time
+      const slotDoctorMap = {};
+      appointments.forEach((app) => {
+        const slotStr = formatSlotTime(new Date(app.appointmentDateTime));
+        if (!slotDoctorMap[slotStr]) {
+          slotDoctorMap[slotStr] = new Set();
+        }
+        if (app.doctor) {
+          slotDoctorMap[slotStr].add(app.doctor.toString());
+        }
+      });
+
+      bookedSlots = Object.keys(slotDoctorMap).filter(
+        (slotStr) => slotDoctorMap[slotStr].size >= totalDeptDoctors
+      );
+    }
 
     // Determine Doctor Schedule details if doctorId or specialization available
     let targetDoctorId = doctorId;

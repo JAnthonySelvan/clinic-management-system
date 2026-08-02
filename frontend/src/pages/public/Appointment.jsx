@@ -26,7 +26,27 @@ const SPECIALIZATIONS = [
   "Orthopedics",
   "General Physician",
   "Dentist",
+  "Eye Care",
+  "Pulmonology",
 ];
+
+const isSpecializationMatch = (selectedSpec, docSpec) => {
+  if (!selectedSpec || !docSpec) return false;
+  const s = selectedSpec.toLowerCase().trim();
+  const d = docSpec.toLowerCase().trim();
+
+  if (s.includes("cardio") && d.includes("cardio")) return true;
+  if (s.includes("neuro") && d.includes("neuro")) return true;
+  if ((s.includes("derma") || s.includes("skin")) && (d.includes("derma") || d.includes("skin"))) return true;
+  if ((s.includes("pedia") || s.includes("child")) && (d.includes("pedia") || d.includes("child"))) return true;
+  if ((s.includes("ortho") || s.includes("bone")) && (d.includes("ortho") || d.includes("bone"))) return true;
+  if ((s.includes("physician") || s.includes("medicine") || s.includes("general")) && (d.includes("physician") || d.includes("medicine") || d.includes("general"))) return true;
+  if (s.includes("dent") && d.includes("dent")) return true;
+  if ((s.includes("eye") || s.includes("ophthalm")) && (d.includes("eye") || d.includes("ophthalm"))) return true;
+  if ((s.includes("pulmo") || s.includes("chest") || s.includes("lung")) && (d.includes("pulmo") || d.includes("chest") || d.includes("lung"))) return true;
+
+  return d.includes(s) || s.includes(d);
+};
 
 const Appointment = () => {
   const dispatch = useAppDispatch();
@@ -53,6 +73,7 @@ const Appointment = () => {
       patientAge: "",
       gender: "",
       specialization: "Cardiology",
+      doctor: "",
       appointmentDate: new Date().toISOString().split("T")[0],
       appointmentTime: "",
       reason: "",
@@ -60,8 +81,13 @@ const Appointment = () => {
   });
 
   const selectedSpecialization = watch("specialization");
+  const selectedDoctorId = watch("doctor");
   const selectedDate = watch("appointmentDate");
   const selectedTime = watch("appointmentTime");
+
+  const filteredDoctors = doctors.filter((doc) =>
+    isSpecializationMatch(selectedSpecialization, doc.specialization)
+  );
 
   useEffect(() => {
     dispatch(fetchPublicDoctors());
@@ -300,8 +326,26 @@ const Appointment = () => {
                 )}
               </div>
 
-              {/* Appointment Date */}
+              {/* Preferred Doctor (Optional) */}
               <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Preferred Specialist / Doctor (Optional)
+                </label>
+                <select
+                  {...register("doctor")}
+                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                >
+                  <option value="">Any Available Specialist</option>
+                  {filteredDoctors.map((doc) => (
+                    <option key={doc._id} value={doc._id}>
+                      {doc.fullName} ({doc.specialization})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Appointment Date */}
+              <div className="md:col-span-2">
                 <label className="block mb-2 text-sm font-medium text-gray-700">
                   Appointment Date *
                 </label>
@@ -333,6 +377,7 @@ const Appointment = () => {
                   })}
                 />
                 <SlotPicker
+                  doctorId={selectedDoctorId}
                   specialization={selectedSpecialization}
                   selectedDate={selectedDate}
                   selectedSlot={selectedTime || ""}
