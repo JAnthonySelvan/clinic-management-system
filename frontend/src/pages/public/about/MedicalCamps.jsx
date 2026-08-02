@@ -510,7 +510,7 @@ const MedicalCamps = () => {
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5C6B73]/75" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#253237]/60 via-[#253237]/45 to-[#5C6B73]/35 backdrop-blur-[1px]" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="mb-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#C2DFE3]">
