@@ -241,7 +241,7 @@ function Home() {
           <div className="grid items-center gap-16 lg:grid-cols-2">
             <AnimatedSection direction="right" className="flex justify-center">
               <img
-                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900"
+                src={FEATURE_IMAGES.qualifiedSpecialists}
                 alt="Healthcare"
                 className="w-full max-w-xl rounded-4xl shadow-2xl transition duration-500 hover:scale-[1.02]"
               />

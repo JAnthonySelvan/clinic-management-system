@@ -17,6 +17,7 @@ import {
   SERVICE_DETAIL_IMAGES,
   ABOUT_THUMBNAILS,
   ABOUT_DETAIL_IMAGES,
+  SPECIALTY_IMAGES,
 } from "../../constants/images";
 
 // Standard medical icons for specialty links
@@ -207,7 +208,7 @@ function Navbar() {
 
   const currentPreviewImage =
     SERVICE_DETAIL_IMAGES[hoveredSpecialtySlug]?.hero ||
-    "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=900";
+    SPECIALTY_IMAGES.cardiology;
 
   const currentHoveredAbout =
     ABOUT_ITEMS.find((item) => item.key === hoveredAboutKey) || ABOUT_ITEMS[0];

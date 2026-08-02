@@ -30,6 +30,7 @@ import {
   SERVICE_DETAIL_IMAGES,
   HERO_IMAGES,
   CTA_IMAGES,
+  FEATURE_IMAGES,
 } from "../../constants/images";
 
 const DEFAULT_AVATAR =
@@ -102,12 +103,12 @@ const ServiceDetailPage = () => {
 
   // Treatment fallback images map
   const defaultTreatmentImages = [
-    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=80&auto=format&fit=crop",
+    FEATURE_IMAGES.fastDiagnosis,
+    FEATURE_IMAGES.preventiveCheckups,
+    FEATURE_IMAGES.emergencyResponse,
+    FEATURE_IMAGES.trustedPatients,
+    FEATURE_IMAGES.modernFacilities,
+    FEATURE_IMAGES.roboticSurgery,
   ];
 
   // Gallery fallback
@@ -127,7 +128,7 @@ const ServiceDetailPage = () => {
   const overviewImg =
     service?.overviewImage ||
     SERVICE_DETAIL_IMAGES[serviceSlug]?.overview ||
-    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900";
+    FEATURE_IMAGES.multilingualTeam;
 
   /* ================= SKELETON LOADING STATE ================= */
   if (loading) {

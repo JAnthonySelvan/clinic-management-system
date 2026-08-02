@@ -16,6 +16,7 @@ import AnimatedSection from "../../components/AnimatedSection";
 import {
   HERO_IMAGES,
   FEATURE_IMAGES,
+  MISSION_IMAGES,
   CTA_IMAGES,
   ABOUT_DETAIL_IMAGES,
 } from "../../constants/images";
@@ -96,7 +97,7 @@ const About = () => {
           <AnimatedSection direction="right">
             <div className="relative overflow-hidden rounded-4xl shadow-2xl bg-[#F8FBFC] aspect-[4/3]">
               <img
-                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900&q=80"
+                src={MISSION_IMAGES.vision}
                 alt="About Clinic"
                 loading="lazy"
                 className="h-full w-full object-cover transition duration-500 hover:scale-[1.02]"

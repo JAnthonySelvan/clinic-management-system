@@ -19,7 +19,7 @@ import {
 
 import AnimatedSection from "../../../components/AnimatedSection";
 import BookingModal from "../../../components/BookingModal";
-import { ABOUT_DETAIL_IMAGES, CTA_IMAGES } from "../../../constants/images";
+import { ABOUT_DETAIL_IMAGES, CTA_IMAGES, DOCTOR_PORTRAITS } from "../../../constants/images";
 
 const CORE_VALUES = [
   {
@@ -489,7 +489,7 @@ const VisionMission = () => {
 
                     <div className="flex flex-col items-center text-center lg:border-l lg:border-gray-200 lg:pl-8">
                       <img
-                        src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&q=80"
+                        src={DOCTOR_PORTRAITS.maleDoctor1}
                         alt="Dr. Anthony Selvan"
                         loading="lazy"
                         className="h-28 w-28 rounded-full object-cover shadow-lg border-4 border-white ring-2 ring-[#253237]/10"
