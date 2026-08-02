@@ -1,249 +1,298 @@
-import { generateGeminiContent } from "../config/gemini.mjs";
 import User from "../models/User.mjs";
-import ChatLog from "../models/ChatLog.mjs";
+import { generateGeminiContent } from "../config/gemini.mjs";
 
-// Red-flag emergency keyword patterns
-const RED_FLAG_KEYWORDS = [
-  "chest pain",
-  "can't breathe",
-  "cannot breathe",
-  "difficulty breathing",
-  "shortness of breath",
-  "stroke",
-  "numbness on one side",
-  "slurred speech",
-  "face drooping",
-  "severe bleeding",
-  "uncontrolled bleeding",
-  "suicidal",
-  "suicide",
-  "end my life",
-  "want to die",
-  "severe allergic reaction",
-  "anaphylaxis",
-  "unconscious",
-  "fainted and not waking",
-  "head trauma",
-  "coughing blood",
-  "poisoning",
-  "overdose",
+// ---------------------------------------------------------------------------
+// Red-flag detection — this NEVER depends on the LLM. It runs first, always,
+// on every message, and short-circuits straight to an emergency response.
+// ---------------------------------------------------------------------------
+const RED_FLAG_PATTERNS = [
+  /chest pain/i,
+  /can'?t breathe|difficulty breathing|shortness of breath/i,
+  /severe bleeding|won'?t stop bleeding/i,
+  /stroke|face drooping|slurred speech|numb(ness)? (on )?one side/i,
+  /suicid|kill myself|end my life|want to die/i,
+  /unconscious|unresponsive|passed out/i,
+  /severe allergic reaction|anaphylaxis|throat closing/i,
+  /overdose|poison(ed|ing)/i,
+  /seizure/i,
+  /heavy bleeding during pregnancy|water broke/i,
 ];
 
-const checkRedFlagSymptoms = (message = "") => {
-  const normalized = message.toLowerCase();
-  return RED_FLAG_KEYWORDS.some((keyword) => normalized.includes(keyword));
+const isRedFlag = (message) => RED_FLAG_PATTERNS.some((re) => re.test(message));
+
+const EMERGENCY_RESPONSE = {
+  reply:
+    "This sounds like it could be a medical emergency. Please call emergency services or go to the nearest emergency room immediately — don't wait for an appointment.",
+  readyToRecommend: false,
+  redFlag: true,
+  specialty: null,
+  urgency: "emergency",
+  doctors: [],
 };
 
-// Fallback symptom-to-specialty rules if Gemini API key is not configured or offline
-const FALLBACK_SYMPTOM_MAP = [
-  {
-    keywords: ["tooth", "teeth", "gum", "dental", "cavity", "molar", "dentist"],
-    specialty: "Dental Care",
-    reply: "Based on your dental symptoms, we recommend consulting our Dental Care department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-  {
-    keywords: ["heart", "chest", "cardio", "bp", "blood pressure", "palpitation", "pulse"],
-    specialty: "Cardiology",
-    reply: "Your symptoms indicate heart or cardiovascular concerns. We recommend consulting our Cardiology department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-  {
-    keywords: ["headache", "migraine", "brain", "nerve", "seizure", "dizz", "vertigo", "memory"],
-    specialty: "Neurology",
-    reply: "For neurological or head discomfort, we recommend consulting our Neurology department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-  {
-    keywords: ["child", "baby", "infant", "pediatr", "toddler", "kid"],
-    specialty: "Pediatrics",
-    reply: "For pediatric or child health concerns, we recommend consulting our Pediatrics department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-  {
-    keywords: ["bone", "joint", "knee", "fracture", "spine", "back pain", "ortho", "muscle"],
-    specialty: "Orthopedics",
-    reply: "For joint, bone, or musculoskeletal pain, we recommend consulting our Orthopedics department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-  {
-    keywords: ["skin", "rash", "acne", "itch", "eczema", "derma"],
-    specialty: "Dermatology",
-    reply: "For skin or dermatological conditions, we recommend consulting our Dermatology department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-  {
-    keywords: ["fever", "cough", "cold", "flu", "stomach", "fatigue", "vomit", "weak", "throat"],
-    specialty: "General Medicine",
-    reply: "For general symptoms or wellness concerns, we recommend consulting our General Medicine department. Please book a consultation so a doctor can properly evaluate this.",
-  },
-];
+// ---------------------------------------------------------------------------
+// Build the system prompt dynamically from real specialties in the DB, so
+// Gemini can only ever recommend departments the clinic actually has.
+// ---------------------------------------------------------------------------
+const buildSystemPrompt = (availableSpecialties) => `
+You are a triage assistant for Saviours Clinic. Your ONLY job is to have a short,
+friendly conversation (2-4 turns) asking clarifying questions about the patient's
+symptoms, then recommend which department they should book with.
 
-const getFallbackRecommendation = (message = "") => {
-  const normalized = message.toLowerCase();
-  for (const rule of FALLBACK_SYMPTOM_MAP) {
-    if (rule.keywords.some((k) => normalized.includes(k))) {
-      return {
-        specialty: rule.specialty,
-        reply: rule.reply,
-      };
-    }
+STRICT RULES:
+- NEVER name a specific diagnosis or condition.
+- NEVER suggest medications, dosages, or treatment steps.
+- NEVER claim certainty about what is wrong.
+- Ask at most 1-2 clarifying questions before making a recommendation — don't
+  drag the conversation out.
+- Only recommend from this exact list of available specialties: ${availableSpecialties.join(", ")}.
+- If the symptoms genuinely don't need a specialist, recommend "General Physician".
+
+RESPONSE FORMAT — you must respond with ONLY valid JSON, no markdown, no
+commentary outside the JSON, matching exactly this shape:
+{
+  "reply": "<the conversational message to show the patient>",
+  "readyToRecommend": <true if you have enough info to recommend a specialty, false if you still need to ask a clarifying question>,
+  "specialty": "<one of the exact specialty names above, or null if not ready yet>",
+  "urgency": "<one of: routine, soon, urgent>"
+}
+
+Examples:
+- If the user just says "I have a headache", you likely need one more clarifying
+  question (how long, any other symptoms) before readyToRecommend is true.
+- Once you have enough info, set readyToRecommend true, fill in specialty and
+  urgency, and make "reply" a short warm summary + recommendation, always ending
+  with a version of: "I'd recommend booking with our ${""}[specialty] team — a doctor can properly evaluate this during your visit."
+`.trim();
+
+const SPECIALTY_ALIASES = {
+  cardiology: "Cardiologist",
+  cardiologist: "Cardiologist",
+  heart: "Cardiologist",
+  cardiac: "Cardiologist",
+
+  dermatology: "Dermatologist",
+  dermatologist: "Dermatologist",
+  skin: "Dermatologist",
+
+  neurology: "Neurologist",
+  neurologist: "Neurologist",
+  brain: "Neurologist",
+  nerve: "Neurologist",
+  nerves: "Neurologist",
+
+  orthopedics: "Orthopedic",
+  orthopedic: "Orthopedic",
+  orthopedist: "Orthopedic",
+  bone: "Orthopedic",
+  bones: "Orthopedic",
+  joint: "Orthopedic",
+  joints: "Orthopedic",
+
+  pediatrics: "Pediatrician",
+  pediatrician: "Pediatrician",
+  pediatric: "Pediatrician",
+  child: "Pediatrician",
+  children: "Pediatrician",
+
+  "general physician": "General Physician",
+  general: "General Physician",
+  "general medicine": "General Physician",
+  gp: "General Physician",
+
+  ophthalmology: "Ophthalmologist",
+  ophthalmologist: "Ophthalmologist",
+  "eye care": "Ophthalmologist",
+  eye: "Ophthalmologist",
+  eyes: "Ophthalmologist",
+
+  ent: "ENT Specialist",
+  "ent specialist": "ENT Specialist",
+  "ear nose throat": "ENT Specialist",
+
+  dentist: "Dentist",
+  dentistry: "Dentist",
+  dental: "Dentist",
+};
+
+// ---------------------------------------------------------------------------
+// Cross-reference the recommended specialty against REAL active doctors.
+// Handles alias lookup, case/whitespace normalization, direct/stem matching,
+// and logs a warning when falling back to General Physician.
+// ---------------------------------------------------------------------------
+const findMatchingDoctors = (parsedSpecialty, activeDoctors) => {
+  if (!parsedSpecialty || typeof parsedSpecialty !== "string") return [];
+
+  const rawSpecialty = parsedSpecialty.toLowerCase().trim();
+  const mappedAlias = SPECIALTY_ALIASES[rawSpecialty];
+  const targetSpec = mappedAlias || parsedSpecialty.trim();
+  const normalizedTarget = targetSpec.toLowerCase().trim();
+
+  // 1. Direct normalized match against mapped alias or raw specialty
+  let matched = activeDoctors.filter((d) => {
+    const docSpec = d.specialization?.toLowerCase().trim() || "";
+    return docSpec === normalizedTarget || docSpec === rawSpecialty;
+  });
+
+  // 2. Substring / stem match if direct match found no active doctors
+  if (matched.length === 0) {
+    matched = activeDoctors.filter((d) => {
+      const docSpec = d.specialization?.toLowerCase().trim() || "";
+      return (
+        docSpec.includes(normalizedTarget) ||
+        normalizedTarget.includes(docSpec)
+      );
+    });
   }
-  return {
-    specialty: "General Medicine",
-    reply: "Thank you for describing your symptoms. We recommend consulting our General Medicine department for an initial evaluation. Please book a consultation so a doctor can properly evaluate this.",
-  };
+
+  // Map to clean client objects
+  let result = matched.map((d) => ({
+    id: d._id,
+    fullName: d.fullName,
+    specialization: d.specialization,
+    qualification: d.qualification,
+    experience: d.experience,
+    profileImage: d.profileImage,
+  }));
+
+  // 3. Fallback to General Physician if no active specialist found
+  if (result.length === 0) {
+    console.warn(
+      `[Assistant Triage Warning] Specialty matching failed for "${parsedSpecialty}" (raw: "${rawSpecialty}", target: "${normalizedTarget}"). Falling back to General Physician.`,
+    );
+
+    result = activeDoctors
+      .filter((d) => d.specialization?.toLowerCase().includes("general"))
+      .map((d) => ({
+        id: d._id,
+        fullName: d.fullName,
+        specialization: d.specialization,
+        qualification: d.qualification,
+        experience: d.experience,
+        profileImage: d.profileImage,
+      }));
+  }
+
+  return result;
 };
 
-export const handleChatAssistant = async (req, res) => {
+// ---------------------------------------------------------------------------
+// POST /api/assistant/chat
+// ---------------------------------------------------------------------------
+export const chatWithAssistant = async (req, res) => {
   try {
     const { message, conversationHistory = [] } = req.body;
-    const ipAddress = req.ip || req.headers["x-forwarded-for"] || "unknown";
 
     if (!message || typeof message !== "string" || !message.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Message is required.",
+        message: "Message is required",
       });
     }
 
-    const trimmedMessage = message.trim();
-
-    // 1. HARD-CODED RED-FLAG CHECK (Bypasses LLM completely for safety)
-    if (checkRedFlagSymptoms(trimmedMessage)) {
-      await ChatLog.create({
-        userMessage: trimmedMessage,
-        isEmergency: true,
-        urgencyLevel: "emergency",
-        ipAddress,
-      });
-
+    // 1. Red-flag check ALWAYS runs first, regardless of Gemini's availability.
+    if (isRedFlag(message)) {
       return res.status(200).json({
         success: true,
-        isEmergency: true,
-        message:
-          "CRITICAL SAFETY ALERT: The symptoms you described may indicate a life-threatening medical emergency requiring immediate, urgent care.",
-        emergencyContact: "+91 98765 43210",
-        action:
-          "Please call emergency services immediately (+91 98765 43210 or local emergency 112) or visit the nearest hospital emergency room without delay.",
+        data: EMERGENCY_RESPONSE,
       });
     }
 
-    // 2. Fetch active doctors and available specializations from database
-    const activeDoctors = await User.find({ role: "doctor", isActive: { $ne: false } }).select(
-      "_id fullName specialization experience consultationFee",
-    );
+    // 2. Pull the real, currently-active specialties from the DB so Gemini's
+    //    recommendations are always bookable, never hallucinated.
+    const activeDoctors = await User.find({
+      role: "doctor",
+      isActive: true,
+    }).select("fullName specialization qualification experience profileImage");
 
     const availableSpecialties = [
-      ...new Set(activeDoctors.map((doc) => doc.specialization)),
+      ...new Set(activeDoctors.map((d) => d.specialization).filter(Boolean)),
     ];
 
-    const specialtyListString =
-      availableSpecialties.length > 0
-        ? availableSpecialties.join(", ")
-        : "Cardiology, Neurology, Pediatrics, Dental Care, General Medicine, Orthopedics";
-
-    let geminiReply = null;
-    let matchedSpecialty = null;
-    let matchedDoctor = null;
-    let urgencyLevel = "routine";
-
-    // 3. Try Gemini API first if configured
-    try {
-      const systemPrompt = `You are a friendly, expert medical triage assistant for Saviours Clinic.
-
-Your role is to interact with the patient, analyze their symptoms, and recommend the right clinic department or doctor (Available specialties: ${specialtyListString}).
-
-CONVERSATION GUIDELINES:
-- If the patient's initial message is brief or lacks detail (e.g., "I have a fever" or "headache"), interact naturally: acknowledge their symptoms empathetically and ask 1-2 brief clarifying questions to analyze the situation deeper before making your recommendation.
-- When you have enough symptom context or when the patient provides detailed symptoms, give a clear recommendation on which clinic specialty (Dental Care, Cardiology, Neurology, Pediatrics, Orthopedics, Dermatology, General Medicine) they should consult.
-- When giving a recommendation, explicitly use the phrase: "We recommend consulting our [Specialty] department" or "You should book a consultation with our [Specialty] department".
-- NEVER state a specific medical disease/diagnosis, NEVER prescribe medications or dosages, and NEVER describe self-treatment procedures.
-- Always end recommendations with: "Please book a consultation so a doctor can properly evaluate this."
-- If symptoms sound severe or emergency-related, direct them to call emergency services (+91 98765 43210) immediately.`;
-
-      geminiReply = await generateGeminiContent(
-        systemPrompt,
-        trimmedMessage,
-        conversationHistory,
-      );
-
-      const lowerReply = geminiReply.toLowerCase();
-
-      // Check if Gemini is giving an explicit recommendation or just asking clarifying questions
-      const isGivingRecommendation =
-        lowerReply.includes("recommend") ||
-        lowerReply.includes("consult") ||
-        lowerReply.includes("specialist") ||
-        lowerReply.includes("department") ||
-        lowerReply.includes("book");
-
-      if (isGivingRecommendation) {
-        for (const spec of availableSpecialties) {
-          if (lowerReply.includes(spec.toLowerCase())) {
-            matchedSpecialty = spec;
-            matchedDoctor = activeDoctors.find((d) => d.specialization === spec);
-            break;
-          }
-        }
-
-        // If Gemini recommended a department but used a generic term, map from symptom keywords
-        if (!matchedSpecialty) {
-          const fallback = getFallbackRecommendation(trimmedMessage);
-          matchedSpecialty = fallback.specialty;
-          matchedDoctor = activeDoctors.find((d) => d.specialization === matchedSpecialty);
-        }
-      }
-
-      if (lowerReply.includes("urgent") || lowerReply.includes("prompt") || lowerReply.includes("immediately")) {
-        urgencyLevel = "urgent";
-      } else if (lowerReply.includes("soon") || lowerReply.includes("few days")) {
-        urgencyLevel = "soon";
-      }
-    } catch (apiError) {
-      console.warn("⚠️ Gemini API call skipped or failed, using smart triage fallback:", apiError.message);
-
-      // Fallback rule engine
-      const fallbackResult = getFallbackRecommendation(trimmedMessage);
-      geminiReply = fallbackResult.reply;
-      matchedSpecialty = fallbackResult.specialty;
-      matchedDoctor = activeDoctors.find((d) => d.specialization === matchedSpecialty) || activeDoctors[0];
+    if (availableSpecialties.length === 0) {
+      return res.status(200).json({
+        success: true,
+        data: {
+          reply:
+            "I'm unable to check doctor availability right now. Please call the clinic directly or use the appointment form.",
+          readyToRecommend: false,
+          redFlag: false,
+          specialty: null,
+          urgency: "routine",
+          doctors: [],
+        },
+      });
     }
 
-    // 4. Log conversation (privacy compliant)
-    await ChatLog.create({
-      userMessage: trimmedMessage,
-      isEmergency: false,
-      recommendedSpecialty: matchedSpecialty,
-      urgencyLevel,
-      ipAddress,
-    });
+    const systemPrompt = buildSystemPrompt(availableSpecialties);
 
-    // 5. Format structured recommendation card ONLY if Gemini gives a doctor/specialty suggestion
-    let recommendation = null;
-    if (matchedSpecialty) {
-      const docObj = matchedDoctor || activeDoctors.find((d) => d.specialization === matchedSpecialty);
-      let formattedDocName = `${matchedSpecialty} Specialist`;
-      if (docObj && docObj.fullName) {
-        const cleanName = docObj.fullName.replace(/^Dr\.\s*/i, "").trim();
-        formattedDocName = `Dr. ${cleanName}`;
-      }
+    // 3. Call Gemini in strict JSON mode.
+    let raw;
+    try {
+      raw = await generateGeminiContent(systemPrompt, message, conversationHistory, {
+        jsonMode: true,
+      });
+    } catch (geminiError) {
+      console.error("Gemini call failed:", geminiError.message);
+      // Fallback: don't leave the user hanging with a dead chat.
+      return res.status(200).json({
+        success: true,
+        data: {
+          reply:
+            "I'm having trouble processing that right now. You're welcome to browse our doctors directly, or try again in a moment.",
+          readyToRecommend: false,
+          redFlag: false,
+          specialty: null,
+          urgency: "routine",
+          doctors: [],
+        },
+      });
+    }
 
-      recommendation = {
-        specialty: matchedSpecialty,
-        doctorName: formattedDocName,
-        doctorId: docObj ? docObj._id : null,
-        rawDoctorObj: docObj || null,
-        urgency: urgencyLevel,
-        description: `Recommended department for ${matchedSpecialty.toLowerCase()} evaluation.`,
-      };
+    // 4. Parse Gemini's JSON response defensively — models can occasionally
+    //    wrap JSON in markdown fences despite instructions, so strip those.
+    let parsed;
+    try {
+      const cleaned = raw.trim().replace(/^```json\s*/i, "").replace(/```$/, "");
+      parsed = JSON.parse(cleaned);
+    } catch (parseError) {
+      console.error("Failed to parse Gemini JSON:", raw);
+      return res.status(200).json({
+        success: true,
+        data: {
+          reply:
+            "Could you rephrase that? I want to make sure I understand your symptoms correctly.",
+          readyToRecommend: false,
+          redFlag: false,
+          specialty: null,
+          urgency: "routine",
+          doctors: [],
+        },
+      });
+    }
+
+    // 5. Cross-reference the recommended specialty against REAL doctors.
+    let matchedDoctors = [];
+    if (parsed.readyToRecommend && parsed.specialty) {
+      matchedDoctors = findMatchingDoctors(parsed.specialty, activeDoctors);
     }
 
     return res.status(200).json({
       success: true,
-      isEmergency: false,
-      reply: geminiReply,
-      recommendation,
+      data: {
+        reply: parsed.reply || "Could you tell me more about your symptoms?",
+        readyToRecommend: Boolean(parsed.readyToRecommend),
+        redFlag: false,
+        specialty: parsed.specialty || null,
+        urgency: parsed.urgency || "routine",
+        doctors: matchedDoctors,
+      },
     });
   } catch (error) {
-    console.error("Error in handleChatAssistant:", error);
+    console.error("Assistant controller error:", error);
     return res.status(500).json({
       success: false,
-      message: "Our health assistant is temporarily unavailable. Please try again or call our clinic directly.",
+      message: "Something went wrong with the health assistant",
     });
   }
 };

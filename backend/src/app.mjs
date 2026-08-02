@@ -11,6 +11,7 @@ import scheduleRoutes from "./routes/scheduleRoutes.mjs";
 import serviceRoutes from "./routes/serviceRoutes.mjs";
 import assistantRoutes from "./routes/assistantRoutes.mjs";
 
+
 const app = express();
 
 // Middleware

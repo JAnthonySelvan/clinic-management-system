@@ -13,10 +13,11 @@ const DEFAULT_AVATAR = "https://res.cloudinary.com/demo/image/upload/v1690000000
  * BookingModal Component
  *
  * @param {object|null} doctor - Selected doctor object or null if closed
+ * @param {string|null} doctorId - Optional selected doctor ID
  * @param {boolean} isOpen - Modal visibility state
  * @param {function} onClose - Callback to close modal
  */
-const BookingModal = ({ doctor: initialDoctor, availableDoctors = [], isOpen, onClose }) => {
+const BookingModal = ({ doctor: initialDoctor, doctorId, availableDoctors = [], isOpen, onClose }) => {
   const dispatch = useAppDispatch();
   const { loading, success, error } = useAppSelector((state) => state.appointment);
 
@@ -24,14 +25,17 @@ const BookingModal = ({ doctor: initialDoctor, availableDoctors = [], isOpen, on
 
   // Sync activeDoctor when initialDoctor prop changes or availableDoctors loads
   useEffect(() => {
-    if (initialDoctor && initialDoctor._id) {
+    if (initialDoctor && (initialDoctor._id || initialDoctor.id)) {
       setActiveDoctor(initialDoctor);
+    } else if (doctorId && availableDoctors && availableDoctors.length > 0) {
+      const found = availableDoctors.find((d) => d._id === doctorId || d.id === doctorId);
+      if (found) setActiveDoctor(found);
     } else if (availableDoctors && availableDoctors.length > 0) {
       setActiveDoctor(availableDoctors[0]);
     } else {
       setActiveDoctor(initialDoctor);
     }
-  }, [initialDoctor, availableDoctors]);
+  }, [initialDoctor, doctorId, availableDoctors]);
 
   const {
     register,
@@ -92,7 +96,7 @@ const BookingModal = ({ doctor: initialDoctor, availableDoctors = [], isOpen, on
     const payload = {
       ...data,
       specialization: activeDoctor?.specialization || "General Medicine",
-      doctor: activeDoctor?._id || undefined,
+      doctor: activeDoctor?._id || activeDoctor?.id || doctorId || undefined,
     };
     await dispatch(createAppointment(payload));
   };

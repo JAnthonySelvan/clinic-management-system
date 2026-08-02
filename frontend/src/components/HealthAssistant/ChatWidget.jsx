@@ -1,129 +1,72 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  FaUserNurse,
-  FaTimes,
-  FaPaperPlane,
-  FaExclamationTriangle,
-  FaStethoscope,
-  FaCalendarCheck,
-  FaPhoneAlt,
-  FaInfoCircle,
-} from "react-icons/fa";
+import { FaCommentMedical, FaTimes, FaPaperPlane, FaExclamationTriangle } from "react-icons/fa";
+import toast from "react-hot-toast";
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
-import BookingModal from "../BookingModal";
 import { sendAssistantMessage } from "../../features/assistant/assistantService";
+import BookingModal from "../BookingModal";
+
+const DEFAULT_AVATAR =
+  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
 
 const ChatWidget = () => {
-  const dispatch = useAppDispatch();
-  const { doctors: publicDoctors } = useAppSelector((state) => state.doctor);
-
   const [isOpen, setIsOpen] = useState(false);
-  const [inputMessage, setInputMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // Booking Modal State
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [selectedDoctorForBooking, setSelectedDoctorForBooking] = useState(null);
-
-  const navigate = useNavigate();
-
+  const [bookingDoctor, setBookingDoctor] = useState(null);
   const [messages, setMessages] = useState([
     {
-      id: "welcome-1",
       sender: "assistant",
-      text: "Hello! I am the Saviours Clinic Triage Assistant. Describe your symptoms and I will help analyze them to connect you with the right doctor or department.",
-      isEmergency: false,
-      recommendation: null,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      text: "Hi! Tell me what symptoms you're experiencing and I'll help point you to the right doctor.",
     },
   ]);
-
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    if (publicDoctors.length === 0) {
-      dispatch(fetchPublicDoctors());
-    }
-  }, [dispatch, publicDoctors.length]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    if (isOpen) {
-      scrollToBottom();
-    }
-  }, [messages, isOpen]);
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, loading]);
 
-  const handleSendMessage = async (textToSend = null) => {
-    const text = (textToSend || inputMessage).trim();
-    if (!text || loading) return;
+  const handleSend = async () => {
+    const trimmed = input.trim();
+    if (!trimmed || loading) return;
 
-    const userMsg = {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      text,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    };
+    // Build history BEFORE clearing input — this is what makes the chat
+    // actually interactive/contextual rather than stateless per message.
+    const userMessage = { sender: "user", text: trimmed };
+    const updatedMessages = [...messages, userMessage];
 
-    setMessages((prev) => [...prev, userMsg]);
-    if (!textToSend) setInputMessage("");
+    setMessages(updatedMessages);
+    setInput("");
     setLoading(true);
 
-    // Format history for backend
-    const history = messages.map((m) => ({
-      sender: m.sender,
-      text: m.text,
-    }));
-
     try {
-      const response = await sendAssistantMessage(text, history);
+      // Send the full history (minus the very first canned greeting) so
+      // Gemini has context across turns.
+      const historyForApi = updatedMessages
+        .slice(1) // drop the initial greeting, it's not part of the real convo
+        .slice(0, -1); // drop the message we're currently sending, backend appends it
 
-      if (response.isEmergency) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `assist-${Date.now()}`,
-            sender: "assistant",
-            text: response.message,
-            isEmergency: true,
-            emergencyContact: response.emergencyContact,
-            action: response.action,
-            recommendation: null,
-            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `assist-${Date.now()}`,
-            sender: "assistant",
-            text: response.reply,
-            isEmergency: false,
-            recommendation: response.recommendation,
-            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          },
-        ]);
-      }
-    } catch (err) {
-      const errorMsg =
-        err.response?.data?.message ||
-        "I'm sorry, I'm having trouble connecting right now. Please book directly or call our helpline.";
+      const response = await sendAssistantMessage(trimmed, historyForApi);
+      const data = response.data;
 
       setMessages((prev) => [
         ...prev,
         {
-          id: `assist-${Date.now()}`,
           sender: "assistant",
-          text: errorMsg,
-          isEmergency: false,
-          recommendation: null,
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          text: data.reply,
+          redFlag: data.redFlag,
+          readyToRecommend: data.readyToRecommend,
+          specialty: data.specialty,
+          urgency: data.urgency,
+          doctors: data.doctors || [],
+        },
+      ]);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to reach the assistant");
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "assistant",
+          text: "Sorry, something went wrong on my end. Please try again.",
         },
       ]);
     } finally {
@@ -131,250 +74,138 @@ const ChatWidget = () => {
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      handleSend();
     }
-  };
-
-  const handleBookRecommendation = (rec) => {
-    let docToBook = rec.rawDoctorObj || null;
-
-    if (!docToBook && rec.doctorId && publicDoctors.length > 0) {
-      docToBook = publicDoctors.find((d) => d._id === rec.doctorId);
-    }
-    if (!docToBook && rec.specialty && publicDoctors.length > 0) {
-      docToBook = publicDoctors.find((d) => d.specialization === rec.specialty);
-    }
-    if (!docToBook && publicDoctors.length > 0) {
-      docToBook = publicDoctors[0];
-    }
-
-    const doctorForModal = docToBook || {
-      _id: rec.doctorId || "default-doc",
-      fullName: rec.doctorName ? rec.doctorName.replace(/^Dr\.\s*/i, "") : "Specialist",
-      specialization: rec.specialty || "General Medicine",
-    };
-
-    setSelectedDoctorForBooking(doctorForModal);
-    setIsBookingModalOpen(true);
   };
 
   return (
     <>
-      {/* Floating Trigger Button */}
+      {/* Floating action button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Open Health Assistant Triage Chatbot"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#253237] text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-[#5C6B73] focus:outline-none focus:ring-4 focus:ring-[#9DB4C0]/50 border border-white/20 group cursor-pointer"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-label={isOpen ? "Close health assistant" : "Open health assistant"}
+        className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#253237] text-2xl text-white shadow-2xl transition duration-300 hover:scale-110 hover:bg-[#5C6B73]"
       >
-        <span className="relative flex h-full w-full items-center justify-center">
-          {isOpen ? (
-            <FaTimes className="text-xl text-[#E0FBFC]" />
-          ) : (
-            <>
-              <FaUserNurse className="text-2xl text-[#E0FBFC] transition-transform duration-300 group-hover:rotate-12" />
-              <span className="absolute top-0 right-0 flex h-3.5 w-3.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-teal-500 border-2 border-white" />
-              </span>
-            </>
-          )}
-        </span>
+        {isOpen ? <FaTimes /> : <FaCommentMedical />}
       </button>
 
-      {/* Chat Window Panel */}
-      {isOpen && (
-        <div className="fixed inset-x-4 bottom-24 top-20 z-50 flex flex-col rounded-3xl bg-white shadow-2xl border border-gray-100 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[85vh] overflow-hidden transition-all duration-300">
-          {/* Header */}
-          <div className="bg-[#253237] px-5 py-4 text-white flex items-center justify-between shadow-md shrink-0">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5C6B73] text-[#E0FBFC] ring-2 ring-white/20">
-                <FaUserNurse className="text-lg" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold font-poppins text-white leading-tight">
-                  Triage Assistant
-                </h3>
-                <p className="text-[11px] text-[#E0FBFC]/80 flex items-center gap-1.5 mt-0.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Saviours Clinic Guide</span>
-                </p>
-              </div>
-            </div>
+      {/* Chat panel */}
+      <div
+        className={`fixed bottom-24 right-6 z-50 flex w-96 max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 ease-out ${
+          isOpen
+            ? "h-[600px] max-h-[70vh] translate-y-0 scale-100 opacity-100"
+            : "pointer-events-none h-0 translate-y-4 scale-95 opacity-0"
+        }`}
+      >
+        {/* Header */}
+        <div className="bg-[#253237] px-6 py-4 text-white">
+          <h3 className="text-lg font-bold">Health Assistant</h3>
+          <p className="mt-1 text-xs leading-4 text-[#C2DFE3]">
+            Helps you find the right doctor — not a diagnosis. In an emergency, call
+            emergency services immediately.
+          </p>
+        </div>
 
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-gray-300 hover:text-white transition p-1 cursor-pointer"
-              aria-label="Close assistant"
-            >
-              <FaTimes className="text-lg" />
-            </button>
-          </div>
-
-          {/* Persistent Non-Dismissible Safety Disclaimer */}
-          <div className="bg-[#F8FBFC] border-b border-gray-200 px-4 py-2.5 flex items-start gap-2 text-[11px] text-[#5C6B73] shrink-0 leading-snug">
-            <FaInfoCircle className="text-teal-600 shrink-0 mt-0.5" />
-            <p>
-              <strong className="text-[#253237]">Triage Only:</strong> This bot suggests departments & doctors — not medical diagnoses or treatment. Emergency? Call <a href="tel:+919876543210" className="underline font-bold text-rose-600">+91 98765 43210</a>.
-            </p>
-          </div>
-
-          {/* Chat Messages Body */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F8FBFC]/50">
-            {messages.map((msg) => {
-              const isUser = msg.sender === "user";
-
-              if (msg.isEmergency) {
-                return (
-                  <div key={msg.id} className="flex justify-start">
-                    <div className="max-w-[90%] rounded-2xl bg-rose-50 border-2 border-rose-200 p-4 text-rose-900 shadow-md">
-                      <div className="flex items-center gap-2 text-rose-700 font-bold text-sm mb-2">
-                        <FaExclamationTriangle className="text-lg text-rose-600" />
-                        <span>IMMEDIATE MEDICAL CARE NEEDED</span>
-                      </div>
-                      <p className="text-xs leading-relaxed font-medium">
-                        {msg.text}
-                      </p>
-                      {msg.action && (
-                        <p className="mt-2 text-xs font-semibold text-rose-800">
-                          {msg.action}
-                        </p>
-                      )}
-                      <div className="mt-3">
-                        <a
-                          href={`tel:${msg.emergencyContact || "+919876543210"}`}
-                          className="inline-flex items-center justify-center gap-2 w-full rounded-xl bg-rose-600 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:bg-rose-700 transition"
-                        >
-                          <FaPhoneAlt className="text-xs" />
-                          <span>Call Emergency Helpline</span>
-                        </a>
-                      </div>
-                    </div>
+        {/* Messages */}
+        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-[#F8FBFC] px-4 py-4">
+          {messages.map((msg, i) => (
+            <div key={i} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              {msg.redFlag ? (
+                <div className="max-w-[85%] rounded-2xl border border-red-200 bg-red-50 p-4">
+                  <div className="flex items-center gap-2 text-red-600">
+                    <FaExclamationTriangle />
+                    <span className="font-bold">Seek immediate medical attention</span>
                   </div>
-                );
-              }
-
-              return (
+                  <p className="mt-2 text-sm text-red-700">{msg.text}</p>
+                </div>
+              ) : (
                 <div
-                  key={msg.id}
-                  className={`flex flex-col ${
-                    isUser ? "items-end" : "items-start"
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
+                    msg.sender === "user"
+                      ? "bg-[#253237] text-white"
+                      : "bg-white text-[#253237] shadow-sm"
                   }`}
                 >
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-xs leading-relaxed shadow-xs ${
-                      isUser
-                        ? "bg-[#253237] text-white rounded-br-none"
-                        : "bg-white text-[#253237] border border-gray-100 rounded-bl-none shadow-sm"
-                    }`}
-                  >
-                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                  <p>{msg.text}</p>
 
-                    {/* Inline Specialty Recommendation Card (Only rendered when AI gives a doctor suggestion after symptom analysis) */}
-                    {msg.recommendation && (
-                      <div className="mt-3 rounded-xl bg-[#F8FBFC] border border-[#C2DFE3] p-3 text-[#253237]">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#5C6B73]">
-                            <FaStethoscope className="text-teal-600" />
-                            <span>Recommended Care</span>
-                          </span>
-                          <span className="rounded-full bg-[#253237] px-2 py-0.5 text-[9px] font-bold text-white uppercase">
-                            {msg.recommendation.urgency || "routine"}
-                          </span>
-                        </div>
-
-                        <h4 className="text-sm font-bold text-[#253237] font-poppins">
-                          {msg.recommendation.specialty} Department
-                        </h4>
-                        <p className="text-[11px] text-[#5C6B73] mt-0.5">
-                          {msg.recommendation.doctorName}
-                        </p>
-
-                        <button
-                          type="button"
-                          onClick={() => handleBookRecommendation(msg.recommendation)}
-                          className="mt-2.5 inline-flex items-center justify-center gap-1.5 w-full rounded-lg bg-[#253237] py-2 text-xs font-bold text-white hover:bg-[#5C6B73] transition cursor-pointer"
+                  {/* Doctor recommendation card */}
+                  {msg.readyToRecommend && msg.doctors?.length > 0 && (
+                    <div className="mt-3 space-y-2 border-t border-gray-100 pt-3">
+                      {msg.doctors.slice(0, 2).map((doc) => (
+                        <div
+                          key={doc.id}
+                          className="flex items-center gap-3 rounded-xl bg-[#F8FBFC] p-3"
                         >
-                          <FaCalendarCheck className="text-xs" />
-                          <span>Book with {msg.recommendation.doctorName}</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-[9px] text-gray-400 mt-1 px-1">
-                    {msg.timestamp}
-                  </span>
+                          <img
+                            src={doc.profileImage || DEFAULT_AVATAR}
+                            alt={doc.fullName}
+                            onError={(e) => (e.currentTarget.src = DEFAULT_AVATAR)}
+                            className="h-10 w-10 rounded-full object-cover"
+                          />
+                          <div className="flex-1">
+                            <p className="text-sm font-semibold text-[#253237]">
+                              {doc.fullName}
+                            </p>
+                            <p className="text-xs text-[#5C6B73]">{doc.specialization}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setBookingDoctor(doc)}
+                            className="rounded-lg bg-[#253237] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#5C6B73]"
+                          >
+                            Book Now
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              );
-            })}
+              )}
+            </div>
+          ))}
 
-            {/* Typing Indicator */}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl rounded-bl-none bg-white border border-gray-100 px-4 py-3 shadow-xs">
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-[#5C6B73] animate-bounce" />
-                    <span className="h-2 w-2 rounded-full bg-[#5C6B73] animate-bounce [animation-delay:0.2s]" />
-                    <span className="h-2 w-2 rounded-full bg-[#5C6B73] animate-bounce [animation-delay:0.4s]" />
-                  </div>
-                </div>
+          {loading && (
+            <div className="flex justify-start">
+              <div className="flex gap-1 rounded-2xl bg-white px-4 py-3 shadow-sm">
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#9DB4C0] [animation-delay:-0.3s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#9DB4C0] [animation-delay:-0.15s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#9DB4C0]" />
               </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Quick Suggestions Chips */}
-          <div className="bg-white border-t border-gray-100 px-3 py-2 flex gap-2 overflow-x-auto scrollbar-none shrink-0">
-            {[
-              "High fever & severe cough",
-              "Persistent toothache",
-              "Joint pain in knees",
-              "Skin rashes & itching",
-            ].map((chip, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleSendMessage(chip)}
-                className="shrink-0 rounded-full bg-[#F8FBFC] border border-[#9DB4C0]/40 px-3 py-1 text-[10px] font-semibold text-[#253237] hover:bg-[#253237] hover:text-white transition cursor-pointer"
-              >
-                {chip}
-              </button>
-            ))}
-          </div>
-
-          {/* Input Footer Bar */}
-          <div className="bg-white p-3 border-t border-gray-100 flex items-center gap-2 shrink-0">
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Describe your symptoms..."
-              className="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 text-xs outline-none focus:border-[#253237]"
-            />
-
-            <button
-              type="button"
-              onClick={() => handleSendMessage()}
-              disabled={!inputMessage.trim() || loading}
-              aria-label="Send message"
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#253237] text-white shadow-md transition hover:bg-[#5C6B73] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
-            >
-              <FaPaperPlane className="text-xs" />
-            </button>
-          </div>
+            </div>
+          )}
         </div>
-      )}
 
-      {/* Booking Modal Popup Triggered Directly From Chat Recommendation */}
+        {/* Input */}
+        <div className="flex items-center gap-2 border-t border-gray-100 bg-white p-3">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Describe your symptoms..."
+            disabled={loading}
+            className="flex-1 rounded-xl border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#253237] disabled:opacity-60"
+          />
+          <button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            aria-label="Send message"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#253237] text-white transition hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <FaPaperPlane className="text-sm" />
+          </button>
+        </div>
+      </div>
+
+      {/* Booking Modal */}
       <BookingModal
-        isOpen={isBookingModalOpen}
-        doctor={selectedDoctorForBooking}
-        availableDoctors={publicDoctors}
-        onClose={() => setIsBookingModalOpen(false)}
+        doctorId={bookingDoctor?.id}
+        doctor={bookingDoctor}
+        isOpen={!!bookingDoctor}
+        onClose={() => setBookingDoctor(null)}
       />
     </>
   );
