@@ -139,7 +139,7 @@ const DEFAULT_SERVICES = [
     fullDescription:
       "Our Pediatrics department provides child-centered compassionate clinical care in a warm, friendly environment. From newborn neonatal health assessments to comprehensive immunization schedules and developmental milestone tracking, our pediatric physicians safeguard your child's growth and health at every stage.",
     heroImage:
-      "https://res.cloudinary.com/udzftzug/image/upload/f_auto,q_auto/images_11_bodtks",
+      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=1600&q=80&auto=format&fit=crop",
     overviewImage:
       "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=900&q=80&auto=format&fit=crop",
     galleryImages: [
@@ -311,7 +311,7 @@ const DEFAULT_SERVICES = [
     fullDescription:
       "Saviours Clinic General Medicine department acts as your primary healthcare partner. Offering preventive health screenings, chronic disease management (diabetes, hypertension, thyroid), and prompt treatment for acute fever and infections.",
     heroImage:
-      "https://res.cloudinary.com/udzftzug/image/upload/v1785430874/Gemini_Generated_Image_rxzd9drxzd9drxzd_tupkkn.png",
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
     overviewImage:
       "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80&auto=format&fit=crop",
     galleryImages: [
@@ -348,15 +348,36 @@ const DEFAULT_SERVICES = [
   },
 ];
 
-export const ensureServicesSeeded = async () => {
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+
+export const ensureServicesSeeded = async (forceReSeed = false) => {
   try {
+    const mongoUri = process.env.MONGODB_URI;
+    if (mongoose.connection.readyState === 0 && mongoUri) {
+      await mongoose.connect(mongoUri);
+    }
+
     const count = await Service.countDocuments();
-    if (count === 0) {
-      console.log("Seeding default clinic services...");
+    if (count === 0 || forceReSeed) {
+      console.log(forceReSeed ? "Re-seeding services dataset..." : "Seeding default clinic services...");
+      if (forceReSeed) {
+        await Service.deleteMany({});
+      }
       await Service.insertMany(DEFAULT_SERVICES);
-      console.log("Clinic services seeded successfully!");
+      console.log(`Clinic services (${DEFAULT_SERVICES.length} services) seeded successfully!`);
     }
   } catch (error) {
     console.error("Error seeding clinic services:", error);
   }
 };
+
+// Execute directly if run via node CLI
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  dotenv.config();
+  ensureServicesSeeded(true).then(() => {
+    mongoose.disconnect();
+    process.exit(0);
+  });
+}

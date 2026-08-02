@@ -1,6 +1,6 @@
 
 export const HERO_IMAGES = {
-  home: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
+  home: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785665898/Gemini_Generated_Image_wv3ndpwv3ndpwv3n_xgbqbm.png",
   about: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80&auto=format&fit=crop",
   doctors: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=1600&q=80&auto=format&fit=crop",
   services: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80&auto=format&fit=crop",
@@ -457,3 +457,6 @@ export const TESTIMONIAL_AVATARS = {
   patient5: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80&auto=format&fit=crop",
   patient6: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80&auto=format&fit=crop",
 };
+
+export const DEFAULT_AVATAR =
+  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";

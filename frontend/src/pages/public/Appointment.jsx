@@ -13,6 +13,7 @@ import {
   clearAppointmentError,
   resetAppointmentSuccess,
 } from "../../features/appointment/appointmentSlice";
+import { Calendar } from "lucide-react";
 import AnimatedSection from "../../components/AnimatedSection";
 import SlotPicker from "../../components/SlotPicker";
 import { HERO_IMAGES, GUIDELINE_IMAGES, CTA_IMAGES } from "../../constants/images";
@@ -121,35 +122,42 @@ const Appointment = () => {
 
   return (
     <>
-      {/* ================= HERO ================= */}
-
-      <section className="relative overflow-hidden">
+      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
         <img
           src={HERO_IMAGES.appointment}
-          alt=""
+          alt="Book Appointment"
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5c6b73]/70" />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
-          <AnimatedSection direction="up">
-            <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
+        {/* Dark luxury gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/95 via-[#253237]/85 to-[#1c282e]/90 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
+
+        <AnimatedSection
+          direction="up"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+            <Calendar className="w-4 h-4 text-teal-300" />
+            <span>Instant Online Scheduling</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+            Book Your{" "}
+            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
               Appointment
             </span>
+          </h1>
 
-            <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl font-poppins">
-              Book Your Appointment
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-              Schedule an appointment with our experienced medical
-              professionals. We are committed to providing timely,
-              compassionate, and personalized healthcare for you and your
-              family.
-            </p>
-          </AnimatedSection>
-        </div>
+          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
+            Schedule an appointment with our experienced medical
+            professionals. We are committed to providing timely,
+            compassionate, and personalized healthcare for you and your
+            family.
+          </p>
+        </AnimatedSection>
       </section>
 
       {/* ================= APPOINTMENT FORM ================= */}

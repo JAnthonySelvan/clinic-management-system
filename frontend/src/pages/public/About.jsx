@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import {
   FaBullseye,
   FaFlask,
@@ -22,7 +23,7 @@ import {
 } from "../../constants/images";
 
 const DEFAULT_AVATAR =
-  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";
 
 const getSpecializationBadgeStyle = (spec) => {
   const normalized = (spec || "").toLowerCase();
@@ -62,30 +63,41 @@ const About = () => {
 
   return (
     <>
-      {/* ================= HERO ================= */}
-
-      <section className="relative overflow-hidden">
+      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
         <img
           src={HERO_IMAGES.about}
-          alt=""
+          alt="About Saviours Clinic"
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5c6b73]/70" />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <AnimatedSection direction="up" className="text-center">
-            <h1 className="text-5xl font-bold text-white font-poppins">
-              About Saviours Clinic
-            </h1>
+        {/* Dark luxury gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/95 via-[#253237]/85 to-[#1c282e]/90 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
 
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
-              We are committed to providing compassionate, high-quality
-              healthcare through experienced doctors, advanced medical
-              technology, and patient-centered care.
-            </p>
-          </AnimatedSection>
-        </div>
+        <AnimatedSection
+          direction="up"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+            <Sparkles className="w-4 h-4 text-teal-300" />
+            <span>Excellence In Healthcare</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+            About{" "}
+            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+              Saviours Clinic
+            </span>
+          </h1>
+
+          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
+            We are committed to providing compassionate, high-quality
+            healthcare through experienced doctors, advanced medical
+            technology, and patient-centered care.
+          </p>
+        </AnimatedSection>
       </section>
 
       {/* About Content */}

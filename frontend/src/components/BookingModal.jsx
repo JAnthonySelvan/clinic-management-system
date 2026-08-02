@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createAppointment, clearAppointmentError, resetAppointmentSuccess } from "../features/appointment/appointmentSlice";
 import SlotPicker from "./SlotPicker";
 
-const DEFAULT_AVATAR = "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";
 
 /**
  * BookingModal Component

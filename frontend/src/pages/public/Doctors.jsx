@@ -34,7 +34,7 @@ import {
 } from "../../constants/images";
 
 const DEFAULT_AVATAR =
-  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";
 
 const SPECIALIZATIONS = [
   {
@@ -248,29 +248,35 @@ const Doctors = () => {
 
   return (
     <>
-      {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden py-28 md:py-36">
+      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
         <img
           src={HERO_IMAGES.doctors}
           alt="Our medical specialists"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#5C6B73]/90 to-[#9DB4C0]/85" />
+
+        {/* Dark luxury gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/95 via-[#253237]/85 to-[#1c282e]/90 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection
           direction="up"
-          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
         >
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#E0FBFC] backdrop-blur-sm border border-white/20">
-            <Stethoscope className="h-3.5 w-3.5 text-[#C2DFE3]" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+            <Stethoscope className="h-4 w-4 text-teal-300" />
             <span>Clinical Faculty & Specialists</span>
           </span>
 
-          <h1 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
-            Meet Our Expert Doctors
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+            Meet Our{" "}
+            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+              Expert Doctors
+            </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-[#E0FBFC] sm:text-lg">
+          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
             Our team of highly qualified specialists is dedicated to providing
             compassionate, evidence-based, and advanced healthcare for every
             patient.

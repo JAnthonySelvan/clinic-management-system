@@ -25,6 +25,7 @@ import {
   FaClock,
 } from "react-icons/fa";
 
+import { Sparkles } from "lucide-react";
 import AnimatedSection from "../../components/AnimatedSection";
 import {
   HERO_IMAGES,
@@ -257,7 +258,6 @@ const Services = () => {
       if (el) el.removeEventListener("scroll", checkScrollPosition);
     };
   }, []);
-
   const scrollToServices = () => {
     const gridEl = document.getElementById("services-grid");
     if (gridEl) {
@@ -267,30 +267,36 @@ const Services = () => {
 
   return (
     <>
-      {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden min-h-[520px] flex items-center justify-center py-28 lg:py-36">
+      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
         <img
           src={HERO_IMAGES.services}
           alt="Our medical services"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5C6B73]/75" />
+
+        {/* Dark luxury gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/95 via-[#253237]/85 to-[#1c282e]/90 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection
           direction="up"
-          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 z-10"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
         >
           {/* Floating Pill Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium text-[#E0FBFC] backdrop-blur-md border border-white/20 shadow-md">
-            <span className="h-2 w-2 rounded-full bg-[#9DB4C0] animate-pulse" />
-            <span>Trusted by 12,000+ Patients</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+            <Sparkles className="w-4 h-4 text-teal-300" />
+            <span>Comprehensive Clinical Care</span>
           </div>
 
-          <h1 className="text-4xl font-bold text-white font-poppins sm:text-5xl lg:text-6xl tracking-tight">
-            Our Medical Services
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+            Our Medical{" "}
+            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+              Services
+            </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]/90">
+          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
             We provide a comprehensive range of healthcare services with modern
             facilities and experienced medical professionals to ensure the best
             treatment for every patient.
@@ -300,9 +306,9 @@ const Services = () => {
           <button
             onClick={scrollToServices}
             aria-label="Scroll down to services"
-            className="mt-12 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 transition duration-300 hover:bg-white/20 hover:scale-110 animate-bounce cursor-pointer"
+            className="mt-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 transition duration-300 hover:bg-white/20 hover:scale-110 animate-bounce cursor-pointer"
           >
-            <FaChevronDown className="text-lg text-[#E0FBFC]" />
+            <FaChevronDown className="text-lg text-teal-200" />
           </button>
         </AnimatedSection>
       </section>

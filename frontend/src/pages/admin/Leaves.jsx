@@ -24,7 +24,7 @@ import {
 import { CTA_IMAGES, FEATURE_IMAGES } from "../../constants/images";
 
 const DEFAULT_AVATAR =
-  "https://res.cloudinary.com/demo/image/upload/v1690000000/default-avatar.png";
+  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";
 
 const statusColor = {
   Pending: "bg-amber-50 text-amber-700 border border-amber-200/60",

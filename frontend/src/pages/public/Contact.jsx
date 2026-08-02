@@ -12,6 +12,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 
+import { Sparkles } from "lucide-react";
 import { submitContactMessage } from "../../features/contact/contactService";
 import AnimatedSection from "../../components/AnimatedSection";
 import { HERO_IMAGES, CONTACT_IMAGES, CTA_IMAGES } from "../../constants/images";
@@ -145,29 +146,35 @@ const Contact = () => {
 
   return (
     <>
-      {/* ================= HERO ================= */}
-
-      <section className="relative overflow-hidden py-32">
+      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
         <img
           src={HERO_IMAGES.contact}
           alt="Contact our clinic"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#5C6B73]/90 to-[#9DB4C0]/80" />
+
+        {/* Dark luxury gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/95 via-[#253237]/85 to-[#1c282e]/90 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection
           direction="up"
-          className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
         >
-          <span className="text-sm font-semibold uppercase tracking-widest text-[#E0FBFC]">
-            Contact Us
-          </span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+            <Sparkles className="w-4 h-4 text-teal-300" />
+            <span>24/7 Patient Support & Inquiry</span>
+          </div>
 
-          <h1 className="mt-4 text-5xl font-bold text-white md:text-6xl font-poppins">
-            We'd Love to Hear From You
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+            We'd Love to{" "}
+            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+              Hear From You
+            </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC]">
+          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
             Have questions, need assistance, or want to schedule a visit? Our
             friendly team is here to help. Reach out to us using the contact
             information below or send us a message directly.
