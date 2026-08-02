@@ -191,8 +191,8 @@ const ServiceDetailPage = () => {
           alt={service.name}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        {/* Gradient Overlay for high readability */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#253237]/95 via-[#253237]/85 to-[#5c6b73]/70" />
+        {/* Dark luxury gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#253237]/65 via-[#253237]/50 to-[#5c6b73]/40 backdrop-blur-[1px]" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           {/* Breadcrumb Navigation */}

@@ -1,37 +1,7 @@
 /**
- * AUDIT & CHANGELOG SUMMARY (images.js)
+ * AUDIT & CLEANUP SUMMARY (images.js)
  * =========================================================================================
- * 1. HERO_IMAGES:
- *    - home: Preserved original custom Cloudinary hero backdrop (per directive).
- *    - about: Retained photo-1519494026892-80bbd2d6fd0d for main clinic lobby.
- *    - doctors: Updated from single doctor to photo-1622902046580-2b47f47f5471 (multi-specialty team corridor).
- *    - services: Updated from lobby duplicate to photo-1538108149393-fbbd81895907 (clinical treatment ward).
- *    - appointment: Updated to photo-1576091160550-2173dba999ef (doctor desk patient consultation).
- *    - contact: Updated from scanner to photo-1486406146926-c627a92ad1ab (clinic exterior front).
- *    - telehealth: Fixed mismatch (was dental procedure) to photo-1576091160550-2173dba999ef (video call on laptop).
- *
- * 2. SPECIALTY_IMAGES:
- *    - pediatrics: Fixed mismatch (was adult doctor alone) to photo-1584515933487-779824d29309 (pediatrician with child).
- *    - ent: Fixed mismatch (was chemistry lab scientist) to photo-1588776814546-1ffcf47267a5 (otoscope ear/throat checkup).
- *    - gastroenterology: Fixed mismatch (was brain MRI scan) to photo-1579684385127-1ef15d508118 (abdominal ultrasound).
- *
- * 3. FEATURE_IMAGES (Marketing & Dashboard Stat Cards):
- *    - fastDiagnosis: Updated to photo-1579684385127-1ef15d508118 (automated diagnostic blood analyzer).
- *    - multilingualTeam: Fixed mismatch (was BP cuff) to photo-1573496359142-b8d87734a5a2 (diverse medical team).
- *    - insuranceSupport: Updated to photo-1450133064473-71024230f91b (insurance claim documentation).
- *    - teleconsultation: Fixed mismatch (was dental procedure) to photo-1576091160550-2173dba999ef (telehealth).
- *    - homeCare: Fixed mismatch to photo-1581579438747-1dc8d1e2729f (home visiting nurse with senior).
- *
- * 4. HOSPITAL_FACILITIES:
- *    - Emergency: Fixed mismatch (was waiting room chairs) to photo-1587745416684-47953f16f02f (ambulance & ER bay).
- *    - ICU Care: Fixed mismatch (was CT scanner) to photo-1538108149393-fbbd81895907 (ICU bed & ventilator).
- *    - Pharmacy: Fixed mismatch (was BP test) to photo-1586015555751-63bb77f4322a (pharmacy shelves & counter).
- *    - Robotic Surgery: Fixed mismatch (was lab beaker) to photo-1551076805-e1869033e561 (robotic surgical arm).
- *
- * 5. DOCTOR_PORTRAITS:
- *    - pediatricianFemale: Fixed mismatch (was senior patient) to photo-1594824813566-88855ce78907 (pediatrician doctor).
- *    - dentistMale: Fixed mismatch (was open mouth dental work) to photo-1612349317150-e413f6a5b16d (male dentist doctor).
- *    - radiologistFemale: Fixed mismatch to photo-1559839734-2b71ea197ec2 (female radiologist portrait).
+ * Cleaned up unused image exports and unused properties not referenced across the codebase.
  * =========================================================================================
  */
 
@@ -40,50 +10,36 @@
 // ==========================================
 export const HERO_IMAGES = {
   home: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785665898/Gemini_Generated_Image_wv3ndpwv3ndpwv3n_xgbqbm.png",
-  about: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80&auto=format&fit=crop",
+  about: "https://res.cloudinary.com/dlaqnbmqk/image/upload/f_auto/q_auto/tmylac0shzdvyh9v6bcb",
   doctors: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=1600&q=80&auto=format&fit=crop",
   services: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1600&q=80&auto=format&fit=crop",
   appointment: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
   contact: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80&auto=format&fit=crop",
   track: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80&auto=format&fit=crop",
-  cta: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1600&q=80&auto=format&fit=crop",
-  emergency: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=1600&q=80&auto=format&fit=crop",
-  pharmacy: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=1600&q=80&auto=format&fit=crop",
-  telehealth: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
-  wellness: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1600&q=80&auto=format&fit=crop",
-  careers: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=1600&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
 // 2. SPECIALTY IMAGES
 // ==========================================
 export const SPECIALTY_IMAGES = {
-  cardiology: "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=80&auto=format&fit=crop",
-  neurology: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80&auto=format&fit=crop",
-  dental: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=80&auto=format&fit=crop",
-  pediatrics: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-  eyeCare: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop",
-  generalMedicine: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
+  cardiology: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681180/nm-ten-signs-cardiologist_preview_kgnmy7.jpg",
+  neurology: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681314/2382299_gj7stq.webp",
+  dental: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681428/The-Benefits-of-Early-Dental-Care_iguxqw.jpg",
+  pediatrics: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681016/media_18137302d93e3acffbe0bc14af67c17b5e12918d8_j7fxss.jpg",
+  eyeCare: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681502/blog-photo_zfcgdb.jpg",
+  generalMedicine: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681562/General-Medicine_hn7en8.png",
   orthopedics: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80&auto=format&fit=crop",
   pulmonology: "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&q=80&auto=format&fit=crop",
-  dermatology: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&q=80&auto=format&fit=crop",
-  oncology: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80&auto=format&fit=crop",
-  gynaecology: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
-  radiology: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-  psychiatry: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?w=800&q=80&auto=format&fit=crop",
-  gastroenterology: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
-  urology: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-  ent: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
 // 3. FEATURE IMAGES
 // ==========================================
 export const FEATURE_IMAGES = {
-  expertDoctors: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=600&q=80&auto=format&fit=crop",
-  modernFacilities: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80&auto=format&fit=crop",
+  expertDoctors: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681900/MedicalExpertWitness_cucdmn.jpg",
+  modernFacilities: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681965/modern-operating-room-hospital-modern-medical-equipment-operating-room_116317-37910_hromma.jpg",
   compassionateCare: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&q=80&auto=format&fit=crop",
-  timelyService: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&q=80&auto=format&fit=crop",
+  timelyService: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682037/hours-doctor-service-logo-iconvector-sign-day-night-healthcare-medical-services-button-symbol-operator-contact-aid-pharmacy-165356768_f91jmj.jpg",
   qualifiedSpecialists: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
   modernTechnology: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=600&q=80&auto=format&fit=crop",
   trustedPatients: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=80&auto=format&fit=crop",
@@ -93,8 +49,6 @@ export const FEATURE_IMAGES = {
   multilingualTeam: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80&auto=format&fit=crop",
   insuranceSupport: "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&q=80&auto=format&fit=crop",
   roboticSurgery: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&q=80&auto=format&fit=crop",
-  teleconsultation: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80&auto=format&fit=crop",
-  homeCare: "https://images.unsplash.com/photo-1581579438747-1dc8d1e2729f?w=600&q=80&auto=format&fit=crop",
   preventiveCheckups: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=80&auto=format&fit=crop",
 };
 
@@ -102,10 +56,7 @@ export const FEATURE_IMAGES = {
 // 4. MISSION & VISION IMAGES
 // ==========================================
 export const MISSION_IMAGES = {
-  mission: "https://images.unsplash.com/photo-1600959907703-125ba1374a12?w=800&q=80&auto=format&fit=crop",
   vision: "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&q=80&auto=format&fit=crop",
-  community: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
-  research: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
@@ -116,8 +67,6 @@ export const PROCESS_IMAGES = {
   medicalConsultation: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
   treatmentPlan: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=800&q=80&auto=format&fit=crop",
   recoveryFollowup: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
-  onlineRegistration: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80&auto=format&fit=crop",
-  virtualScreening: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
@@ -128,7 +77,6 @@ export const CONTACT_IMAGES = {
   phone: "https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=800&q=80&auto=format&fit=crop",
   email: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&q=80&auto=format&fit=crop",
   hours: "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=800&q=80&auto=format&fit=crop",
-  locationMap: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80&auto=format&fit=crop",
 };
 
 export const GUIDELINE_IMAGES = {
@@ -136,14 +84,10 @@ export const GUIDELINE_IMAGES = {
   identification: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&q=80&auto=format&fit=crop",
   arriveEarly: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=400&q=80&auto=format&fit=crop",
   medicalHistory: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&q=80&auto=format&fit=crop",
-  insuranceCard: "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=400&q=80&auto=format&fit=crop",
-  medicationList: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400&q=80&auto=format&fit=crop",
 };
 
 export const CTA_IMAGES = {
   background: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80&auto=format&fit=crop",
-  emergencyBanner: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=1600&q=80&auto=format&fit=crop",
-  appDownload: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1600&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
@@ -158,120 +102,63 @@ export const HOSPITAL_FACILITIES = [
       "Round-the-clock emergency response with a dedicated trauma team ready for critical cases at any hour.",
   },
   {
-    image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682123/11_qyhcl5.jpg",
     title: "ICU & Critical Care",
     tag: "Advanced Monitoring",
     description:
       "Fully-equipped intensive care units with continuous monitoring and a dedicated critical care team.",
   },
   {
-    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682271/surgery-equipment-and-instruments-in-surgery-operation-room-instruments-for-microsurgery-modern-operating-theatre-photo_ko3ce1.jpg",
     title: "Modern Operation Theatres",
     tag: "Precision Surgery",
     description:
       "State-of-the-art operation theatres equipped with the latest surgical technology for safer outcomes.",
   },
   {
-    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682455/Diagnostic-Imaging-Center-in-Lufkin_mjgwcl.jpg",
     title: "Diagnostic & Imaging Center",
     tag: "Fast, Accurate Results",
     description:
       "In-house labs and imaging — X-ray, MRI, CT scans — for quick, accurate diagnosis without outside referrals.",
   },
   {
-    image: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682525/private-room_eboa27.jpg",
     title: "Private In-Patient Rooms",
     tag: "Comfort-Focused",
     description: "Spacious, comfortable rooms designed for recovery, with round-the-clock nursing support.",
   },
   {
-    image: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682582/In-House-Pharmacy-24_C3_977_usk5i5.png",
     title: "24/7 In-House Pharmacy",
     tag: "Always Open",
     description:
       "A fully-stocked pharmacy on-site, so prescriptions are filled the moment you need them — any time of day.",
   },
   {
-    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682654/dfef8a2faff6e952167a6fad97115acb_jdwyzl.jpg",
     title: "Robotic Surgery Suite",
     tag: "Minimally Invasive",
     description:
       "Advanced robotic-assisted surgery for higher precision, shorter recovery time, and minimal scarring.",
   },
   {
-    image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682794/2_gbqokx.jpg",
     title: "Advanced Rehabilitation Center",
     tag: "Physical & Occupational",
     description:
       "Comprehensive physical therapy and post-surgical rehabilitation led by certified physiotherapists.",
   },
   {
-    image: "https://images.unsplash.com/photo-1502740479091-635887520276?w=900&q=80&auto=format&fit=crop",
+    image: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785683059/6ac4972edf923e26c92837e640ce1578_p5uvjq.jpg",
     title: "Pediatric & Neonatal Intensive Care (NICU)",
     tag: "Specialized Care",
     description: "Dedicated neonatal and pediatric intensive care units designed for infants and children.",
   },
 ];
 
-export const ABOUT_THUMBNAILS = {
-  mission: "https://images.unsplash.com/photo-1600959907703-125ba1374a12?w=200&q=80&auto=format&fit=crop",
-  facilities: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=200&q=80&auto=format&fit=crop",
-  medicalBoard: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=200&q=80&auto=format&fit=crop",
-  researchLab: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=200&q=80&auto=format&fit=crop",
-  communityOutreach: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=200&q=80&auto=format&fit=crop",
-};
-
 // ==========================================
-// 8. SPECIALIZED SERVICES (AMBULANCE, PHARMACY, ROOMS, ETC.)
-// ==========================================
-export const AMBULANCE_SERVICES = {
-  hero: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=1600&q=80&auto=format&fit=crop",
-  fleet: [
-    "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80&auto=format&fit=crop",
-  ],
-  paramedicTeam: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=800&q=80&auto=format&fit=crop",
-  controlRoom: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80&auto=format&fit=crop",
-};
-
-export const PHARMACY_IMAGES = {
-  hero: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=1600&q=80&auto=format&fit=crop",
-  storefront: "https://images.unsplash.com/photo-1576602976047-174e57a47881?w=900&q=80&auto=format&fit=crop",
-  pharmacist: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=800&q=80&auto=format&fit=crop",
-  medications: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=800&q=80&auto=format&fit=crop",
-  roboticDispensing: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80&auto=format&fit=crop",
-  labDelivery: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop",
-};
-
-export const PATIENT_ROOMS = {
-  vipSuite: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000&q=80&auto=format&fit=crop",
-  deluxePrivate: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1000&q=80&auto=format&fit=crop",
-  semiPrivate: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1000&q=80&auto=format&fit=crop",
-  pediatricWard: "https://images.unsplash.com/photo-1502740479091-635887520276?w=1000&q=80&auto=format&fit=crop",
-  icuBed: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1000&q=80&auto=format&fit=crop",
-  patientLounge: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1000&q=80&auto=format&fit=crop",
-};
-
-export const WELLNESS_CHECKUPS = {
-  hero: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
-  executiveCheckup: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80&auto=format&fit=crop",
-  seniorCare: "https://images.unsplash.com/photo-1581579438747-1dc8d1e2729f?w=800&q=80&auto=format&fit=crop",
-  womenHealth: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80&auto=format&fit=crop",
-  pediatricCheckup: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&auto=format&fit=crop",
-  sportsPhysical: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80&auto=format&fit=crop",
-};
-
-export const TELEMEDICINE_IMAGES = {
-  hero: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
-  videoCall: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80&auto=format&fit=crop",
-  mobileApp: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80&auto=format&fit=crop",
-  digitalPrescription: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80&auto=format&fit=crop",
-  doctorRemote: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
-};
-
-// ==========================================
-// 9. SERVICE DETAIL IMAGES
+// 8. SERVICE DETAIL IMAGES
 // ==========================================
 export const SERVICE_DETAIL_IMAGES = {
   cardiology: {
@@ -413,7 +300,7 @@ SERVICE_DETAIL_IMAGES["general-medicine"] = SERVICE_DETAIL_IMAGES.generalMedicin
 SERVICE_DETAIL_IMAGES["skin-care"] = SERVICE_DETAIL_IMAGES.dermatology;
 
 // ==========================================
-// 10. ABOUT DETAIL IMAGES
+// 9. ABOUT DETAIL IMAGES
 // ==========================================
 export const ABOUT_DETAIL_IMAGES = {
   visionMission: {
@@ -456,46 +343,15 @@ ABOUT_DETAIL_IMAGES["research-organization"] = ABOUT_DETAIL_IMAGES.research;
 ABOUT_DETAIL_IMAGES["medical-camps"] = ABOUT_DETAIL_IMAGES.medicalCamps;
 
 // ==========================================
-// 11. DOCTOR PORTRAITS & PROFILES
+// 10. DOCTOR PORTRAITS & PROFILES
 // ==========================================
 export const DOCTOR_PORTRAITS = {
   maleDoctor1: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&q=80&auto=format&fit=crop",
-  femaleDoctor1: "https://images.unsplash.com/photo-1594824813566-88855ce78907?w=600&q=80&auto=format&fit=crop",
-  maleDoctor2: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&q=80&auto=format&fit=crop",
   femaleDoctor2: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
-  surgeonMale: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&auto=format&fit=crop",
-  pediatricianFemale: "https://images.unsplash.com/photo-1594824813566-88855ce78907?w=600&q=80&auto=format&fit=crop",
-  cardiologistMale: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&q=80&auto=format&fit=crop",
-  neurologistFemale: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80&auto=format&fit=crop",
-  dentistMale: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&auto=format&fit=crop",
-  radiologistFemale: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
 };
 
 // ==========================================
-// 12. BLOG & HEALTH ARTICLES COVER IMAGES
+// 11. DEFAULT AVATAR
 // ==========================================
-export const BLOG_IMAGES = {
-  heartHealth: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80&auto=format&fit=crop",
-  mentalWellness: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?w=800&q=80&auto=format&fit=crop",
-  nutritionGuide: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&q=80&auto=format&fit=crop",
-  sleepHygiene: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&q=80&auto=format&fit=crop",
-  immunityBoosters: "https://images.unsplash.com/photo-1511688878353-3a2f5be94cd7?w=800&q=80&auto=format&fit=crop",
-  pediatricCare: "https://images.unsplash.com/photo-1502740479091-635887520276?w=800&q=80&auto=format&fit=crop",
-  firstAidBasics: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80&auto=format&fit=crop",
-  exerciseTips: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80&auto=format&fit=crop",
-};
-
-// ==========================================
-// 13. PATIENT TESTIMONIAL AVATARS
-// ==========================================
-export const TESTIMONIAL_AVATARS = {
-  patient1: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80&auto=format&fit=crop",
-  patient2: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80&auto=format&fit=crop",
-  patient3: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&auto=format&fit=crop",
-  patient4: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&auto=format&fit=crop",
-  patient5: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80&auto=format&fit=crop",
-  patient6: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80&auto=format&fit=crop",
-};
-
 export const DEFAULT_AVATAR =
   "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";

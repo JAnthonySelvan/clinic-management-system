@@ -15,7 +15,6 @@ import {
 } from "react-icons/fa";
 import {
   SERVICE_DETAIL_IMAGES,
-  ABOUT_THUMBNAILS,
   ABOUT_DETAIL_IMAGES,
   SPECIALTY_IMAGES,
 } from "../../constants/images";
