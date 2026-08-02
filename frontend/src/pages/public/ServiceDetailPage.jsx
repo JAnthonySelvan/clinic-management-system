@@ -25,7 +25,9 @@ import {
 
 import AnimatedSection from "../../components/AnimatedSection";
 import BookingModal from "../../components/BookingModal";
-import { getServiceBySlug } from "../../features/service/serviceService";
+import { getLocalServiceBySlug } from "../../constants/servicesData";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
 import {
   SERVICE_DETAIL_IMAGES,
   HERO_IMAGES,
@@ -49,6 +51,9 @@ const getPricingIcon = (testName = "", index = 0) => {
 
 const ServiceDetailPage = () => {
   const { serviceSlug } = useReactParams();
+  const dispatch = useAppDispatch();
+  const { doctors: allDoctors = [] } = useAppSelector((state) => state.doctor);
+
   const [service, setService] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,34 +62,35 @@ const ServiceDetailPage = () => {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchDetail = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await getServiceBySlug(serviceSlug);
-        if (isMounted && response.success) {
-          setService(response.data);
-          setDoctors(response.data.doctors || []);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(
-            err.response?.data?.message ||
-              `The medical service '${serviceSlug}' could not be found.`,
-          );
-          setService(null);
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
+    dispatch(fetchPublicDoctors());
+  }, [dispatch]);
 
-    fetchDetail();
-    return () => {
-      isMounted = false;
-    };
-  }, [serviceSlug]);
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    const localData = getLocalServiceBySlug(serviceSlug);
+
+    if (localData) {
+      setService(localData);
+
+      // Match doctors by specialty / service name
+      const filteredDocs = allDoctors.filter((doc) => {
+        if (!doc.specialization) return false;
+        const spec = doc.specialization.toLowerCase();
+        const sName = localData.name.toLowerCase();
+        const sSlug = localData.slug.toLowerCase();
+        return spec.includes(sName) || spec.includes(sSlug) || sName.includes(spec);
+      });
+
+      setDoctors(filteredDocs.length > 0 ? filteredDocs : (localData.doctors || allDoctors.slice(0, 3)));
+      setLoading(false);
+    } else {
+      setError(`The medical service '${serviceSlug}' could not be found.`);
+      setService(null);
+      setLoading(false);
+    }
+  }, [serviceSlug, allDoctors]);
 
   const handleOpenBooking = (doc = null) => {
     if (doc) {
@@ -117,6 +123,12 @@ const ServiceDetailPage = () => {
       ? service.galleryImages
       : SERVICE_DETAIL_IMAGES[serviceSlug]?.gallery ||
         SERVICE_DETAIL_IMAGES.cardiology.gallery;
+
+  // Features images for Key Treatments cards
+  const featurePhotos =
+    service?.features && service.features.length > 0
+      ? service.features
+      : SERVICE_DETAIL_IMAGES[serviceSlug]?.features || [];
 
   // Hero image fallback
   const heroImg =
@@ -406,7 +418,7 @@ const ServiceDetailPage = () => {
                     service.keyTreatments.map((treatment, idx) => {
                       const treatImg =
                         treatment.image ||
-                        galleryPhotos[idx % galleryPhotos.length] ||
+                        featurePhotos[idx % featurePhotos.length] ||
                         defaultTreatmentImages[idx % defaultTreatmentImages.length];
 
                       return (

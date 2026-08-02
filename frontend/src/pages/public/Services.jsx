@@ -121,7 +121,7 @@ const Services = () => {
       tag: "Bone & Joint",
     },
   ];
-
+  
   const whyChooseUs = [
     {
       image: FEATURE_IMAGES.modernFacilities,
