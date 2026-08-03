@@ -49,6 +49,48 @@ const getPricingIcon = (testName = "", index = 0) => {
   return fallbackIcons[index % fallbackIcons.length];
 };
 
+const isDoctorMatchingService = (doc, service) => {
+  if (!doc || !doc.specialization || !service) return false;
+
+  const spec = doc.specialization.toLowerCase().trim();
+  const sName = (service.name || "").toLowerCase().trim();
+  const sSlug = (service.slug || "").toLowerCase().trim();
+  const aliases = (service.aliases || []).map((a) => a.toLowerCase().trim());
+
+  // Direct equality / string inclusion check
+  const targets = [sName, sSlug, ...aliases];
+  for (const target of targets) {
+    if (!target) continue;
+    if (spec === target || spec.includes(target) || target.includes(spec)) {
+      return true;
+    }
+  }
+
+  // Stem map for medical specialization variants
+  const stemMap = {
+    cardiology: ["cardio"],
+    neurology: ["neuro"],
+    orthopedics: ["ortho"],
+    pediatrics: ["pedia", "child"],
+    dental: ["dent"],
+    "eye-care": ["ophthalm", "eye", "optom"],
+    pulmonology: ["pulmo", "lung", "respirat"],
+    "general-medicine": ["general physician", "general medicine", "internal medicine", "primary care", "physician"],
+    dermatology: ["derma", "skin"],
+    oncology: ["onco", "cancer"],
+    gynaecology: ["gynaec", "gynec", "women"],
+    radiology: ["radio", "imag"],
+    psychiatry: ["psych", "mental"],
+  };
+
+  const stems = stemMap[sSlug] || [];
+  for (const stem of stems) {
+    if (spec.includes(stem)) return true;
+  }
+
+  return false;
+};
+
 const ServiceDetailPage = () => {
   const { serviceSlug } = useReactParams();
   const dispatch = useAppDispatch();
@@ -74,16 +116,12 @@ const ServiceDetailPage = () => {
     if (localData) {
       setService(localData);
 
-      // Match doctors by specialty / service name
-      const filteredDocs = allDoctors.filter((doc) => {
-        if (!doc.specialization) return false;
-        const spec = doc.specialization.toLowerCase();
-        const sName = localData.name.toLowerCase();
-        const sSlug = localData.slug.toLowerCase();
-        return spec.includes(sName) || spec.includes(sSlug) || sName.includes(spec);
-      });
+      // Match doctors strictly by specialty matching the current service
+      const filteredDocs = allDoctors.filter((doc) =>
+        isDoctorMatchingService(doc, localData)
+      );
 
-      setDoctors(filteredDocs.length > 0 ? filteredDocs : (localData.doctors || allDoctors.slice(0, 3)));
+      setDoctors(filteredDocs);
       setLoading(false);
     } else {
       setError(`The medical service '${serviceSlug}' could not be found.`);
