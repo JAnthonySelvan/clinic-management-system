@@ -150,18 +150,18 @@ const VisionMission = () => {
 
   return (
     <>
-      {/* ================= HERO SECTION ================= */}
-      <section className="relative overflow-hidden">
+      {/* ================= HERO SECTION (INCREASED DARKNESS & ELEGANT TYPOGRAPHY) ================= */}
+      <section className="relative overflow-hidden bg-[#080e12]">
         <img
           src={ABOUT_DETAIL_IMAGES.visionMission.hero}
           alt="Vision & Mission Hero"
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover brightness-75 contrast-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#253237]/60 via-[#253237]/45 to-[#5C6B73]/35 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="mb-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#C2DFE3]">
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28 font-outfit">
+          <div className="mb-6 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#C2DFE3] font-jakarta">
             <RouterLink to="/" className="hover:text-white transition-colors">
               Home
             </RouterLink>
@@ -170,20 +170,20 @@ const VisionMission = () => {
               About
             </RouterLink>
             <FaChevronRight className="text-[10px]" />
-            <span className="text-white font-bold">Vision & Mission</span>
+            <span className="text-white font-medium">Vision & Mission</span>
           </div>
 
           <AnimatedSection direction="up" className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold text-[#E0FBFC] backdrop-blur-md mb-4 border border-white/20">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-xs font-normal text-[#E0FBFC] backdrop-blur-md mb-4 border border-white/15">
               <FaBullseye className="text-teal-300" />
-              Saviours Core Identity
+              <span className="font-jakarta font-medium tracking-wide">Saviours Core Identity</span>
             </span>
 
-            <h1 className="text-4xl font-bold text-white font-poppins sm:text-5xl lg:text-6xl leading-tight">
+            <h1 className="font-serif-display text-4xl font-normal text-white sm:text-5xl lg:text-6xl leading-tight">
               Our Purpose, Vision & Values
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-[#E0FBFC] sm:text-xl">
+            <p className="mt-6 text-lg leading-8 text-gray-300 sm:text-xl font-light font-jakarta">
               Dedicated to restoring health, inspiring hope, and elevating clinical care through ethical medicine and compassionate patient experiences.
             </p>
 

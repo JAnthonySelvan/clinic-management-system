@@ -94,11 +94,10 @@ const ChatWidget = () => {
 
       {/* Chat panel */}
       <div
-        className={`fixed bottom-24 right-6 z-50 flex w-96 max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 ease-out ${
-          isOpen
+        className={`fixed bottom-24 right-6 z-50 flex w-96 max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 ease-out ${isOpen
             ? "h-[600px] max-h-[70vh] translate-y-0 scale-100 opacity-100"
             : "pointer-events-none h-0 translate-y-4 scale-95 opacity-0"
-        }`}
+          }`}
       >
         {/* Header */}
         <div className="bg-[#253237] px-6 py-4 text-white">
@@ -123,11 +122,10 @@ const ChatWidget = () => {
                 </div>
               ) : (
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
-                    msg.sender === "user"
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.sender === "user"
                       ? "bg-[#253237] text-white"
                       : "bg-white text-[#253237] shadow-sm"
-                  }`}
+                    }`}
                 >
                   <p>{msg.text}</p>
 

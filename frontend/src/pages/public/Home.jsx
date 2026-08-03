@@ -84,49 +84,49 @@ function Home() {
 
   return (
     <>
-      {/* ================= HERO SECTION (CLEAN PREMIUM RECONSTRUCTION) ================= */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-24 lg:py-32">
+      {/* ================= HERO SECTION (INCREASED DARKNESS & ELEGANT TYPOGRAPHY) ================= */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-24 lg:py-32 bg-[#080e12]">
         {/* Background image - PRESERVED */}
         <img
           src={HERO_IMAGES.home}
           alt="Saviours Healthcare Clinic"
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-75 contrast-105"
         />
 
-        {/* Dark luxury gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/65 via-[#253237]/50 to-[#1c282e]/60 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
+        {/* Increased Darkness & Dark Luxury Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-transparent pointer-events-none" />
 
-        <div className="relative mx-auto max-w-5xl px-6 lg:px-8 text-center text-white z-10">
+        <div className="relative mx-auto max-w-5xl px-6 lg:px-8 text-center text-white z-10 font-outfit">
           <AnimatedSection direction="up" className="space-y-8 flex flex-col items-center">
             
             {/* Top Glass Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl transition-all duration-300 hover:bg-white/15 hover:border-white/30">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs sm:text-sm font-normal tracking-wide text-teal-200 backdrop-blur-md shadow-2xl">
               <Sparkles className="w-4 h-4 text-teal-300" />
-              <span>Welcome to Saviours Healthcare</span>
+              <span className="font-jakarta font-medium tracking-wide">Welcome to Saviours Healthcare</span>
             </div>
 
-            {/* Premium Headline */}
+            {/* Premium Headline (Slim, Elegant, Not Bolded) */}
             <div className="space-y-4 max-w-4xl">
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.12]">
+              <h1 className="font-serif-display text-4xl sm:text-6xl lg:text-7xl font-normal tracking-normal leading-[1.15] text-white">
                 Caring For Your{" "}
-                <span className="block sm:inline bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+                <span className="block sm:inline font-serif-display italic font-normal bg-gradient-to-r from-teal-200 via-emerald-200 to-cyan-200 bg-clip-text text-transparent">
                   Health Every Day
                 </span>
               </h1>
 
-              {/* Subheadline */}
-              <p className="mx-auto max-w-2xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
+              {/* Subheadline (Refined & Light) */}
+              <p className="mx-auto max-w-2xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-300 font-jakarta">
                 Experience compassionate healthcare with expert doctors, advanced facilities, and patient-first care. Book appointments online with ease.
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full pt-4 font-jakarta">
               <Link
                 to="/appointment"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 px-9 py-4 text-base font-bold text-white shadow-xl shadow-teal-950/40 transition-all duration-300 hover:scale-[1.04] hover:shadow-2xl hover:from-teal-400 hover:to-emerald-400 group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 px-9 py-4 text-base font-medium text-white shadow-xl shadow-teal-950/50 transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:from-teal-400 hover:to-emerald-400 group"
               >
                 <Calendar className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
                 <span>Book Appointment</span>
@@ -135,7 +135,7 @@ function Home() {
 
               <Link
                 to="/doctors"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/30 bg-white/10 px-9 py-4 text-base font-semibold text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-white hover:text-[#253237] hover:scale-[1.02]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/25 bg-white/10 px-9 py-4 text-base font-normal text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-white hover:text-[#253237] hover:scale-[1.02]"
               >
                 <UserCheck className="w-5 h-5 text-teal-300 group-hover:text-[#253237]" />
                 <span>Our Doctors</span>

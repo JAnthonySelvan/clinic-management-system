@@ -146,38 +146,36 @@ const Contact = () => {
 
   return (
     <>
-      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
-      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
+      {/* ================= HERO (INCREASED DARKNESS & ELEGANT TYPOGRAPHY) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32 bg-[#080e12]">
         <img
           src={HERO_IMAGES.contact}
           alt="Contact our clinic"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-75 contrast-105"
         />
 
-        {/* Dark luxury gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/65 via-[#253237]/50 to-[#1c282e]/60 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
+        {/* Increased Darkness & Dark Luxury Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection
           direction="up"
-          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center font-outfit"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs sm:text-sm font-normal tracking-wide text-teal-200 backdrop-blur-md shadow-2xl">
             <Sparkles className="w-4 h-4 text-teal-300" />
-            <span>24/7 Patient Support & Inquiry</span>
+            <span className="font-jakarta font-medium tracking-wide">24/7 Patient Support & Inquiry</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+          <h1 className="font-serif-display text-4xl sm:text-6xl lg:text-7xl font-normal tracking-normal text-white leading-[1.15]">
             We'd Love to{" "}
-            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+            <span className="font-serif-display italic font-normal bg-gradient-to-r from-teal-200 via-emerald-200 to-cyan-200 bg-clip-text text-transparent">
               Hear From You
             </span>
           </h1>
 
-          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
-            Have questions, need assistance, or want to schedule a visit? Our
-            friendly team is here to help. Reach out to us using the contact
-            information below or send us a message directly.
+          <p className="mx-auto max-w-2xl text-base sm:text-lg lg:text-xl font-light text-gray-300 leading-relaxed font-jakarta">
+            Have questions, need assistance, or want to schedule a visit? Our friendly team is here to help.
           </p>
         </AnimatedSection>
       </section>
@@ -564,7 +562,7 @@ const Contact = () => {
             </p>
           </div>
 
-          <div className="rounded-3xl bg-white p-8 shadow-2xl border border-gray-100">
+          <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[#091115] via-[#122027] to-[#091115] text-white shadow-2xl border border-teal-500/20 font-outfit p-8 sm:p-10">
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="grid gap-6 md:grid-cols-2"
@@ -572,15 +570,15 @@ const Contact = () => {
               <div>
                 <input
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="Full Name *"
                   {...register("name", {
                     required: "Name is required",
                   })}
-                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                  className="w-full rounded-xl border border-white/20 bg-[#13222a] px-5 py-4 text-white placeholder-gray-400 outline-none transition focus:border-teal-400 focus:bg-[#182a34] focus:ring-2 focus:ring-teal-400/20 font-jakarta text-sm"
                 />
 
                 {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">
+                  <p className="mt-1 text-xs text-red-400 font-medium">
                     {errors.name.message}
                   </p>
                 )}
@@ -589,7 +587,7 @@ const Contact = () => {
               <div>
                 <input
                   type="email"
-                  placeholder="Email Address"
+                  placeholder="Email Address *"
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
@@ -597,11 +595,11 @@ const Contact = () => {
                       message: "Enter a valid email address",
                     },
                   })}
-                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                  className="w-full rounded-xl border border-white/20 bg-[#13222a] px-5 py-4 text-white placeholder-gray-400 outline-none transition focus:border-teal-400 focus:bg-[#182a34] focus:ring-2 focus:ring-teal-400/20 font-jakarta text-sm"
                 />
 
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-500">
+                  <p className="mt-1 text-xs text-red-400 font-medium">
                     {errors.email.message}
                   </p>
                 )}
@@ -612,22 +610,22 @@ const Contact = () => {
                   type="tel"
                   placeholder="Phone Number"
                   {...register("phone")}
-                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                  className="w-full rounded-xl border border-white/20 bg-[#13222a] px-5 py-4 text-white placeholder-gray-400 outline-none transition focus:border-teal-400 focus:bg-[#182a34] focus:ring-2 focus:ring-teal-400/20 font-jakarta text-sm"
                 />
               </div>
 
               <div>
                 <input
                   type="text"
-                  placeholder="Subject"
+                  placeholder="Subject *"
                   {...register("subject", {
                     required: "Subject is required",
                   })}
-                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                  className="w-full rounded-xl border border-white/20 bg-[#13222a] px-5 py-4 text-white placeholder-gray-400 outline-none transition focus:border-teal-400 focus:bg-[#182a34] focus:ring-2 focus:ring-teal-400/20 font-jakarta text-sm"
                 />
 
                 {errors.subject && (
-                  <p className="mt-1 text-sm text-red-500">
+                  <p className="mt-1 text-xs text-red-400 font-medium">
                     {errors.subject.message}
                   </p>
                 )}
@@ -635,16 +633,16 @@ const Contact = () => {
 
               <div className="md:col-span-2">
                 <textarea
-                  rows="6"
-                  placeholder="Write your message..."
+                  rows="5"
+                  placeholder="Write your message... *"
                   {...register("message", {
                     required: "Message is required",
                   })}
-                  className="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-[#253237]"
+                  className="w-full rounded-xl border border-white/20 bg-[#13222a] px-5 py-4 text-white placeholder-gray-400 outline-none transition focus:border-teal-400 focus:bg-[#182a34] focus:ring-2 focus:ring-teal-400/20 font-jakarta text-sm"
                 ></textarea>
 
                 {errors.message && (
-                  <p className="mt-1 text-sm text-red-500">
+                  <p className="mt-1 text-xs text-red-400 font-medium">
                     {errors.message.message}
                   </p>
                 )}
@@ -653,7 +651,7 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="md:col-span-2 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
+                className="md:col-span-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-8 py-4 font-medium text-white shadow-lg shadow-teal-950/40 hover:from-teal-500 hover:to-emerald-500 hover:scale-[1.01] transition duration-300 disabled:opacity-70 cursor-pointer font-outfit text-base"
               >
                 {loading ? "Sending..." : "Send Message"}
               </button>

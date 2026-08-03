@@ -267,39 +267,37 @@ const Services = () => {
 
   return (
     <>
-      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
-      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
+      {/* ================= HERO (INCREASED DARKNESS & ELEGANT TYPOGRAPHY) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32 bg-[#080e12]">
         <img
           src={HERO_IMAGES.services}
           alt="Our medical services"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-75 contrast-105"
         />
 
-        {/* Dark luxury gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/65 via-[#253237]/50 to-[#1c282e]/60 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
+        {/* Increased Darkness & Dark Luxury Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection
           direction="up"
-          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center font-outfit"
         >
           {/* Floating Pill Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs sm:text-sm font-normal tracking-wide text-teal-200 backdrop-blur-md shadow-2xl">
             <Sparkles className="w-4 h-4 text-teal-300" />
-            <span>Comprehensive Clinical Care</span>
+            <span className="font-jakarta font-medium tracking-wide">Comprehensive Clinical Care</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+          <h1 className="font-serif-display text-4xl sm:text-6xl lg:text-7xl font-normal tracking-normal text-white leading-[1.15]">
             Our Medical{" "}
-            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+            <span className="font-serif-display italic font-normal bg-gradient-to-r from-teal-200 via-emerald-200 to-cyan-200 bg-clip-text text-transparent">
               Services
             </span>
           </h1>
 
-          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
-            We provide a comprehensive range of healthcare services with modern
-            facilities and experienced medical professionals to ensure the best
-            treatment for every patient.
+          <p className="mx-auto max-w-2xl text-base sm:text-lg lg:text-xl font-light text-gray-300 leading-relaxed font-jakarta">
+            We provide a comprehensive range of healthcare services with modern facilities and experienced medical professionals.
           </p>
 
           {/* Scroll Cue Button */}

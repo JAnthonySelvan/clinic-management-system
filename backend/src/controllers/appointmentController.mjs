@@ -118,32 +118,6 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
-    // If no specific doctor was selected, auto-assign an available doctor in the department who is free at this slot
-    if (!assignedDoctorId && assignedSpecialization) {
-      const deptDoctors = await User.find({
-        role: "doctor",
-        specialization: getSpecializationRegex(assignedSpecialization),
-        isActive: { $ne: false },
-      });
-
-      for (const doc of deptDoctors) {
-        const isBooked = await Appointment.findOne({
-          doctor: doc._id,
-          appointmentDateTime,
-          status: { $ne: "Rejected" },
-        });
-        if (!isBooked) {
-          assignedDoctorId = doc._id;
-          break;
-        }
-      }
-
-      // If all doctors in department have bookings at this slot, assign the first doctor
-      if (!assignedDoctorId && deptDoctors.length > 0) {
-        assignedDoctorId = deptDoctors[0]._id;
-      }
-    }
-
     // If a specific doctor was requested, check if that doctor is free at the requested time
     if (assignedDoctorId) {
       const existingBooking = await Appointment.findOne({

@@ -97,38 +97,37 @@ const TrackBooking = () => {
 
   return (
     <>
-      {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
-      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
+      {/* ================= HERO (INCREASED DARKNESS & ELEGANT TYPOGRAPHY) ================= */}
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32 bg-[#080e12]">
         <img
           src={HERO_IMAGES.track}
           alt="Track Appointment"
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-75 contrast-105"
         />
 
-        {/* Dark luxury gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/65 via-[#253237]/50 to-[#1c282e]/60 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
+        {/* Increased Darkness & Dark Luxury Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection
           direction="up"
-          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center"
+          className="relative mx-auto max-w-5xl px-6 text-center lg:px-8 z-10 space-y-6 flex flex-col items-center font-outfit"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs sm:text-sm font-semibold tracking-wide text-teal-200 backdrop-blur-md shadow-xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs sm:text-sm font-normal tracking-wide text-teal-200 backdrop-blur-md shadow-2xl">
             <Sparkles className="w-4 h-4 text-teal-300" />
-            <span>Real-Time Appointment Status</span>
+            <span className="font-jakarta font-medium tracking-wide">Real-Time Appointment Status</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]">
+          <h1 className="font-serif-display text-4xl sm:text-6xl lg:text-7xl font-normal tracking-normal text-white leading-[1.15]">
             Track Your{" "}
-            <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+            <span className="font-serif-display italic font-normal bg-gradient-to-r from-teal-200 via-emerald-200 to-cyan-200 bg-clip-text text-transparent">
               Appointment
             </span>
           </h1>
 
-          <p className="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed text-gray-200">
-            Easily check the status and details of your booked appointment with
-            Saviours Clinic by entering your registered phone number.
+          <p className="mx-auto max-w-2xl text-base sm:text-lg lg:text-xl font-light text-gray-300 leading-relaxed font-jakarta">
+            Easily check the status and details of your booked appointment with Saviours Clinic by entering your registered phone number.
           </p>
         </AnimatedSection>
       </section>
@@ -149,14 +148,14 @@ const TrackBooking = () => {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-2xl border border-gray-100">
+            <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[#091115] via-[#122027] to-[#091115] text-white shadow-2xl border border-teal-500/20 font-outfit p-8 sm:p-10">
               <form onSubmit={handleSubmit(onSearch)} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-medium text-gray-300 mb-2 font-jakarta">
                     Registered Phone Number *
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-teal-400">
                       <FaPhoneAlt />
                     </div>
                     <input
@@ -169,11 +168,11 @@ const TrackBooking = () => {
                           message: "Phone number must be at least 5 digits",
                         },
                       })}
-                      className="w-full rounded-xl border border-gray-300 py-4 pl-11 pr-5 text-gray-900 placeholder-gray-400 outline-none transition duration-200 focus:border-[#253237] focus:ring-2 focus:ring-[#253237]/10"
+                      className="w-full rounded-xl border border-white/20 bg-[#13222a] py-4 pl-11 pr-5 text-white placeholder-gray-400 outline-none transition duration-200 focus:border-teal-400 focus:bg-[#182a34] focus:ring-2 focus:ring-teal-400/20 font-jakarta text-sm"
                     />
                   </div>
                   {errors.phone && (
-                    <p className="mt-2 text-sm text-red-500">
+                    <p className="mt-2 text-xs text-red-400 font-medium">
                       {errors.phone.message}
                     </p>
                   )}
@@ -182,7 +181,7 @@ const TrackBooking = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#253237] py-4 text-lg font-semibold text-white transition duration-300 hover:bg-[#5C6B73] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
+                  className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 py-4 text-base font-medium text-white shadow-lg shadow-teal-950/40 hover:from-teal-500 hover:to-emerald-500 hover:scale-[1.01] transition duration-300 disabled:opacity-70 cursor-pointer font-outfit"
                 >
                   <FaSearch className="text-base" />
                   {loading ? "Searching..." : "Track Appointment"}

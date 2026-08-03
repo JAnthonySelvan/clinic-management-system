@@ -192,14 +192,14 @@ const SlotPicker = ({
   // EMPTY STATE: No Doctor/Specialization or Date selected
   if ((!doctorId && !specialization) || !selectedDate) {
     return (
-      <div className="w-full rounded-2xl border border-slate-200/80 bg-linear-to-b from-slate-50/50 to-white p-8 text-center shadow-xs">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-50 text-teal-600 ring-8 ring-teal-50/50">
+      <div className="w-full rounded-2xl border border-teal-500/20 bg-[#0d171c] p-8 text-center shadow-xl text-white font-outfit">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/20 text-teal-300 ring-8 ring-teal-500/10">
           <CalendarDays className="h-7 w-7" />
         </div>
-        <h3 className="mt-4 text-base font-semibold text-slate-800">
+        <h3 className="mt-4 text-base font-medium text-white font-jakarta">
           Select Specialization & Date
         </h3>
-        <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500 leading-relaxed">
+        <p className="mx-auto mt-1 max-w-sm text-sm text-gray-300 font-light font-jakarta leading-relaxed">
           Please select a medical department and your preferred appointment date above to view available time slots.
         </p>
       </div>
@@ -210,14 +210,14 @@ const SlotPicker = ({
   // LOADING STATE: Pulse Skeleton
   if (loading) {
     return (
-      <div className="w-full space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+      <div className="w-full space-y-6 rounded-2xl border border-teal-500/20 bg-[#0d171c] p-6 shadow-xl">
         {/* Skeleton Legend */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-          <div className="h-5 w-36 rounded-md bg-slate-200 animate-pulse" />
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="h-5 w-36 rounded-md bg-white/10 animate-pulse" />
           <div className="flex items-center space-x-4">
-            <div className="h-4 w-16 rounded-full bg-slate-200 animate-pulse" />
-            <div className="h-4 w-16 rounded-full bg-slate-200 animate-pulse" />
-            <div className="h-4 w-16 rounded-full bg-slate-200 animate-pulse" />
+            <div className="h-4 w-16 rounded-full bg-white/10 animate-pulse" />
+            <div className="h-4 w-16 rounded-full bg-white/10 animate-pulse" />
+            <div className="h-4 w-16 rounded-full bg-white/10 animate-pulse" />
           </div>
         </div>
 
@@ -225,14 +225,14 @@ const SlotPicker = ({
         {[1, 2, 3].map((shiftIndex) => (
           <div key={shiftIndex} className="space-y-3">
             <div className="flex items-center space-x-2">
-              <div className="h-5 w-5 rounded-full bg-slate-200 animate-pulse" />
-              <div className="h-4 w-28 rounded-md bg-slate-200 animate-pulse" />
+              <div className="h-5 w-5 rounded-full bg-white/10 animate-pulse" />
+              <div className="h-4 w-28 rounded-md bg-white/10 animate-pulse" />
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {[1, 2, 3, 4].map((chipIndex) => (
                 <div
                   key={chipIndex}
-                  className="h-11 w-full rounded-xl bg-slate-100 animate-pulse"
+                  className="h-11 w-full rounded-xl bg-white/5 animate-pulse"
                 />
               ))}
             </div>
@@ -243,28 +243,28 @@ const SlotPicker = ({
   }
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs">
+    <div className="w-full rounded-2xl border border-teal-500/20 bg-[#0d171c] p-5 sm:p-6 shadow-xl text-white font-outfit">
       {/* Header & Legend Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
         <div className="flex items-center space-x-2">
-          <Clock className="h-5 w-5 text-teal-600" />
-          <h3 className="text-base font-semibold text-slate-800">
+          <Clock className="h-5 w-5 text-teal-400" />
+          <h3 className="text-base font-normal font-serif-display text-white">
             Available Time Slots
           </h3>
         </div>
 
         {/* Legend */}
-        <div className="flex items-center space-x-4 text-xs font-medium text-slate-600">
+        <div className="flex items-center space-x-4 text-xs font-medium text-gray-300 font-jakarta">
           <div className="flex items-center space-x-1.5">
-            <span className="h-2.5 w-2.5 rounded-full border border-slate-300 bg-white shadow-2xs" />
+            <span className="h-2.5 w-2.5 rounded-full border border-white/30 bg-[#13222a]" />
             <span>Available</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-teal-600 ring-2 ring-teal-600/30" />
+            <span className="h-2.5 w-2.5 rounded-full bg-teal-400 ring-2 ring-teal-400/30" />
             <span>Selected</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+            <span className="h-2.5 w-2.5 rounded-full bg-gray-600" />
             <span>Booked</span>
           </div>
         </div>
@@ -272,7 +272,7 @@ const SlotPicker = ({
 
       {/* Error Notice if fetch failed */}
       {error && (
-        <div className="mt-4 flex items-center space-x-2 rounded-xl bg-amber-50 p-3 text-xs text-amber-700 border border-amber-200">
+        <div className="mt-4 flex items-center space-x-2 rounded-xl bg-amber-500/10 p-3 text-xs text-amber-300 border border-amber-500/20">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error} Showing standard slot grid.</span>
         </div>
@@ -280,12 +280,12 @@ const SlotPicker = ({
 
       {/* Doctor Leave Notice Banner */}
       {scheduleInfo?.isBlocked && (
-        <div className="mt-5 flex flex-col items-center justify-center rounded-2xl bg-red-50 p-6 text-center border border-red-200 shadow-xs">
-          <AlertCircle className="h-8 w-8 text-red-500 mb-2" />
-          <h4 className="text-base font-bold text-red-800">
+        <div className="mt-5 flex flex-col items-center justify-center rounded-2xl bg-red-500/10 p-6 text-center border border-red-500/20 shadow-xs">
+          <AlertCircle className="h-8 w-8 text-red-400 mb-2" />
+          <h4 className="text-base font-bold text-red-200">
             Doctor is on Leave / Unavailable on this Date
           </h4>
-          <p className="mt-1 text-xs font-medium text-red-600">
+          <p className="mt-1 text-xs font-medium text-red-300">
             Reason: {scheduleInfo.blockedReason || "Scheduled Leave"}. Please pick a different date.
           </p>
         </div>
@@ -293,12 +293,12 @@ const SlotPicker = ({
 
       {/* Doctor Day Off Banner */}
       {!scheduleInfo?.isBlocked && scheduleInfo?.isAvailable === false && (
-        <div className="mt-5 flex flex-col items-center justify-center rounded-2xl bg-amber-50 p-6 text-center border border-amber-200 shadow-xs">
-          <AlertCircle className="h-8 w-8 text-amber-500 mb-2" />
-          <h4 className="text-base font-bold text-amber-800">
+        <div className="mt-5 flex flex-col items-center justify-center rounded-2xl bg-amber-500/10 p-6 text-center border border-amber-500/20 shadow-xs">
+          <AlertCircle className="h-8 w-8 text-amber-400 mb-2" />
+          <h4 className="text-base font-bold text-amber-200">
             Doctor Non-Working Day
           </h4>
-          <p className="mt-1 text-xs font-medium text-amber-700">
+          <p className="mt-1 text-xs font-medium text-amber-300">
             The doctor is not scheduled for consultations on {scheduleInfo.dayName || "this day"}s. Please select a working day.
           </p>
         </div>
@@ -315,15 +315,15 @@ const SlotPicker = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <div
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg ${shift.badgeBg}`}
+                      className={`flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 border border-white/15`}
                     >
                       <IconComponent className={`h-4 w-4 ${shift.iconColor}`} />
                     </div>
-                    <span className="text-sm font-semibold text-slate-700">
+                    <span className="text-sm font-medium text-gray-200 font-jakarta">
                       {shift.name}
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">
+                  <span className="text-xs text-gray-400 font-light font-jakarta">
                     {shift.timeRange}
                   </span>
                 </div>
@@ -345,12 +345,12 @@ const SlotPicker = ({
                         whileTap={booked ? {} : { scale: 0.97 }}
                         animate={selected ? { scale: 1.03 } : { scale: 1 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className={`relative flex items-center justify-center rounded-xl px-3 py-3 text-xs font-semibold transition-all duration-200 select-none ${
+                        className={`relative flex items-center justify-center rounded-xl px-3 py-3 text-xs font-medium transition-all duration-200 select-none ${
                           booked
-                            ? "cursor-not-allowed bg-slate-100 text-slate-400 border border-slate-200/80 line-through opacity-75 group"
+                            ? "cursor-not-allowed bg-[#091115] text-gray-500 border border-gray-800 line-through opacity-60 group"
                             : selected
-                            ? "bg-teal-600 text-white border border-teal-600 shadow-md shadow-teal-600/25 ring-2 ring-teal-600/20"
-                            : "bg-white text-slate-700 border border-slate-200 shadow-2xs hover:border-teal-500 hover:text-teal-700 hover:shadow-sm"
+                            ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white border border-teal-300 shadow-md shadow-teal-950/50 ring-2 ring-teal-300 font-bold"
+                            : "bg-[#13222a] text-white border border-white/15 shadow-2xs hover:border-teal-400 hover:bg-[#182c36] hover:text-teal-200 cursor-pointer"
                         }`}
                       >
                         {/* Left icon for selected / booked */}
