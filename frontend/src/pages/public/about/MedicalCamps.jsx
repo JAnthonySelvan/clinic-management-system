@@ -207,7 +207,7 @@ const CampInquiryModal = ({ camp, isOpen, onClose }) => {
       setSubmitting(true);
       await submitContactMessage(data);
       toast.success(
-        `🎉 Inquiry for "${campTitle}" sent successfully! Our outreach coordinator will contact you.`,
+        `Inquiry for "${campTitle}" sent successfully! Our outreach coordinator will contact you.`,
         { duration: 5000 },
       );
       reset();
@@ -496,7 +496,7 @@ const MedicalCamps = () => {
   const handleNewsletterSubmit = (e) => {
     e.preventDefault();
     if (!newsletterEmail) return;
-    toast.success("🎉 Subscribed! You will receive early notifications for upcoming health drives.", { duration: 4000 });
+    toast.success("Subscribed! You will receive early notifications for upcoming health drives.", { duration: 4000 });
     setNewsletterEmail("");
   };
 

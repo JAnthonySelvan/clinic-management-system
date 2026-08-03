@@ -41,6 +41,19 @@ const AnimatedSection = ({
     );
 
     observer.observe(node);
+
+    // Fallback: if the element is already inside the viewport at mount time,
+    // the observer's first callback can be missed or delayed (e.g. right below
+    // a full-height hero, or when a sticky sibling shifts layout after mount).
+    // Without this, the element stays stuck at opacity-0 + its offset transform
+    // forever — which visually reads as a blank gap since it still occupies
+    // its grid cell.
+    const rect = node.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      setIsVisible(true);
+      observer.disconnect();
+    }
+
     return () => observer.disconnect();
   }, [threshold]);
 
