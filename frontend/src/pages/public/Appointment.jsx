@@ -111,8 +111,12 @@ const Appointment = () => {
   }, [success, error, dispatch, navigate, reset]);
 
   const onSubmit = async (data) => {
-    console.log("Form Data:", data);
-    await dispatch(createAppointment(data));
+    const payload = {
+      ...data,
+      doctor: data.doctor && data.doctor.trim() !== "" ? data.doctor : undefined,
+    };
+    console.log("Form Data:", payload);
+    await dispatch(createAppointment(payload));
   };
 
   const guidelines = [

@@ -16,9 +16,11 @@ export const createAppointment = createAsyncThunk(
     try {
       return await bookAppointment(appointmentData);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to book appointment",
-      );
+      const firstFieldErr = error.response?.data?.errors?.[0]?.msg;
+      const msg = firstFieldErr
+        ? `${error.response?.data?.message || "Validation Error"}: ${firstFieldErr}`
+        : error.response?.data?.message || "Failed to book appointment";
+      return thunkAPI.rejectWithValue(msg);
     }
   },
 );

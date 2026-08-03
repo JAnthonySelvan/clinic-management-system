@@ -391,6 +391,7 @@ export const ABOUT_DETAIL_IMAGES = {
   },
   medicalCamps: {
     hero: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785684920/8e5746e1-1607-4df8-9e26-fc0a8100aace_nxk6xu.jpg",
+    intro: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785687978/cff7234a-e982-49b3-9c61-6db3190a92fa_ofynj9.jpg",
     gallery: [
       "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785687978/cff7234a-e982-49b3-9c61-6db3190a92fa_ofynj9.jpg",
       "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785688106/d034bd90-fd3f-4ded-a646-73a59c285321_bd8jqp.jpg",
@@ -412,6 +413,7 @@ ABOUT_DETAIL_IMAGES["medical-camps"] = ABOUT_DETAIL_IMAGES.medicalCamps;
 // ==========================================
 export const DOCTOR_PORTRAITS = {
   maleDoctor1: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&q=80&auto=format&fit=crop",
+  femaleDoctor1: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785681900/MedicalExpertWitness_cucdmn.jpg",
   femaleDoctor2: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
 };
 

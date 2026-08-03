@@ -36,13 +36,13 @@ export const createAppointmentValidation = [
     .withMessage("Invalid gender"),
 
   body("specialization")
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .notEmpty()
     .withMessage("Specialization is required"),
 
   body("doctor")
-    .optional()
+    .optional({ checkFalsy: true })
     .isMongoId()
     .withMessage("Invalid doctor id"),
 

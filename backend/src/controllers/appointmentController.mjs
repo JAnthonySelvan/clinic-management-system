@@ -48,7 +48,7 @@ export const bookAppointment = async (req, res) => {
     let assignedSpecialization = specialization;
     let assignedDoctorId = doctor;
 
-    if (doctor) {
+    if (doctor && String(doctor).trim() !== "") {
       const doctorExists = await User.findOne({
         _id: doctor,
         role: "doctor",
@@ -57,6 +57,8 @@ export const bookAppointment = async (req, res) => {
         assignedSpecialization = assignedSpecialization || doctorExists.specialization;
         assignedDoctorId = doctorExists._id;
       }
+    } else {
+      assignedDoctorId = undefined;
     }
 
     if (!assignedSpecialization) {
@@ -142,7 +144,7 @@ export const bookAppointment = async (req, res) => {
       }
     }
 
-    // Double-booking check: If a doctor is assigned, verify that doctor is free at the requested time
+    // If a specific doctor was requested, check if that doctor is free at the requested time
     if (assignedDoctorId) {
       const existingBooking = await Appointment.findOne({
         doctor: assignedDoctorId,
@@ -158,6 +160,9 @@ export const bookAppointment = async (req, res) => {
       }
     }
 
+    // Do NOT auto-assign a doctor if none was selected. Leave doctor as null/undefined.
+    // The request will be broadcast to all doctors in the specialization, and the first doctor to approve will be assigned.
+
     const appointment = await Appointment.create({
       patientName,
       patientEmail,
@@ -165,7 +170,7 @@ export const bookAppointment = async (req, res) => {
       patientAge,
       gender,
       specialization: assignedSpecialization,
-      doctor: assignedDoctorId,
+      doctor: assignedDoctorId || null,
       appointmentDateTime,
       reason,
       status: "Pending",
@@ -173,7 +178,9 @@ export const bookAppointment = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Appointment request submitted successfully",
+      message: assignedDoctorId
+        ? "Appointment request submitted to selected doctor successfully"
+        : "Appointment request submitted to specialization department. Available doctors will review and confirm your slot.",
       data: appointment,
     });
   } catch (error) {
@@ -432,23 +439,21 @@ export const getDoctorAppointments = async (req, res) => {
     const doctorId = req.user._id;
     const doctorSpec = req.user.specialization || "";
 
-    const queryConditions = [{ doctor: doctorId }];
+    const specRegex = getSpecializationRegex(doctorSpec);
+
+    // Doctor sees:
+    // 1. Appointments explicitly assigned to this doctor
+    // 2. Unassigned pending requests matching the doctor's specialization
+    const queryConditions = [
+      { doctor: doctorId },
+    ];
 
     if (doctorSpec && typeof doctorSpec === "string" && doctorSpec.trim()) {
-      const cleanSpec = doctorSpec.trim();
-      const specStem = cleanSpec
-        .replace(/(ologist|ology|ist|y|ics|ian|al|care)$/i, "")
-        .trim();
-
       queryConditions.push({
-        specialization: new RegExp(cleanSpec, "i"),
+        $or: [{ doctor: null }, { doctor: { $exists: false } }],
+        status: "Pending",
+        specialization: specRegex,
       });
-
-      if (specStem && specStem.length >= 3) {
-        queryConditions.push({
-          specialization: new RegExp(specStem, "i"),
-        });
-      }
     }
 
     const appointments = await Appointment.find({
@@ -493,27 +498,54 @@ export const updateAppointmentStatus = async (req, res) => {
     }
 
     if (req.user.role === "doctor") {
+      // Check if another doctor already claimed/approved or rejected this appointment!
       if (
         appointment.doctor &&
-        appointment.doctor.toString() !== req.user._id.toString() &&
-        appointment.status !== "Pending"
+        appointment.doctor.toString() !== req.user._id.toString()
       ) {
-        return res.status(403).json({
+        return res.status(400).json({
           success: false,
-          message: "Unauthorized",
+          message: "This appointment request has already been accepted or claimed by another doctor.",
         });
       }
-      appointment.doctor = req.user._id;
+
+      // If appointment was unassigned and status is being changed to Approved or Rejected
+      if (status === "Approved") {
+        // Double-check race condition: Ensure this doctor isn't already booked at this exact time slot
+        const doctorConflict = await Appointment.findOne({
+          doctor: req.user._id,
+          appointmentDateTime: appointment.appointmentDateTime,
+          status: "Approved",
+          _id: { $ne: appointment._id },
+        });
+
+        if (doctorConflict) {
+          return res.status(400).json({
+            success: false,
+            message: "You already have another confirmed appointment at this exact time slot.",
+          });
+        }
+
+        // Assign this appointment to the doctor who approved it first!
+        appointment.doctor = req.user._id;
+      }
     }
 
     appointment.status = status;
 
     await appointment.save();
 
+    const updatedAppointment = await Appointment.findById(appointment._id).populate(
+      "doctor",
+      "fullName specialization"
+    );
+
     return res.status(200).json({
       success: true,
-      message: "Appointment updated successfully",
-      data: appointment,
+      message: status === "Approved" 
+        ? "Appointment accepted and assigned to you successfully!" 
+        : `Appointment status updated to ${status}`,
+      data: updatedAppointment,
     });
   } catch (error) {
     return res.status(500).json({

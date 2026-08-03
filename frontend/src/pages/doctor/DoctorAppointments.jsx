@@ -160,7 +160,14 @@ const DoctorAppointments = () => {
                     className="hover:bg-[#F8FBFC] transition-colors duration-150"
                   >
                     <td className="px-6 py-5 font-semibold text-[#253237]">
-                      {appointment.patientName}
+                      <div>
+                        <span>{appointment.patientName}</span>
+                        {!appointment.doctor && (
+                          <span className="ml-2 inline-flex items-center rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-700 border border-purple-200">
+                            Dept Request (First to Accept)
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     <td className="px-6 py-5 text-xs text-[#5C6B73]">
