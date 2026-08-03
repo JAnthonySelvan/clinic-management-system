@@ -296,16 +296,7 @@ export const getBookedSlots = async (req, res) => {
       );
     }
 
-    // Determine Doctor Schedule details if doctorId or specialization available
-    let targetDoctorId = doctorId;
-    if (!targetDoctorId && specialization) {
-      const doc = await User.findOne({
-        role: "doctor",
-        specialization: new RegExp(specialization, "i"),
-      });
-      if (doc) targetDoctorId = doc._id;
-    }
-
+    // Determine Doctor Schedule details
     let isBlocked = false;
     let blockedReason = "";
     let isAvailable = true;
@@ -325,10 +316,10 @@ export const getBookedSlots = async (req, res) => {
     const dayIndex = startOfDay.getUTCDay();
     const dayName = daysOfWeek[dayIndex];
 
-    if (targetDoctorId) {
-      const docSchedule = await Schedule.findOne({ doctor: targetDoctorId });
+    if (doctorId && mongoose.Types.ObjectId.isValid(doctorId)) {
+      // Specific doctor schedule evaluation
+      const docSchedule = await Schedule.findOne({ doctor: doctorId });
       if (docSchedule) {
-        // Check blocked dates (only Approved leaves block booking)
         const dateStr = startOfDay.toISOString().split("T")[0];
         const blockedMatch = docSchedule.blockedDates.find((b) => {
           const bStr = new Date(b.date).toISOString().split("T")[0];
@@ -340,7 +331,6 @@ export const getBookedSlots = async (req, res) => {
           blockedReason = blockedMatch.reason || "Leave / Holiday";
         }
 
-        // Check weekly availability
         if (
           docSchedule.weeklyAvailability &&
           docSchedule.weeklyAvailability[dayName]
@@ -349,6 +339,49 @@ export const getBookedSlots = async (req, res) => {
           isAvailable = dayConfig.isAvailable !== false;
           startTime = dayConfig.startTime || "09:00";
           endTime = dayConfig.endTime || "18:00";
+        }
+      }
+    } else if (specialization) {
+      // Department level: evaluate all doctors belonging to this specialization
+      const specRegex = getSpecializationRegex(specialization);
+      const deptDoctors = await User.find({
+        role: "doctor",
+        specialization: specRegex,
+        isActive: { $ne: false },
+      }).select("_id");
+
+      if (deptDoctors && deptDoctors.length > 0) {
+        const docIds = deptDoctors.map((d) => d._id);
+        const schedules = await Schedule.find({ doctor: { $in: docIds } });
+        const dateStr = startOfDay.toISOString().split("T")[0];
+
+        let blockedCount = 0;
+        let reasons = [];
+
+        for (const doc of deptDoctors) {
+          const docSched = schedules.find(
+            (s) => s.doctor.toString() === doc._id.toString()
+          );
+          if (docSched) {
+            const bMatch = docSched.blockedDates.find((b) => {
+              const bStr = new Date(b.date).toISOString().split("T")[0];
+              return bStr === dateStr && b.status === "Approved";
+            });
+            if (bMatch) {
+              blockedCount++;
+              if (bMatch.reason && !reasons.includes(bMatch.reason)) {
+                reasons.push(bMatch.reason);
+              }
+            }
+          }
+        }
+
+        // Block department level ONLY if ALL doctors in the department are on approved leave
+        if (blockedCount > 0 && blockedCount === deptDoctors.length) {
+          isBlocked = true;
+          blockedReason =
+            reasons.join(", ") ||
+            "All specialists in this department are on leave on this date";
         }
       }
     }

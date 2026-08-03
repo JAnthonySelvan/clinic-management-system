@@ -11,9 +11,9 @@
 export const HERO_IMAGES = {
   home: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785665898/Gemini_Generated_Image_wv3ndpwv3ndpwv3n_xgbqbm.png",
   about: "https://res.cloudinary.com/dlaqnbmqk/image/upload/f_auto/q_auto/tmylac0shzdvyh9v6bcb",
-  doctors: "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=1600&q=80&auto=format&fit=crop",
+  doctors: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785717509/How-to-Become-Endometriosis-Expert-scaled_q8pde4.jpg",
   services: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785689203/shutterstock_242389561-2560x852_j2at1x.jpg",
-  appointment: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80&auto=format&fit=crop",
+  appointment: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785717636/photo-1576091160550-2173dba999ef_gco47e.jpg",
   contact: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80&auto=format&fit=crop",
   track: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80&auto=format&fit=crop",
 };
@@ -42,7 +42,7 @@ export const FEATURE_IMAGES = {
   timelyService: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785682037/hours-doctor-service-logo-iconvector-sign-day-night-healthcare-medical-services-button-symbol-operator-contact-aid-pharmacy-165356768_f91jmj.jpg",
   qualifiedSpecialists: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80&auto=format&fit=crop",
   modernTechnology: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=600&q=80&auto=format&fit=crop",
-  trustedPatients: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=80&auto=format&fit=crop",
+  trustedPatients: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785717405/trussville-office-02-upscale_lniqyu.jpg",
   fastDiagnosis: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785690171/healthcare-patient-and-group-of-doctors-rushing-for-surgery-diagnosis-or-treatment-in-hospital-stress-fast-and-team-of-medical-workers-in-hurry-for-emergency-operation-or-procedure-in-clinic-photo_zcwq0e.jpg",
   emergencyResponse: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=600&q=80&auto=format&fit=crop",
   diagnosticLab: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785690254/advanced_diagnostic_lab_cover_mf5t4v.jpg",
@@ -81,7 +81,7 @@ export const CONTACT_IMAGES = {
 
 export const GUIDELINE_IMAGES = {
   schedule: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&q=80&auto=format&fit=crop",
-  identification: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&q=80&auto=format&fit=crop",
+  identification: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785717940/9bc7d582-7aee-4a66-8019-e628a4bd026e_zmnndf.png",
   arriveEarly: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=400&q=80&auto=format&fit=crop",
   medicalHistory: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=400&q=80&auto=format&fit=crop",
 };
@@ -257,7 +257,7 @@ export const SERVICE_DETAIL_IMAGES = {
       "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785713305/imengine.public.prod.bte.navigacloud.com_gw7enb.jpg",
       "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785713307/2367-3490-otr_Depositphotos_138790774_xl-2015-1_j429zq.jpg",
       "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785713304/fullsizer-20180629-192706_1_orig_xrobig.jpg",
-      "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785713307/2367-3490-otr_Depositphotos_138790774_xl-2015-1_j429zq.jpg",
+      "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785713306/IN_PL_CHI_Allergology_Pulmonology_Clinic_1_gkmsci.jpg",
     ],
     features: [
       "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785713479/digital-spirometer15247615612_mexnt1.jpg",

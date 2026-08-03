@@ -23,19 +23,21 @@ const BookingModal = ({ doctor: initialDoctor, doctorId, availableDoctors = [], 
 
   const [activeDoctor, setActiveDoctor] = useState(initialDoctor);
 
-  // Sync activeDoctor when initialDoctor prop changes or availableDoctors loads
+  // Sync activeDoctor when modal opens or initialDoctor/doctorId props change
   useEffect(() => {
-    if (initialDoctor && (initialDoctor._id || initialDoctor.id)) {
-      setActiveDoctor(initialDoctor);
-    } else if (doctorId && availableDoctors && availableDoctors.length > 0) {
-      const found = availableDoctors.find((d) => d._id === doctorId || d.id === doctorId);
-      if (found) setActiveDoctor(found);
-    } else if (availableDoctors && availableDoctors.length > 0) {
-      setActiveDoctor(availableDoctors[0]);
-    } else {
-      setActiveDoctor(initialDoctor);
+    if (isOpen) {
+      if (initialDoctor && (initialDoctor._id || initialDoctor.id)) {
+        setActiveDoctor(initialDoctor);
+      } else if (doctorId && availableDoctors && availableDoctors.length > 0) {
+        const found = availableDoctors.find((d) => (d._id || d.id) === doctorId);
+        if (found) setActiveDoctor(found);
+      } else if (availableDoctors && availableDoctors.length > 0) {
+        setActiveDoctor(availableDoctors[0]);
+      } else {
+        setActiveDoctor(initialDoctor);
+      }
     }
-  }, [initialDoctor, doctorId, availableDoctors]);
+  }, [isOpen, initialDoctor?._id || initialDoctor?.id, doctorId]);
 
   const {
     register,
@@ -168,16 +170,22 @@ const BookingModal = ({ doctor: initialDoctor, doctorId, availableDoctors = [], 
                     <span>Choose Specialist / Doctor ({availableDoctors.length} Available)</span>
                   </label>
                   <select
-                    value={activeDoctor?._id || ""}
+                    value={activeDoctor?._id || activeDoctor?.id || ""}
                     onChange={(e) => {
-                      const found = availableDoctors.find((d) => d._id === e.target.value);
-                      if (found) setActiveDoctor(found);
+                      const selectedId = e.target.value;
+                      const found = availableDoctors.find(
+                        (d) => (d._id || d.id)?.toString() === selectedId
+                      );
+                      if (found) {
+                        setActiveDoctor(found);
+                        setValue("appointmentTime", "", { shouldValidate: false });
+                      }
                     }}
-                    className="w-full rounded-xl border border-teal-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none shadow-xs transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
+                    className="w-full rounded-xl border border-teal-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none shadow-xs transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 cursor-pointer"
                   >
                     {availableDoctors.map((doc) => (
-                      <option key={doc._id} value={doc._id}>
-                        Dr. {doc.fullName} — {doc.specialization} ({doc.experience || "Specialist"})
+                      <option key={doc._id || doc.id} value={doc._id || doc.id}>
+                        Dr. {doc.fullName} — {doc.specialization} ({doc.experience ? `${doc.experience} yrs exp` : "Specialist"})
                       </option>
                     ))}
                   </select>
@@ -332,7 +340,7 @@ const BookingModal = ({ doctor: initialDoctor, doctorId, availableDoctors = [], 
                         })}
                       />
                       <SlotPicker
-                        doctorId={activeDoctor?._id}
+                        doctorId={activeDoctor?._id || activeDoctor?.id}
                         specialization={activeDoctor?.specialization}
                         selectedDate={selectedDate}
                         selectedSlot={selectedTime || ""}
