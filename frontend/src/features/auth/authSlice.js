@@ -88,12 +88,16 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload?.data || action.payload;
+        if (action.payload?.token) {
+          localStorage.setItem("token", action.payload.token);
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.isAuthenticated = false;
+        localStorage.removeItem("token");
       })
 
       // Fetch Current User
@@ -103,12 +107,13 @@ const authSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload?.data || action.payload;
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
+        localStorage.removeItem("token");
       })
 
       // Update Profile
@@ -118,7 +123,7 @@ const authSlice = createSlice({
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload?.data || action.payload;
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
@@ -131,10 +136,12 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
+        localStorage.removeItem("token");
       })
       .addCase(logout.rejected, (state) => {
         state.user = null;
         state.isAuthenticated = false;
+        localStorage.removeItem("token");
       });
   },
 });
