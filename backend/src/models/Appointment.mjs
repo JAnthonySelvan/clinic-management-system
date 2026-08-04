@@ -62,6 +62,25 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["Pending", "Approved", "Rejected", "Completed"],
       default: "Pending",
     },
+
+    rejectionReason: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+
+    rejectedBy: {
+      type: String,
+      enum: ["doctor", "admin", "system-leave", "system-auto"],
+      default: null,
+    },
+
+    rejectedByDoctors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,

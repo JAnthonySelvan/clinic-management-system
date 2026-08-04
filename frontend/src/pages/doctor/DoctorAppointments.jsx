@@ -45,8 +45,9 @@ const DoctorAppointments = () => {
     dispatch(fetchDoctorAppointments());
   }, [dispatch]);
 
-  const handleStatusChange = (id, status) => {
-    dispatch(changeAppointmentStatus({ id, status }));
+  const handleStatusChange = async (id, status) => {
+    await dispatch(changeAppointmentStatus({ id, status }));
+    dispatch(fetchDoctorAppointments());
   };
 
   const handleSearchChange = (e) => {
@@ -180,6 +181,7 @@ const DoctorAppointments = () => {
                         {
                           dateStyle: "medium",
                           timeStyle: "short",
+                          timeZone: "UTC",
                         },
                       )}
                     </td>

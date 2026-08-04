@@ -90,6 +90,7 @@ const TrackBooking = () => {
     const formatted = dateObj.toLocaleString("en-IN", {
       dateStyle: "medium",
       timeStyle: "short",
+      timeZone: "UTC",
     });
 
     return formatted;
@@ -295,6 +296,15 @@ const TrackBooking = () => {
                           <p className="mt-2 text-sm leading-relaxed text-gray-700">
                             {app.reason}
                           </p>
+
+                          {app.status === "Rejected" && app.rejectionReason && (
+                            <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50/70 p-3.5 text-xs text-rose-800 font-jakarta flex items-start gap-2.5">
+                              <FaExclamationCircle className="text-rose-600 shrink-0 text-sm mt-0.5" />
+                              <div>
+                                <span className="font-semibold">Rejection Reason:</span> {app.rejectionReason}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </AnimatedSection>
                     ))}

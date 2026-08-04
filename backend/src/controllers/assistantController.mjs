@@ -1,4 +1,5 @@
 import User from "../models/User.mjs";
+import ChatLog from "../models/ChatLog.mjs";
 import { generateGeminiContent } from "../config/gemini.mjs";
 
 // ---------------------------------------------------------------------------
@@ -192,6 +193,17 @@ export const chatWithAssistant = async (req, res) => {
 
     // 1. Red-flag check ALWAYS runs first, regardless of Gemini's availability.
     if (isRedFlag(message)) {
+      try {
+        await ChatLog.create({
+          userMessage: message,
+          isEmergency: true,
+          urgencyLevel: "emergency",
+          ipAddress: req.ip || req.headers["x-forwarded-for"] || null,
+        });
+      } catch (logErr) {
+        console.error("Failed to persist ChatLog:", logErr.message);
+      }
+
       return res.status(200).json({
         success: true,
         data: EMERGENCY_RESPONSE,
@@ -234,7 +246,6 @@ export const chatWithAssistant = async (req, res) => {
       });
     } catch (geminiError) {
       console.error("Gemini call failed:", geminiError.message);
-      // Fallback: don't leave the user hanging with a dead chat.
       return res.status(200).json({
         success: true,
         data: {
@@ -249,8 +260,7 @@ export const chatWithAssistant = async (req, res) => {
       });
     }
 
-    // 4. Parse Gemini's JSON response defensively — models can occasionally
-    //    wrap JSON in markdown fences despite instructions, so strip those.
+    // 4. Parse Gemini's JSON response defensively
     let parsed;
     try {
       const cleaned = raw.trim().replace(/^```json\s*/i, "").replace(/```$/, "");
@@ -275,6 +285,21 @@ export const chatWithAssistant = async (req, res) => {
     let matchedDoctors = [];
     if (parsed.readyToRecommend && parsed.specialty) {
       matchedDoctors = findMatchingDoctors(parsed.specialty, activeDoctors);
+    }
+
+    // Persist ChatLog for analytics and review
+    try {
+      await ChatLog.create({
+        userMessage: message,
+        isEmergency: false,
+        recommendedSpecialty: parsed.specialty || null,
+        urgencyLevel: ["emergency", "urgent", "soon", "routine"].includes(parsed.urgency)
+          ? parsed.urgency
+          : "routine",
+        ipAddress: req.ip || req.headers["x-forwarded-for"] || null,
+      });
+    } catch (logErr) {
+      console.error("Failed to persist ChatLog:", logErr.message);
     }
 
     return res.status(200).json({

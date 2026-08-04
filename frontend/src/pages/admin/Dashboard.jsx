@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../services/axios";
 import {
   FaUserMd,
   FaCalendarCheck,
@@ -105,10 +105,7 @@ const Dashboard = () => {
         setLoading(true);
         setError("");
 
-        const { data } = await axios.get(
-          "http://localhost:5000/api/dashboard/stats",
-          { withCredentials: true },
-        );
+        const { data } = await api.get("/dashboard/stats");
 
         setStats(data.data);
       } catch (err) {

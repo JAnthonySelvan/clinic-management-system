@@ -370,6 +370,7 @@ const Leaves = () => {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
+                            timeZone: "UTC",
                           })}
                         </span>
                       </div>

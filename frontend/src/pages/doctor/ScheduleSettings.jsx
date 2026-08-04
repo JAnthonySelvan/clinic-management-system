@@ -106,12 +106,13 @@ const ScheduleSettings = () => {
   };
 
   // Submit Weekly Availability
-  const handleSaveWeeklyAvailability = () => {
-    dispatch(updateAvailability(weeklyState));
+  const handleSaveWeeklyAvailability = async () => {
+    await dispatch(updateAvailability(weeklyState));
+    dispatch(fetchMySchedule());
   };
 
   // Block Date submission
-  const handleBlockSelectedDate = (e) => {
+  const handleBlockSelectedDate = async (e) => {
     e.preventDefault();
     if (!selectedDate) {
       toast.error("Please select a date on the calendar first");
@@ -130,22 +131,23 @@ const ScheduleSettings = () => {
       ),
     ).toISOString();
 
-    dispatch(
+    const res = await dispatch(
       createBlockedDate({
         date: isoDate,
         reason: leaveReason.trim(),
       }),
-    ).then((res) => {
-      if (!res.error) {
-        setLeaveReason("");
-        setSelectedDate(null);
-      }
-    });
+    );
+    if (!res.error) {
+      setLeaveReason("");
+      setSelectedDate(null);
+      dispatch(fetchMySchedule());
+    }
   };
 
   // Unblock date
-  const handleRemoveBlocked = (dateId) => {
-    dispatch(deleteBlockedDate(dateId));
+  const handleRemoveBlocked = async (dateId) => {
+    await dispatch(deleteBlockedDate(dateId));
+    dispatch(fetchMySchedule());
   };
 
   // Calculations for summary banner

@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import User from "../models/User.mjs";
+import Schedule from "../models/Schedule.mjs";
 import {
   uploadImageBuffer,
   DEFAULT_PROFILE_IMAGE,
@@ -192,9 +193,12 @@ export const deleteDoctor = async (req, res) => {
       });
     }
 
+    // Clean up schedule and leave documents referencing the deleted doctor
+    await Schedule.deleteMany({ doctor: req.params.id });
+
     return res.status(200).json({
       success: true,
-      message: "Doctor deleted successfully",
+      message: "Doctor and associated schedule deleted successfully",
     });
   } catch (error) {
     return res.status(500).json({

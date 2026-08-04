@@ -46,9 +46,12 @@ export const fetchAppointments = createAsyncThunk(
 // ==============================
 export const changeAppointmentStatus = createAsyncThunk(
   "appointment/changeAppointmentStatus",
-  async ({ id, status }, thunkAPI) => {
+  async ({ id, status, rejectionReason }, thunkAPI) => {
     try {
-      return await updateAppointmentStatus(id, status);
+      const res = await updateAppointmentStatus(id, status, rejectionReason);
+      thunkAPI.dispatch(fetchDoctorAppointments());
+      thunkAPI.dispatch(fetchAppointments());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to update appointment status",

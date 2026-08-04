@@ -7,6 +7,10 @@ import {
   getAdminLeaves,
   updateLeaveStatus,
 } from "./scheduleService";
+import {
+  fetchAppointments,
+  fetchDoctorAppointments,
+} from "../appointment/appointmentSlice";
 
 // Fetch doctor schedule
 export const fetchMySchedule = createAsyncThunk(
@@ -27,7 +31,9 @@ export const updateAvailability = createAsyncThunk(
   "schedule/updateAvailability",
   async (weeklyAvailability, thunkAPI) => {
     try {
-      return await updateWeeklyAvailability(weeklyAvailability);
+      const res = await updateWeeklyAvailability(weeklyAvailability);
+      thunkAPI.dispatch(fetchMySchedule());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to update weekly availability",
@@ -41,7 +47,9 @@ export const createBlockedDate = createAsyncThunk(
   "schedule/createBlockedDate",
   async (blockedDateData, thunkAPI) => {
     try {
-      return await addBlockedDate(blockedDateData);
+      const res = await addBlockedDate(blockedDateData);
+      thunkAPI.dispatch(fetchMySchedule());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to add blocked date",
@@ -55,7 +63,9 @@ export const deleteBlockedDate = createAsyncThunk(
   "schedule/deleteBlockedDate",
   async (dateId, thunkAPI) => {
     try {
-      return await removeBlockedDate(dateId);
+      const res = await removeBlockedDate(dateId);
+      thunkAPI.dispatch(fetchMySchedule());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to remove blocked date",
@@ -83,7 +93,11 @@ export const changeLeaveStatus = createAsyncThunk(
   "schedule/changeLeaveStatus",
   async ({ scheduleId, dateId, status }, thunkAPI) => {
     try {
-      return await updateLeaveStatus(scheduleId, dateId, status);
+      const res = await updateLeaveStatus(scheduleId, dateId, status);
+      thunkAPI.dispatch(fetchAdminLeaves());
+      thunkAPI.dispatch(fetchAppointments());
+      thunkAPI.dispatch(fetchDoctorAppointments());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to update leave status",

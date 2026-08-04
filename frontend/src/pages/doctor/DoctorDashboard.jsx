@@ -54,14 +54,17 @@ const DoctorDashboard = () => {
     dispatch(fetchDoctorAppointments());
   }, [dispatch]);
 
-  const todayStr = useMemo(() => new Date().toDateString(), []);
+  const todayStr = useMemo(() => new Date().toISOString().split("T")[0], []);
 
   const todayAppointments = useMemo(() => {
     if (!Array.isArray(doctorAppointments)) return [];
-    return doctorAppointments.filter(
-      (appointment) =>
-        new Date(appointment.appointmentDateTime).toDateString() === todayStr,
-    );
+    return doctorAppointments.filter((appointment) => {
+      if (!appointment.appointmentDateTime) return false;
+      const appDateStr = new Date(appointment.appointmentDateTime)
+        .toISOString()
+        .split("T")[0];
+      return appDateStr === todayStr;
+    });
   }, [doctorAppointments, todayStr]);
 
   const pendingCount = useMemo(() => {
@@ -247,9 +250,10 @@ const DoctorDashboard = () => {
                     <td className="px-6 py-5 font-mono text-xs text-[#5C6B73]">
                       {new Date(
                         appointment.appointmentDateTime,
-                      ).toLocaleTimeString([], {
+                      ).toLocaleTimeString("en-IN", {
                         hour: "2-digit",
                         minute: "2-digit",
+                        timeZone: "UTC",
                       })}
                     </td>
 

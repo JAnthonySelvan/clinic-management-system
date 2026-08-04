@@ -49,6 +49,7 @@ const Doctors = () => {
 
     try {
       await dispatch(removeDoctor(id)).unwrap();
+      dispatch(fetchDoctors());
       toast.success("Doctor deleted successfully");
     } catch (err) {
       toast.error(err || "Failed to delete doctor");

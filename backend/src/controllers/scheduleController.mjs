@@ -271,6 +271,21 @@ export const getAdminLeaves = async (req, res) => {
   }
 };
 
+const getSpecializationRegex = (spec) => {
+  if (!spec) return /.*/i;
+  const s = spec.toLowerCase().trim();
+  if (s.includes("cardio")) return /cardio/i;
+  if (s.includes("neuro")) return /neuro/i;
+  if (s.includes("derma") || s.includes("skin")) return /derma|skin/i;
+  if (s.includes("pedia") || s.includes("child")) return /pedia|child/i;
+  if (s.includes("ortho") || s.includes("bone")) return /ortho|bone/i;
+  if (s.includes("physician") || s.includes("medicine") || s.includes("general")) return /physician|medicine|general/i;
+  if (s.includes("dent")) return /dent/i;
+  if (s.includes("eye") || s.includes("ophthalm")) return /eye|ophthalm/i;
+  if (s.includes("pulmo") || s.includes("chest") || s.includes("lung")) return /pulmo|lung|chest/i;
+  return new RegExp(spec, "i");
+};
+
 /**
  * @desc    Update a doctor leave request status (Approve / Reject)
  * @route   PATCH /api/schedule/admin/leaves/:scheduleId/:dateId
@@ -312,35 +327,20 @@ export const updateLeaveStatus = async (req, res) => {
     await schedule.save();
 
     let autoRejectedCount = 0;
+    let autoReassignedCount = 0;
 
-    // If leave is Approved, automatically reject all existing Pending/Approved appointments on that leave date for this doctor
+    // If leave is Approved, automatically reassign or reject existing Pending/Approved appointments on that leave date for this doctor
     if (status === "Approved" && leave.date && schedule.doctor) {
       const leaveDate = new Date(leave.date);
       const doctorId = schedule.doctor._id || schedule.doctor;
 
-      // Calculate UTC day start and end
-      const startOfDay = new Date(
-        Date.UTC(
-          leaveDate.getUTCFullYear(),
-          leaveDate.getUTCMonth(),
-          leaveDate.getUTCDate(),
-          0,
-          0,
-          0,
-          0,
-        ),
-      );
-      const endOfDay = new Date(
-        Date.UTC(
-          leaveDate.getUTCFullYear(),
-          leaveDate.getUTCMonth(),
-          leaveDate.getUTCDate(),
-          23,
-          59,
-          59,
-          999,
-        ),
-      );
+      const dateStr = leaveDate.toISOString().split("T")[0];
+      const startOfDay = new Date(`${dateStr}T00:00:00.000Z`);
+      const endOfDay = new Date(`${dateStr}T23:59:59.999Z`);
+
+      const doctorUser = await User.findById(doctorId);
+      const doctorSpec = doctorUser ? doctorUser.specialization : schedule.doctor.specialization;
+      const specRegex = getSpecializationRegex(doctorSpec);
 
       // Find affected appointments for this doctor on that date
       const affectedAppointments = await Appointment.find({
@@ -350,23 +350,75 @@ export const updateLeaveStatus = async (req, res) => {
       });
 
       if (affectedAppointments.length > 0) {
-        const updateResult = await Appointment.updateMany(
-          {
-            _id: { $in: affectedAppointments.map((app) => app._id) },
-          },
-          {
-            $set: { status: "Rejected" },
-          },
-        );
+        const candidateDoctors = await User.find({
+          _id: { $ne: doctorId },
+          role: "doctor",
+          specialization: specRegex,
+          isActive: { $ne: false },
+        });
 
-        autoRejectedCount = updateResult.modifiedCount || affectedAppointments.length;
+        const candidateSchedules = await Schedule.find({
+          doctor: { $in: candidateDoctors.map((d) => d._id) },
+        });
+
+        const availableCandidateIds = candidateDoctors
+          .filter((doc) => {
+            const docSched = candidateSchedules.find(
+              (s) => s.doctor.toString() === doc._id.toString()
+            );
+            if (docSched && docSched.blockedDates) {
+              const isDocOnLeave = docSched.blockedDates.some((b) => {
+                const bStr = new Date(b.date).toISOString().split("T")[0];
+                return bStr === dateStr && b.status === "Approved";
+              });
+              if (isDocOnLeave) return false;
+            }
+            return true;
+          })
+          .map((doc) => doc._id);
+
+        for (const app of affectedAppointments) {
+          let reassigned = false;
+
+          if (availableCandidateIds.length > 0) {
+            for (const candId of availableCandidateIds) {
+              const conflict = await Appointment.findOne({
+                doctor: candId,
+                appointmentDateTime: app.appointmentDateTime,
+                status: { $in: ["Pending", "Approved"] },
+              });
+
+              if (!conflict) {
+                app.doctor = candId;
+                await app.save();
+                reassigned = true;
+                autoReassignedCount++;
+                break;
+              }
+            }
+          }
+
+          if (!reassigned) {
+            app.status = "Rejected";
+            app.rejectionReason = "Doctor on approved leave";
+            app.rejectedBy = "system-leave";
+            await app.save();
+            autoRejectedCount++;
+          }
+        }
       }
     }
 
-    const message =
-      status === "Approved" && autoRejectedCount > 0
-        ? `Leave approved. ${autoRejectedCount} appointment(s) on this date were automatically rejected.`
-        : `Leave request ${status.toLowerCase()} successfully`;
+    let message = `Leave request ${status.toLowerCase()} successfully`;
+    if (status === "Approved") {
+      if (autoReassignedCount > 0 && autoRejectedCount > 0) {
+        message = `Leave approved. ${autoReassignedCount} appointment(s) reassigned, ${autoRejectedCount} appointment(s) automatically rejected.`;
+      } else if (autoReassignedCount > 0) {
+        message = `Leave approved. ${autoReassignedCount} appointment(s) automatically reassigned to available specialists.`;
+      } else if (autoRejectedCount > 0) {
+        message = `Leave approved. ${autoRejectedCount} appointment(s) on this date were automatically rejected.`;
+      }
+    }
 
     return res.status(200).json({
       success: true,
@@ -379,6 +431,7 @@ export const updateLeaveStatus = async (req, res) => {
         status: leave.status,
         doctor: schedule.doctor,
         autoRejectedAppointmentsCount: autoRejectedCount,
+        autoReassignedCount,
       },
     });
   } catch (error) {

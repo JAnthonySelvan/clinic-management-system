@@ -584,40 +584,56 @@ function Navbar() {
           <div className="relative" ref={loginMenuRef}>
             <button
               onClick={() => setLoginMenuOpen((prev) => !prev)}
-              className="flex items-center gap-2 rounded-full bg-[#253237] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-out hover:scale-105 hover:bg-[#5c6b73] hover:shadow-lg active:scale-95"
+              className="group relative flex items-center gap-2.5 rounded-lg bg-[#253237] px-4.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all duration-300 hover:bg-[#1b262b] hover:shadow-lg hover:shadow-[#253237]/20 border border-[#3b4c54]/40 active:translate-y-0.5"
             >
-              <FaUserCircle className="transition-transform duration-300" />
-              Login
+              <FaUserCircle className="text-sm text-[#9DB4C0] group-hover:text-white transition-colors" />
+              <span>Login</span>
               <FaChevronDown
-                className={`text-xs transition-transform duration-300 ${
-                  loginMenuOpen ? "rotate-180" : ""
+                className={`text-[10px] text-[#9DB4C0] transition-transform duration-300 ${
+                  loginMenuOpen ? "rotate-180 text-white" : "group-hover:text-white"
                 }`}
               />
             </button>
 
             <div
-              className={`absolute right-0 mt-2 w-48 origin-top-right overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 transition-all duration-200 ease-out ${
+              className={`absolute right-0 mt-2.5 w-60 origin-top-right overflow-hidden rounded-xl bg-white p-2 shadow-2xl ring-1 ring-black/10 border border-gray-100 transition-all duration-200 ease-out ${
                 loginMenuOpen
                   ? "translate-y-0 scale-100 opacity-100"
                   : "pointer-events-none -translate-y-2 scale-95 opacity-0"
               }`}
             >
+              <div className="px-3 py-1.5 border-b border-gray-100 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c6b73]">
+                  Portal Authentication
+                </p>
+              </div>
+
               <Link
                 to="/admin/login"
                 onClick={() => setLoginMenuOpen(false)}
-                className="flex items-center gap-3 px-5 py-3 text-sm font-medium text-[#253237] transition-all duration-200 hover:bg-[#F8FBFC] hover:pl-6"
+                className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-semibold text-[#253237] transition-all duration-200 hover:bg-[#253237] hover:text-white"
               >
-                <FaUserShield className="text-[#5c6b73]" />
-                Login as Admin
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#253237]/10 text-[#253237] group-hover:bg-white/20 group-hover:text-white transition-colors shrink-0">
+                  <FaUserShield className="text-xs" />
+                </div>
+                <div>
+                  <div className="font-bold">Admin Portal</div>
+                  <div className="text-[10px] font-normal text-[#5c6b73] group-hover:text-[#E0FBFC] leading-tight">Management & Control</div>
+                </div>
               </Link>
 
               <Link
                 to="/doctor/login"
                 onClick={() => setLoginMenuOpen(false)}
-                className="flex items-center gap-3 px-5 py-3 text-sm font-medium text-[#253237] transition-all duration-200 hover:bg-[#F8FBFC] hover:pl-6"
+                className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-semibold text-[#253237] transition-all duration-200 hover:bg-[#253237] hover:text-white mt-1"
               >
-                <FaUserMd className="text-[#5c6b73]" />
-                Login as Doctor
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#253237]/10 text-[#253237] group-hover:bg-white/20 group-hover:text-white transition-colors shrink-0">
+                  <FaUserMd className="text-xs" />
+                </div>
+                <div>
+                  <div className="font-bold">Doctor Portal</div>
+                  <div className="text-[10px] font-normal text-[#5c6b73] group-hover:text-[#E0FBFC] leading-tight">Practitioner Dashboard</div>
+                </div>
               </Link>
             </div>
           </div>
@@ -799,23 +815,23 @@ function Navbar() {
           </NavLink>
 
           {/* Login Actions */}
-          <div className="mt-3 grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+          <div className="mt-3 grid grid-cols-2 gap-2.5 pt-3 border-t border-gray-100">
             <Link
               to="/admin/login"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-2xl bg-[#253237] px-4 py-2.5 text-center text-xs font-semibold text-white transition-all duration-300 hover:bg-[#5c6b73]"
+              className="flex items-center justify-center gap-2 rounded-lg bg-[#253237] px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-300 hover:bg-[#1b262b]"
             >
-              <FaUserShield />
-              Admin
+              <FaUserShield className="text-sm text-[#9DB4C0]" />
+              <span>Admin Login</span>
             </Link>
 
             <Link
               to="/doctor/login"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-2xl bg-[#253237] px-4 py-2.5 text-center text-xs font-semibold text-white transition-all duration-300 hover:bg-[#5c6b73]"
+              className="flex items-center justify-center gap-2 rounded-lg bg-[#253237] px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-300 hover:bg-[#1b262b]"
             >
-              <FaUserMd />
-              Doctor
+              <FaUserMd className="text-sm text-[#9DB4C0]" />
+              <span>Doctor Login</span>
             </Link>
           </div>
         </div>

@@ -10,10 +10,10 @@ export const getAppointments = async () => {
   return response.data;
 };
 
-export const updateAppointmentStatus = async (id, status) => {
-  const response = await api.patch(`/appointments/${id}/status`, {
-    status,
-  });
+export const updateAppointmentStatus = async (id, status, rejectionReason) => {
+  const payload = { status };
+  if (rejectionReason) payload.rejectionReason = rejectionReason;
+  const response = await api.patch(`/appointments/${id}/status`, payload);
 
   return response.data;
 };

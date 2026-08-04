@@ -7,6 +7,7 @@ import {
   getDoctorAppointments,
   updateAppointmentStatus,
   deleteAppointment,
+  cleanupDanglingAppointmentsHandler,
 } from "../controllers/appointmentController.mjs";
 
 import { protect, authorize } from "../middleware/authMiddleware.mjs";
@@ -24,9 +25,9 @@ router.get("/track", trackLimiter, trackAppointmentValidation, validate, trackAp
 router.get("/booked-slots", getBookedSlots);
 router.post("/", createAppointmentValidation, validate, bookAppointment);
 
-
 // Admin
 router.get("/", protect, authorize("admin"), getAllAppointments);
+router.post("/admin/cleanup", protect, authorize("admin"), cleanupDanglingAppointmentsHandler);
 
 // Doctor
 router.get("/doctor", protect, authorize("doctor"), getDoctorAppointments);

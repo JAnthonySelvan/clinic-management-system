@@ -60,7 +60,7 @@ export const createAppointmentValidation = [
   body("reason")
     .trim()
     .notEmpty()
-    .withMessage("Reason is required")
-    .isLength({ min: 0, max: 500 })
+    .withMessage("Reason for visit is required")
+    .isLength({ min: 10, max: 500 })
     .withMessage("Reason must be between 10 and 500 characters"),
 ];

@@ -19,6 +19,282 @@ const getSpecializationRegex = (spec) => {
   return new RegExp(spec, "i");
 };
 
+/**
+ * Helper to check department capacity at a specific appointment date & time slot.
+ * Capacity is full ONLY when all available doctors in the department have Approved (confirmed) bookings.
+ */
+export const checkDepartmentCapacityAtTime = async (specialization, appointmentDateTime) => {
+  const specRegex = getSpecializationRegex(specialization);
+
+  const activeDoctors = await User.find({
+    role: "doctor",
+    specialization: specRegex,
+    isActive: { $ne: false },
+  }).select("_id");
+
+  if (!activeDoctors || activeDoctors.length === 0) {
+    return {
+      isFull: true,
+      reason: "No active doctors are available in this medical department.",
+      totalDoctors: 0,
+      availableDoctors: 0,
+    };
+  }
+
+  const doctorIds = activeDoctors.map((d) => d._id);
+  const totalDeptDoctors = doctorIds.length;
+
+  const dateStr = new Date(appointmentDateTime).toISOString().split("T")[0];
+
+  const schedules = await Schedule.find({ doctor: { $in: doctorIds } });
+  const doctorsOnLeave = new Set();
+
+  schedules.forEach((sched) => {
+    if (sched.blockedDates && Array.isArray(sched.blockedDates)) {
+      const hasApprovedLeave = sched.blockedDates.some((b) => {
+        const bStr = new Date(b.date).toISOString().split("T")[0];
+        return bStr === dateStr && b.status === "Approved";
+      });
+      if (hasApprovedLeave) {
+        doctorsOnLeave.add(sched.doctor.toString());
+      }
+    }
+  });
+
+  const availableDoctorsCount = totalDeptDoctors - doctorsOnLeave.size;
+
+  if (availableDoctorsCount <= 0) {
+    return {
+      isFull: true,
+      reason: "All specialists in this department are on approved leave for this date.",
+      totalDoctors: totalDeptDoctors,
+      availableDoctors: 0,
+    };
+  }
+
+  // Count ONLY CONFIRMED (Approved) appointments at this time slot
+  const confirmedAppointmentsCount = await Appointment.countDocuments({
+    status: "Approved",
+    appointmentDateTime,
+    $or: [
+      { specialization: specRegex },
+      { doctor: { $in: doctorIds } },
+    ],
+  });
+
+  const isFull = confirmedAppointmentsCount >= availableDoctorsCount;
+
+  return {
+    isFull,
+    reason: isFull
+      ? "All doctors slots are full"
+      : null,
+    totalDoctors: totalDeptDoctors,
+    availableDoctors: availableDoctorsCount,
+    committedAppointments: confirmedAppointmentsCount,
+  };
+};
+
+/**
+ * Helper to check if a specific appointment can no longer be fulfilled by any doctor in the department
+ * because all available doctors are either on leave, already have Approved bookings at this slot, or have rejected this request.
+ */
+export const checkIfSlotIsFullyBookedOrRejected = async (appointment, specialization, appointmentDateTime) => {
+  const specRegex = getSpecializationRegex(specialization);
+
+  const activeDoctors = await User.find({
+    role: "doctor",
+    specialization: specRegex,
+    isActive: { $ne: false },
+  }).select("_id");
+
+  if (!activeDoctors || activeDoctors.length === 0) {
+    return true;
+  }
+
+  const dateStr = new Date(appointmentDateTime).toISOString().split("T")[0];
+  const doctorIds = activeDoctors.map((d) => d._id);
+  const schedules = await Schedule.find({ doctor: { $in: doctorIds } });
+
+  const rejectedDoctorIdStrs = (appointment.rejectedByDoctors || []).map((id) => id.toString());
+
+  let availableDoctorCount = 0;
+
+  for (const doc of activeDoctors) {
+    const docIdStr = doc._id.toString();
+
+    // 1. Check if this doctor has already rejected this request
+    if (rejectedDoctorIdStrs.includes(docIdStr)) {
+      continue;
+    }
+
+    // 2. Check if this doctor is on approved leave on this date
+    const docSched = schedules.find((s) => s.doctor.toString() === docIdStr);
+    if (docSched && docSched.blockedDates) {
+      const isOnLeave = docSched.blockedDates.some((b) => {
+        const bStr = new Date(b.date).toISOString().split("T")[0];
+        return bStr === dateStr && b.status === "Approved";
+      });
+      if (isOnLeave) continue;
+    }
+
+    // 3. Check if this doctor already has a confirmed Approved appointment at this exact time slot
+    const hasApprovedBooking = await Appointment.findOne({
+      doctor: doc._id,
+      appointmentDateTime,
+      status: "Approved",
+      _id: { $ne: appointment._id },
+    });
+
+    if (hasApprovedBooking) continue;
+
+    // This doctor is available!
+    availableDoctorCount++;
+  }
+
+  return availableDoctorCount === 0;
+};
+
+/**
+ * Helper to clean up / reassign / auto-reject other pending requests at the same time slot
+ * after an appointment is approved by a doctor.
+ */
+export const handleSlotPostApprovalCleanup = async (approvedAppointment, approvingDoctorId) => {
+  try {
+    const { _id: approvedId, specialization, appointmentDateTime } = approvedAppointment;
+    const doctorId = approvingDoctorId || approvedAppointment.doctor;
+    const specRegex = getSpecializationRegex(specialization);
+
+    if (doctorId) {
+      // 1. Doctor-assigned Pending requests for this doctor at the exact same time slot:
+      // "In more than one request for a same time slot doctor approves a one request a removed request should be rejects and reason becomes rejected."
+      const otherPendingAssignedToDoctor = await Appointment.find({
+        _id: { $ne: approvedId },
+        doctor: doctorId,
+        appointmentDateTime,
+        status: "Pending",
+      });
+
+      for (const pendingApp of otherPendingAssignedToDoctor) {
+        pendingApp.status = "Rejected";
+        pendingApp.rejectionReason = "Rejected";
+        pendingApp.rejectedBy = "doctor";
+        await pendingApp.save();
+      }
+
+      // 2. Department unassigned Pending requests at the exact same time slot:
+      // "In department booking in more than one request for a same time slot doctor approves a one request a removed request should be consider as rejected add that doctor in rejectedy"
+      const unassignedPendingAtSlot = await Appointment.find({
+        _id: { $ne: approvedId },
+        status: "Pending",
+        appointmentDateTime,
+        $or: [{ doctor: null }, { doctor: { $exists: false } }],
+        specialization: specRegex,
+      });
+
+      for (const unassignedApp of unassignedPendingAtSlot) {
+        if (!unassignedApp.rejectedByDoctors) {
+          unassignedApp.rejectedByDoctors = [];
+        }
+        if (!unassignedApp.rejectedByDoctors.some((id) => id.toString() === doctorId.toString())) {
+          unassignedApp.rejectedByDoctors.push(doctorId);
+        }
+
+        // Check if all doctors slots are full / no remaining available doctors
+        const isFullyBooked = await checkIfSlotIsFullyBookedOrRejected(
+          unassignedApp,
+          specialization,
+          appointmentDateTime
+        );
+
+        if (isFullyBooked) {
+          unassignedApp.status = "Rejected";
+          unassignedApp.rejectionReason = "All doctors slots are full";
+          unassignedApp.rejectedBy = "doctor";
+        }
+
+        await unassignedApp.save();
+      }
+    }
+  } catch (err) {
+    console.error("Error during post-approval slot cleanup:", err);
+  }
+};
+
+/**
+ * Helper to auto-reject past or unfulfillable dangling appointments
+ */
+export const cleanupDanglingAppointments = async () => {
+  try {
+    const now = new Date();
+
+    // 1. Expired Pending appointments whose date/time has passed
+    const expiredResult = await Appointment.updateMany(
+      {
+        status: "Pending",
+        appointmentDateTime: { $lt: now },
+      },
+      {
+        $set: {
+          status: "Rejected",
+          rejectionReason: "Appointment date and time has passed",
+          rejectedBy: "system-auto",
+        },
+      }
+    );
+
+    // 2. All future Pending appointments where the department capacity is 100% full with confirmed Approved bookings
+    const futurePending = await Appointment.find({
+      status: "Pending",
+      appointmentDateTime: { $gte: now },
+    });
+
+    let autoRejectedDanglingCount = 0;
+
+    for (const app of futurePending) {
+      const isFullyBooked = await checkIfSlotIsFullyBookedOrRejected(
+        app,
+        app.specialization,
+        app.appointmentDateTime
+      );
+
+      if (isFullyBooked) {
+        app.status = "Rejected";
+        app.rejectionReason = "All doctors slots are full";
+        app.rejectedBy = "system-auto";
+        await app.save();
+        autoRejectedDanglingCount++;
+      }
+    }
+
+    return {
+      expiredCount: expiredResult.modifiedCount || 0,
+      danglingCount: autoRejectedDanglingCount,
+    };
+  } catch (err) {
+    console.error("Error during dangling appointments cleanup:", err);
+    return { expiredCount: 0, danglingCount: 0 };
+  }
+};
+
+/**
+ * Admin controller action for triggering explicit dangling appointments cleanup
+ */
+export const cleanupDanglingAppointmentsHandler = async (req, res) => {
+  try {
+    const result = await cleanupDanglingAppointments();
+    return res.status(200).json({
+      success: true,
+      message: "Dangling and expired appointments cleaned up successfully",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Server error while cleaning up appointments",
+    });
+  }
+};
 
 export const bookAppointment = async (req, res) => {
   try {
@@ -123,7 +399,7 @@ export const bookAppointment = async (req, res) => {
       const existingBooking = await Appointment.findOne({
         doctor: assignedDoctorId,
         appointmentDateTime,
-        status: { $ne: "Rejected" },
+        status: "Approved",
       });
 
       if (existingBooking) {
@@ -132,10 +408,22 @@ export const bookAppointment = async (req, res) => {
           message: "The selected doctor is already booked for this time slot. Please choose another time slot or another doctor.",
         });
       }
-    }
+    } else {
+      // Unassigned booking capacity check
+      const capacity = await checkDepartmentCapacityAtTime(
+        assignedSpecialization,
+        appointmentDateTime
+      );
 
-    // Do NOT auto-assign a doctor if none was selected. Leave doctor as null/undefined.
-    // The request will be broadcast to all doctors in the specialization, and the first doctor to approve will be assigned.
+      if (capacity.isFull) {
+        return res.status(400).json({
+          success: false,
+          message:
+            capacity.reason ||
+            "All doctors slots are full",
+        });
+      }
+    }
 
     const appointment = await Appointment.create({
       patientName,
@@ -181,7 +469,6 @@ export const getBookedSlots = async (req, res) => {
       });
     }
 
-    // Validate date format YYYY-MM-DD
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(date)) {
       return res.status(400).json({
@@ -190,7 +477,6 @@ export const getBookedSlots = async (req, res) => {
       });
     }
 
-    // Define start and end of specified date in UTC
     const startOfDay = new Date(`${date}T00:00:00.000Z`);
     const endOfDay = new Date(`${date}T23:59:59.999Z`);
 
@@ -210,7 +496,7 @@ export const getBookedSlots = async (req, res) => {
     }
 
     const queryConditions = [
-      { status: { $ne: "Rejected" } },
+      { status: "Approved" },
       { appointmentDateTime: { $gte: startOfDay, $lte: endOfDay } },
     ];
 
@@ -236,12 +522,10 @@ export const getBookedSlots = async (req, res) => {
       });
     }
 
-    // Query appointments for doctor/specialization on date where status is NOT Rejected
     const appointments = await Appointment.find({
       $and: queryConditions,
     });
 
-    // Helper to format Date into 12-hour "hh:mm AM/PM" format (e.g. "09:30 AM")
     const formatSlotTime = (dateObj) => {
       let hours = dateObj.getUTCHours();
       const minutes = dateObj.getUTCMinutes().toString().padStart(2, "0");
@@ -255,12 +539,10 @@ export const getBookedSlots = async (req, res) => {
     let bookedSlots = [];
 
     if (doctorId) {
-      // Specific doctor: all non-rejected booked slots for that doctor
       bookedSlots = appointments.map((app) =>
         formatSlotTime(new Date(app.appointmentDateTime))
       );
     } else {
-      // Department level: A slot is ONLY FULL if EVERY doctor in the department is booked at that slot time
       const slotDoctorMap = {};
       appointments.forEach((app) => {
         const slotStr = formatSlotTime(new Date(app.appointmentDateTime));
@@ -277,7 +559,6 @@ export const getBookedSlots = async (req, res) => {
       );
     }
 
-    // Determine Doctor Schedule details
     let isBlocked = false;
     let blockedReason = "";
     let isAvailable = true;
@@ -298,7 +579,6 @@ export const getBookedSlots = async (req, res) => {
     const dayName = daysOfWeek[dayIndex];
 
     if (doctorId && mongoose.Types.ObjectId.isValid(doctorId)) {
-      // Specific doctor schedule evaluation
       const docSchedule = await Schedule.findOne({ doctor: doctorId });
       if (docSchedule) {
         const dateStr = startOfDay.toISOString().split("T")[0];
@@ -323,7 +603,6 @@ export const getBookedSlots = async (req, res) => {
         }
       }
     } else if (specialization) {
-      // Department level: evaluate all doctors belonging to this specialization
       const specRegex = getSpecializationRegex(specialization);
       const deptDoctors = await User.find({
         role: "doctor",
@@ -357,7 +636,6 @@ export const getBookedSlots = async (req, res) => {
           }
         }
 
-        // Block department level ONLY if ALL doctors in the department are on approved leave
         if (blockedCount > 0 && blockedCount === deptDoctors.length) {
           isBlocked = true;
           blockedReason =
@@ -388,9 +666,10 @@ export const getBookedSlots = async (req, res) => {
   }
 };
 
-
 export const getAllAppointments = async (req, res) => {
   try {
+    await cleanupDanglingAppointments();
+
     const appointments = await Appointment.find()
       .populate("doctor", "fullName specialization email")
       .sort({ appointmentDateTime: 1 });
@@ -410,24 +689,43 @@ export const getAllAppointments = async (req, res) => {
 
 export const getDoctorAppointments = async (req, res) => {
   try {
+    await cleanupDanglingAppointments();
+
     const doctorId = req.user._id;
     const doctorSpec = req.user.specialization || "";
 
     const specRegex = getSpecializationRegex(doctorSpec);
 
+    // Find all time slots where this doctor ALREADY has a confirmed (Approved) appointment
+    const myApprovedAppointments = await Appointment.find({
+      doctor: doctorId,
+      status: "Approved",
+    }).select("appointmentDateTime");
+
+    const myBookedTimeSlots = myApprovedAppointments.map((app) => app.appointmentDateTime);
+
     // Doctor sees:
     // 1. Appointments explicitly assigned to this doctor
-    // 2. Unassigned pending requests matching the doctor's specialization
+    // 2. Unassigned pending requests matching the doctor's specialization, EXCLUDING:
+    //    - requests rejected by this doctor
+    //    - time slots where this doctor is already booked/approved
     const queryConditions = [
       { doctor: doctorId },
     ];
 
     if (doctorSpec && typeof doctorSpec === "string" && doctorSpec.trim()) {
-      queryConditions.push({
+      const unassignedCondition = {
         $or: [{ doctor: null }, { doctor: { $exists: false } }],
         status: "Pending",
         specialization: specRegex,
-      });
+        rejectedByDoctors: { $ne: doctorId },
+      };
+
+      if (myBookedTimeSlots.length > 0) {
+        unassignedCondition.appointmentDateTime = { $nin: myBookedTimeSlots };
+      }
+
+      queryConditions.push(unassignedCondition);
     }
 
     const appointments = await Appointment.find({
@@ -451,7 +749,7 @@ export const getDoctorAppointments = async (req, res) => {
 
 export const updateAppointmentStatus = async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, rejectionReason } = req.body;
 
     const allowedStatus = ["Approved", "Rejected", "Completed"];
 
@@ -462,9 +760,10 @@ export const updateAppointmentStatus = async (req, res) => {
       });
     }
 
-    const appointment = await Appointment.findById(req.params.id);
+    const appointmentId = req.params.id;
+    const existingAppointment = await Appointment.findById(appointmentId);
 
-    if (!appointment) {
+    if (!existingAppointment) {
       return res.status(404).json({
         success: false,
         message: "Appointment not found",
@@ -472,53 +771,161 @@ export const updateAppointmentStatus = async (req, res) => {
     }
 
     if (req.user.role === "doctor") {
-      // Check if another doctor already claimed/approved or rejected this appointment!
-      if (
-        appointment.doctor &&
-        appointment.doctor.toString() !== req.user._id.toString()
-      ) {
+      const isUnassigned = !existingAppointment.doctor;
+      const isAssignedToMe =
+        existingAppointment.doctor &&
+        existingAppointment.doctor.toString() === req.user._id.toString();
+
+      if (!isUnassigned && !isAssignedToMe) {
         return res.status(400).json({
           success: false,
-          message: "This appointment request has already been accepted or claimed by another doctor.",
+          message:
+            "This appointment request has already been accepted or claimed by another doctor.",
         });
       }
 
-      // If appointment was unassigned and status is being changed to Approved or Rejected
       if (status === "Approved") {
-        // Double-check race condition: Ensure this doctor isn't already booked at this exact time slot
-        const doctorConflict = await Appointment.findOne({
-          doctor: req.user._id,
-          appointmentDateTime: appointment.appointmentDateTime,
-          status: "Approved",
-          _id: { $ne: appointment._id },
-        });
+        if (isUnassigned) {
+          // Atomic claim for unassigned pending request
+          const claimedAppointment = await Appointment.findOneAndUpdate(
+            {
+              _id: appointmentId,
+              $or: [{ doctor: null }, { doctor: { $exists: false } }],
+              status: "Pending",
+            },
+            {
+              $set: {
+                doctor: req.user._id,
+                status: "Approved",
+              },
+            },
+            { new: true }
+          );
 
-        if (doctorConflict) {
-          return res.status(400).json({
-            success: false,
-            message: "You already have another confirmed appointment at this exact time slot.",
+          if (!claimedAppointment) {
+            return res.status(400).json({
+              success: false,
+              message:
+                "This appointment was already accepted by another doctor.",
+            });
+          }
+
+          // Post-claim doctor conflict check
+          const doctorConflict = await Appointment.findOne({
+            doctor: req.user._id,
+            appointmentDateTime: claimedAppointment.appointmentDateTime,
+            status: "Approved",
+            _id: { $ne: claimedAppointment._id },
           });
-        }
 
-        // Assign this appointment to the doctor who approved it first!
-        appointment.doctor = req.user._id;
+          if (doctorConflict) {
+            // Roll back atomic claim
+            await Appointment.findByIdAndUpdate(claimedAppointment._id, {
+              $set: { doctor: null, status: "Pending" },
+            });
+
+            return res.status(400).json({
+              success: false,
+              message:
+                "You already have another confirmed appointment at this exact time slot.",
+            });
+          }
+
+          // Clean up / reassign / remove other pending requests at this same time slot
+          await handleSlotPostApprovalCleanup(claimedAppointment, req.user._id);
+
+          const updatedAppointment = await Appointment.findById(
+            claimedAppointment._id
+          ).populate("doctor", "fullName specialization");
+
+          return res.status(200).json({
+            success: true,
+            message: "Appointment accepted and assigned to you successfully!",
+            data: updatedAppointment,
+          });
+        } else {
+          // Doctor-specific / assigned to me
+          const doctorConflict = await Appointment.findOne({
+            doctor: req.user._id,
+            appointmentDateTime: existingAppointment.appointmentDateTime,
+            status: "Approved",
+            _id: { $ne: existingAppointment._id },
+          });
+
+          if (doctorConflict) {
+            return res.status(400).json({
+              success: false,
+              message:
+                "You already have another confirmed appointment at this exact time slot.",
+            });
+          }
+
+          existingAppointment.status = "Approved";
+          await existingAppointment.save();
+
+          // Clean up / reassign / remove other pending requests at this same time slot
+          await handleSlotPostApprovalCleanup(existingAppointment, req.user._id);
+        }
+      } else if (status === "Rejected") {
+        if (isUnassigned) {
+          // Department-level unassigned appointment rejection by doctor
+          if (!existingAppointment.rejectedByDoctors) {
+            existingAppointment.rejectedByDoctors = [];
+          }
+          if (!existingAppointment.rejectedByDoctors.some((id) => id.toString() === req.user._id.toString())) {
+            existingAppointment.rejectedByDoctors.push(req.user._id);
+          }
+
+          // Check if ALL active available doctors in this specialization have rejected this request or are full
+          const isFullyBooked = await checkIfSlotIsFullyBookedOrRejected(
+            existingAppointment,
+            existingAppointment.specialization,
+            existingAppointment.appointmentDateTime
+          );
+
+          if (isFullyBooked) {
+            existingAppointment.status = "Rejected";
+            existingAppointment.rejectionReason = rejectionReason || "All doctors slots are full";
+            existingAppointment.rejectedBy = "doctor";
+          } else {
+            // Keep status as Pending so other available doctors in department can still see and approve it
+            existingAppointment.status = "Pending";
+          }
+          await existingAppointment.save();
+        } else {
+          // Doctor-assigned request rejected by assigned doctor
+          existingAppointment.status = "Rejected";
+          existingAppointment.rejectionReason = rejectionReason || "Rejected";
+          existingAppointment.rejectedBy = "doctor";
+          await existingAppointment.save();
+        }
+      } else {
+        existingAppointment.status = status;
+        await existingAppointment.save();
       }
+    } else {
+      // Admin update
+      existingAppointment.status = status;
+      if (status === "Rejected") {
+        existingAppointment.rejectionReason =
+          rejectionReason || "Rejected by admin";
+        existingAppointment.rejectedBy = "admin";
+      } else if (status === "Approved") {
+        await handleSlotPostApprovalCleanup(existingAppointment, existingAppointment.doctor);
+      }
+      await existingAppointment.save();
     }
 
-    appointment.status = status;
-
-    await appointment.save();
-
-    const updatedAppointment = await Appointment.findById(appointment._id).populate(
-      "doctor",
-      "fullName specialization"
-    );
+    const updatedAppointment = await Appointment.findById(
+      existingAppointment._id
+    ).populate("doctor", "fullName specialization");
 
     return res.status(200).json({
       success: true,
-      message: status === "Approved" 
-        ? "Appointment accepted and assigned to you successfully!" 
-        : `Appointment status updated to ${status}`,
+      message:
+        status === "Approved"
+          ? "Appointment accepted and assigned to you successfully!"
+          : `Appointment status updated to ${status}`,
       data: updatedAppointment,
     });
   } catch (error) {
@@ -586,6 +993,8 @@ export const trackAppointment = async (req, res) => {
       appointmentDateTime: app.appointmentDateTime,
       reason: app.reason,
       status: app.status,
+      rejectionReason: app.rejectionReason || null,
+      rejectedBy: app.rejectedBy || null,
     }));
 
     if (safeAppointments.length === 0) {

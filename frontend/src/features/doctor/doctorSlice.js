@@ -45,7 +45,10 @@ export const addDoctor = createAsyncThunk(
   "doctor/addDoctor",
   async (doctorData, thunkAPI) => {
     try {
-      return await createDoctor(doctorData);
+      const res = await createDoctor(doctorData);
+      thunkAPI.dispatch(fetchDoctors());
+      thunkAPI.dispatch(fetchPublicDoctors());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to create doctor",
@@ -58,7 +61,10 @@ export const editDoctor = createAsyncThunk(
   "doctor/editDoctor",
   async ({ id, doctorData }, thunkAPI) => {
     try {
-      return await updateDoctor(id, doctorData);
+      const res = await updateDoctor(id, doctorData);
+      thunkAPI.dispatch(fetchDoctors());
+      thunkAPI.dispatch(fetchPublicDoctors());
+      return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to update doctor",
@@ -72,6 +78,8 @@ export const removeDoctor = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       await deleteDoctor(id);
+      thunkAPI.dispatch(fetchDoctors());
+      thunkAPI.dispatch(fetchPublicDoctors());
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(

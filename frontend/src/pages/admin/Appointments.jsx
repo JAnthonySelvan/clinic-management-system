@@ -53,9 +53,10 @@ const Appointments = () => {
     setCurrentPage(1);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Delete this appointment record permanently?")) {
-      dispatch(removeAppointment(id));
+      await dispatch(removeAppointment(id));
+      dispatch(fetchAppointments());
     }
   };
 
@@ -203,21 +204,20 @@ const Appointments = () => {
                         {
                           dateStyle: "medium",
                           timeStyle: "short",
+                          timeZone: "UTC",
                         },
                       )}
                     </td>
 
                     <td className="px-6 py-5">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                          statusColor[appointment.status] ||
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${statusColor[appointment.status] ||
                           "bg-gray-100 text-gray-700"
-                        }`}
+                          }`}
                       >
                         <span
-                          className={`h-2 w-2 rounded-full ${
-                            statusDots[appointment.status] || "bg-gray-400"
-                          }`}
+                          className={`h-2 w-2 rounded-full ${statusDots[appointment.status] || "bg-gray-400"
+                            }`}
                         />
                         <span>{appointment.status}</span>
                       </span>
@@ -279,11 +279,10 @@ const Appointments = () => {
                   type="button"
                   onClick={() => setCurrentPage(pageNum)}
                   aria-label={`Go to page ${pageNum}`}
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold transition duration-150 ${
-                    pageNum === currentPage
-                      ? "bg-[#253237] text-white shadow-xs"
-                      : "bg-white border border-gray-200 text-[#253237] hover:border-[#253237]"
-                  }`}
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold transition duration-150 ${pageNum === currentPage
+                    ? "bg-[#253237] text-white shadow-xs"
+                    : "bg-white border border-gray-200 text-[#253237] hover:border-[#253237]"
+                    }`}
                 >
                   {pageNum}
                 </button>
