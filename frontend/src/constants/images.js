@@ -5,7 +5,7 @@
  * =========================================================================================
  */
 
-export const SITE_LOGO = "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785862144/fe315523-5b3f-4953-b48a-48e7156dbba3_qkwmyj.jpg";
+export const SITE_LOGO = "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785862855/ccc17c9b-016f-4c06-a055-00f8dc0f7913_wobfa0.jpg";
 
 // ==========================================
 // 1. HERO IMAGES
