@@ -95,7 +95,7 @@ function Home() {
         />
 
         {/* Increased Darkness & Dark Luxury Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#060c0f]/80 to-[#060c0f]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-transparent pointer-events-none" />
 
         <div className="relative mx-auto max-w-5xl px-6 lg:px-8 text-center text-white z-10 font-outfit">

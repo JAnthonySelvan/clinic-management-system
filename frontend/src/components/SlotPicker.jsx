@@ -243,12 +243,12 @@ const SlotPicker = ({
   }
 
   return (
-    <div className="w-full rounded-2xl border border-teal-500/20 bg-[#0d171c] p-5 sm:p-6 shadow-xl text-white font-outfit">
+    <div className="w-full rounded-2xl border border-white/15 bg-black/30 backdrop-blur-md p-5 sm:p-6 shadow-xl text-white font-outfit">
       {/* Header & Legend Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
         <div className="flex items-center space-x-2">
-          <Clock className="h-5 w-5 text-teal-400" />
-          <h3 className="text-base font-normal font-serif-display text-white">
+          <Clock className="h-5 w-5 text-[#C2DFE3]" />
+          <h3 className="text-base font-normal font-serif-display text-[#E0FBFC]">
             Available Time Slots
           </h3>
         </div>
@@ -256,11 +256,11 @@ const SlotPicker = ({
         {/* Legend */}
         <div className="flex items-center space-x-4 text-xs font-medium text-gray-300 font-jakarta">
           <div className="flex items-center space-x-1.5">
-            <span className="h-2.5 w-2.5 rounded-full border border-white/30 bg-[#13222a]" />
+            <span className="h-2.5 w-2.5 rounded-full border border-white/30 bg-black/40" />
             <span>Available</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-teal-400 ring-2 ring-teal-400/30" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#E0FBFC] ring-2 ring-[#C2DFE3]/40" />
             <span>Selected</span>
           </div>
           <div className="flex items-center space-x-1.5">
@@ -347,10 +347,10 @@ const SlotPicker = ({
                         transition={{ duration: 0.15, ease: "easeOut" }}
                         className={`relative flex items-center justify-center rounded-xl px-3 py-3 text-xs font-medium transition-all duration-200 select-none ${
                           booked
-                            ? "cursor-not-allowed bg-[#091115] text-gray-500 border border-gray-800 line-through opacity-60 group"
+                            ? "cursor-not-allowed bg-black/20 text-gray-500 border border-white/10 line-through opacity-50 group"
                             : selected
-                            ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white border border-teal-300 shadow-md shadow-teal-950/50 ring-2 ring-teal-300 font-bold"
-                            : "bg-[#13222a] text-white border border-white/15 shadow-2xs hover:border-teal-400 hover:bg-[#182c36] hover:text-teal-200 cursor-pointer"
+                            ? "bg-gradient-to-r from-[#253237] to-[#5C6B73] text-[#E0FBFC] border border-[#C2DFE3] ring-2 ring-[#C2DFE3]/50 shadow-md font-bold"
+                            : "bg-black/40 text-white border border-white/20 shadow-2xs hover:border-[#C2DFE3] hover:bg-black/60 hover:text-[#E0FBFC] cursor-pointer"
                         }`}
                       >
                         {/* Left icon for selected / booked */}
@@ -360,7 +360,7 @@ const SlotPicker = ({
                             animate={{ scale: 1, opacity: 1 }}
                             className="mr-1.5 inline-flex items-center"
                           >
-                            <Check className="h-3.5 w-3.5 stroke-[3]" />
+                            <Check className="h-3.5 w-3.5 stroke-[3] text-[#E0FBFC]" />
                           </motion.span>
                         )}
 
@@ -400,18 +400,18 @@ const SlotPicker = ({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="mt-6 flex items-center justify-between rounded-xl bg-teal-50/80 border border-teal-100 px-4 py-3 text-xs"
+            className="mt-6 flex items-center justify-between rounded-xl bg-black/40 border border-white/20 px-4 py-3 text-xs"
           >
-            <div className="flex items-center space-x-2 text-teal-900">
-              <Sparkles className="h-4 w-4 text-teal-600" />
+            <div className="flex items-center space-x-2 text-[#E0FBFC]">
+              <Sparkles className="h-4 w-4 text-[#C2DFE3]" />
               <span>
-                Selected Slot: <strong className="font-semibold">{selectedSlot}</strong>
+                Selected Slot: <strong className="font-semibold text-white">{selectedSlot}</strong>
               </span>
             </div>
             <button
               type="button"
               onClick={() => onSelectSlot("")}
-              className="text-teal-700 hover:text-teal-900 font-medium underline underline-offset-2"
+              className="text-[#C2DFE3] hover:text-white font-medium underline underline-offset-2"
             >
               Clear
             </button>

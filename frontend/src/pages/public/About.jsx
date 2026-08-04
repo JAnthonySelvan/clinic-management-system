@@ -64,7 +64,7 @@ const About = () => {
   return (
     <>
       {/* ================= HERO (PREMIUM RECONSTRUCTION) ================= */}
-      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32">
+      <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-24 lg:py-32 bg-[#080e12]">
         <img
           src={HERO_IMAGES.about}
           alt="About Saviours Clinic"
@@ -73,7 +73,7 @@ const About = () => {
         />
 
         {/* Dark luxury gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#182329]/45 via-[#253237]/35 to-[#1c282e]/45 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#060c0f]/80 to-[#060c0f]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/15 via-transparent to-transparent pointer-events-none" />
 
         <AnimatedSection

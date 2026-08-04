@@ -424,6 +424,6 @@ export const DEFAULT_AVATAR =
   "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";
 
 export const FORMS_IMAGE = {
-  BookingModal:"https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785772438/3228ebf7-fb7b-4200-ba31-9770b0aa1a88_aoswxa.jpg",
-  Appointment:"https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785772764/aec54c2f-a688-40b5-a794-c53e54693018_hwieks.jpg"
+  BookingModal: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785820495/79bcd90968e0b6535db5fa72ba848e19_gnmyy8.jpg",
+  Appointment: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785820214/1af296e06610dd46944892fe29441231_pp3cch.jpg"
 }

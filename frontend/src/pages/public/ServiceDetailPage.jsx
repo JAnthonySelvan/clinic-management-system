@@ -283,7 +283,7 @@ const ServiceDetailPage = () => {
           className="absolute inset-0 h-full w-full object-cover brightness-75 contrast-105"
         />
         {/* Increased Darkness & Dark Luxury Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#060c0f]/80 to-[#060c0f]" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28 font-outfit">
           {/* Breadcrumb Navigation */}

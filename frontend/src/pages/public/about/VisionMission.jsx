@@ -158,7 +158,7 @@ const VisionMission = () => {
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover brightness-75 contrast-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#060c0f]/92 via-[#0a1216]/88 to-[#060c0f]/94 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#060c0f]/80 to-[#060c0f]" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28 font-outfit">
           <div className="mb-6 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#C2DFE3] font-jakarta">
