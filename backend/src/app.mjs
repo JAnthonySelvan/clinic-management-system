@@ -83,7 +83,7 @@ app.use("/api/assistant", assistantRoutes);
 const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
-  app.get("*", (req, res, next) => {
+  app.use((req, res, next) => {
     if (req.path.startsWith("/api") || req.path.startsWith("/uploads") || req.path === "/health") {
       return next();
     }
@@ -92,4 +92,5 @@ if (fs.existsSync(frontendDistPath)) {
 }
 
 export default app;
+
 
