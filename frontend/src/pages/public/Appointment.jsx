@@ -1,145 +1,13 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { FaClipboardCheck, FaPlus, FaMinus } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, CheckCircle2, ArrowRight, Clock, ShieldCheck, Stethoscope } from "lucide-react";
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-
-import { fetchPublicDoctors } from "../../features/doctor/doctorSlice";
-
-import {
-  createAppointment,
-  clearAppointmentError,
-  resetAppointmentSuccess,
-} from "../../features/appointment/appointmentSlice";
-import {
-  Calendar,
-  User,
-  Mail,
-  Phone,
-  Users,
-  Stethoscope,
-  UserCheck,
-  FileText,
-  CheckCircle2,
-  CalendarDays,
-  Check,
-  Clock,
-} from "lucide-react";
 import AnimatedSection from "../../components/AnimatedSection";
-import SlotPicker from "../../components/SlotPicker";
-import { HERO_IMAGES, GUIDELINE_IMAGES, CTA_IMAGES, FORMS_IMAGE } from "../../constants/images";
-
-const SPECIALIZATIONS = [
-  "Cardiology",
-  "Neurology",
-  "Dermatology",
-  "Pediatrics",
-  "Orthopedics",
-  "General Physician",
-  "Dentist",
-  "Eye Care",
-  "Pulmonology",
-];
-
-const isSpecializationMatch = (selectedSpec, docSpec) => {
-  if (!selectedSpec || !docSpec) return false;
-  const s = selectedSpec.toLowerCase().trim();
-  const d = docSpec.toLowerCase().trim();
-
-  if (s.includes("cardio") && d.includes("cardio")) return true;
-  if (s.includes("neuro") && d.includes("neuro")) return true;
-  if ((s.includes("derma") || s.includes("skin")) && (d.includes("derma") || d.includes("skin"))) return true;
-  if ((s.includes("pedia") || s.includes("child")) && (d.includes("pedia") || d.includes("child"))) return true;
-  if ((s.includes("ortho") || s.includes("bone")) && (d.includes("ortho") || d.includes("bone"))) return true;
-  if ((s.includes("physician") || s.includes("medicine") || s.includes("general")) && (d.includes("physician") || d.includes("medicine") || d.includes("general"))) return true;
-  if (s.includes("dent") && d.includes("dent")) return true;
-  if ((s.includes("eye") || s.includes("ophthalm")) && (d.includes("eye") || d.includes("ophthalm"))) return true;
-  if ((s.includes("pulmo") || s.includes("chest") || s.includes("lung")) && (d.includes("pulmo") || d.includes("chest") || d.includes("lung"))) return true;
-
-  return d.includes(s) || s.includes(d);
-};
+import { HERO_IMAGES, GUIDELINE_IMAGES, FORMS_IMAGE } from "../../constants/images";
 
 const Appointment = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
-
-  const { doctors } = useAppSelector((state) => state.doctor);
-
-  const { loading, success, error } = useAppSelector(
-    (state) => state.appointment,
-  );
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      patientName: "",
-      patientEmail: "",
-      patientPhone: "",
-      patientAge: "",
-      gender: "",
-      specialization: "Cardiology",
-      doctor: "",
-      appointmentDate: new Date().toISOString().split("T")[0],
-      appointmentTime: "",
-      reason: "",
-    },
-  });
-
-  const selectedSpecialization = watch("specialization");
-  const selectedDoctorId = watch("doctor");
-  const selectedDate = watch("appointmentDate");
-  const selectedTime = watch("appointmentTime");
-
-  const patientNameVal = watch("patientName");
-  const patientEmailVal = watch("patientEmail");
-  const patientPhoneVal = watch("patientPhone");
-  const patientAgeVal = watch("patientAge");
-  const genderVal = watch("gender");
-  const reasonVal = watch("reason");
-
-  const filteredDoctors = doctors.filter((doc) =>
-    isSpecializationMatch(selectedSpecialization, doc.specialization)
-  );
-
-  useEffect(() => {
-    dispatch(fetchPublicDoctors());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (success) {
-      toast.success("Appointment booked successfully");
-
-      reset();
-
-      dispatch(resetAppointmentSuccess());
-
-      navigate("/");
-    }
-
-    if (error) {
-      toast.error(error);
-      dispatch(clearAppointmentError());
-    }
-  }, [success, error, dispatch, navigate, reset]);
-
-  const onSubmit = async (data) => {
-    const payload = {
-      ...data,
-      doctor: data.doctor && data.doctor.trim() !== "" ? data.doctor : undefined,
-    };
-    console.log("Form Data:", payload);
-    await dispatch(createAppointment(payload));
-  };
 
   const toggleFaq = (index) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -213,391 +81,100 @@ const Appointment = () => {
         </AnimatedSection>
       </section>
 
-      {/* ================= APPOINTMENT FORM ================= */}
-
-      <AnimatedSection as="section" className="py-24">
+      {/* ================= PREMIUM BOOK NOW CTA CARD ================= */}
+      <AnimatedSection as="section" className="py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-14 text-center space-y-3">
+          <div className="mb-12 text-center space-y-3">
             <span className="text-xs font-semibold uppercase tracking-widest text-[#5C6B73]">
-              Book Appointment
+              Direct Clinical Booking
             </span>
 
             <h2 className="text-3xl sm:text-4xl font-bold text-[#253237] font-poppins">
-              Schedule Your Visit
+              Ready to See a Specialist?
             </h2>
 
             <p className="mx-auto max-w-3xl text-base sm:text-lg text-[#5C6B73] font-jakarta">
-              Fill out the form below and our team will contact you to confirm
-              your appointment.
+              Launch our dedicated booking form to choose your specialist, date, and time slot with real-time availability.
             </p>
           </div>
 
-          {/* Single Seamless Floating Card Container */}
-          <div className="relative max-w-5xl mx-auto overflow-hidden rounded-3xl border border-white/20 text-white shadow-2xl font-outfit my-4 bg-[#060c0f]">
+          {/* Premium Dark Elevated Floating Card Container */}
+          <div className="relative max-w-5xl mx-auto overflow-hidden rounded-3xl border border-white/20 text-white shadow-2xl font-outfit bg-[#060c0f]">
             {/* Background Image Layer */}
             <img
               src={FORMS_IMAGE.Appointment}
-              alt="Schedule Appointment Background"
+              alt="Appointment Booking"
               aria-hidden="true"
               className="absolute inset-0 h-full w-full object-cover object-center brightness-95"
             />
-            {/* Single Transparent Overlay Scrim */}
-            <div className="absolute inset-0 bg-black/35" />
+            {/* Transparent Overlay Scrim */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#060c0f]/90 via-[#060c0f]/75 to-[#060c0f]/90" />
 
-            {/* Content Container (Header + Form) */}
-            <div className="relative z-10 p-6 sm:p-10 font-outfit">
-              {/* Header Info */}
-              <div className="border-b border-white/15 pb-6 mb-8 space-y-3">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-1 text-xs font-normal text-[#E0FBFC] border border-white/20 backdrop-blur-md font-jakarta">
-                    <FaClipboardCheck className="text-[#C2DFE3]" />
-                    <span className="font-medium tracking-wide">Direct Online Booking</span>
-                  </span>
-                  <span className="hidden sm:inline-flex items-center gap-2 text-xs text-[#E0FBFC] font-jakarta bg-black/40 px-3 py-1 rounded-full border border-white/20 backdrop-blur-md">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Instant Confirmation</span>
-                  </span>
-                </div>
+            {/* Content Container */}
+            <div className="relative z-10 p-8 sm:p-14 lg:p-16 flex flex-col items-center text-center space-y-8">
+              {/* Badges */}
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full bg-black/50 px-4 py-1.5 text-xs sm:text-sm font-normal text-[#E0FBFC] border border-white/20 backdrop-blur-md font-jakarta">
+                  <FaClipboardCheck className="text-[#C2DFE3]" />
+                  <span className="font-medium tracking-wide">Direct Online Booking</span>
+                </span>
+                <span className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#E0FBFC] font-jakarta bg-black/50 px-4 py-1.5 rounded-full border border-white/20 backdrop-blur-md">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Instant Confirmation</span>
+                </span>
+              </div>
 
-                <h3 className="font-serif-display text-2xl sm:text-3xl font-normal text-white leading-snug">
+              {/* Heading & Subtext */}
+              <div className="max-w-3xl space-y-4">
+                <h3 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl font-normal text-white leading-tight">
                   Schedule Your Clinical Consultation
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-200 font-light font-jakarta leading-relaxed max-w-3xl">
-                  Fill out your details below. Choose a specialist or department, pick your date, and select an available time slot.
+                <p className="text-sm sm:text-base text-gray-200 font-light font-jakarta leading-relaxed max-w-2xl mx-auto">
+                  Our interactive booking system connects you directly with top doctors across 9+ specialized departments. Pick your preferred slot and receive immediate confirmation.
                 </p>
               </div>
 
-              {/* Form Body */}
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
-                <AnimatedSection delay={100} className="w-full">
-                  <div className="space-y-6">
-                    {/* Patient Details Row 1 */}
-                    <div className="grid gap-5 md:grid-cols-2">
-                      {/* Full Name */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-200 mb-1.5 font-jakarta">
-                          Full Name *
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            placeholder="e.g. John Doe"
-                            {...register("patientName", {
-                              required: "Patient name is required",
-                            })}
-                            className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white placeholder-gray-400 outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta"
-                          />
-                            <User className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                            {patientNameVal && !errors.patientName && (
-                              <span className="absolute right-3.5 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                <Check className="h-3 w-3" />
-                              </span>
-                            )}
-                          </div>
-                          {errors.patientName && (
-                            <p className="mt-1 text-xs text-red-400 font-medium">{errors.patientName.message}</p>
-                          )}
-                        </div>
-
-                        {/* Email */}
-                        <div>
-                          <label className="block text-xs font-medium text-gray-300 mb-1.5 font-jakarta">
-                            Email Address *
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="email"
-                              placeholder="name@example.com"
-                              {...register("patientEmail", {
-                                required: "Email is required",
-                              })}
-                              className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white placeholder-gray-400 outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta"
-                            />
-                            <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                            {patientEmailVal && !errors.patientEmail && (
-                              <span className="absolute right-3.5 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                <Check className="h-3 w-3" />
-                              </span>
-                            )}
-                          </div>
-                          {errors.patientEmail && (
-                            <p className="mt-1 text-xs text-red-400 font-medium">{errors.patientEmail.message}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Patient Details Row 2 */}
-                      <div className="grid gap-5 md:grid-cols-2">
-                        {/* Phone */}
-                        <div>
-                          <label className="block text-xs font-medium text-gray-300 mb-1.5 font-jakarta">
-                            Phone Number *
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="tel"
-                              placeholder="+1 555-0192"
-                              {...register("patientPhone", {
-                                required: "Phone number is required",
-                              })}
-                              className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white placeholder-gray-400 outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta"
-                            />
-                            <Phone className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                            {patientPhoneVal && !errors.patientPhone && (
-                              <span className="absolute right-3.5 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                <Check className="h-3 w-3" />
-                              </span>
-                            )}
-                          </div>
-                          {errors.patientPhone && (
-                            <p className="mt-1 text-xs text-red-400 font-medium">{errors.patientPhone.message}</p>
-                          )}
-                        </div>
-
-                        {/* Age & Gender Grid */}
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-xs font-medium text-gray-300 mb-1.5 font-jakarta">
-                              Age *
-                            </label>
-                            <div className="relative">
-                              <input
-                                type="number"
-                                placeholder="28"
-                                {...register("patientAge", {
-                                  required: "Age is required",
-                                  valueAsNumber: true,
-                                })}
-                                className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white placeholder-gray-400 outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta"
-                              />
-                              <User className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                              {patientAgeVal && !errors.patientAge && (
-                                <span className="absolute right-3 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                  <Check className="h-3 w-3" />
-                                </span>
-                              )}
-                            </div>
-                            {errors.patientAge && (
-                              <p className="mt-1 text-xs text-red-400 font-medium">{errors.patientAge.message}</p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-medium text-gray-300 mb-1.5 font-jakarta">
-                              Gender *
-                            </label>
-                            <div className="relative">
-                              <select
-                                {...register("gender", {
-                                  required: "Gender is required",
-                                })}
-                                className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta cursor-pointer"
-                              >
-                                <option value="" className="bg-[#0d181d] text-white">Select</option>
-                                <option value="Male" className="bg-[#0d181d] text-white">Male</option>
-                                <option value="Female" className="bg-[#0d181d] text-white">Female</option>
-                                <option value="Other" className="bg-[#0d181d] text-white">Other</option>
-                              </select>
-                              <Users className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                              {genderVal && !errors.gender && (
-                                <span className="absolute right-7 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                  <Check className="h-3 w-3" />
-                                </span>
-                              )}
-                            </div>
-                            {errors.gender && (
-                              <p className="mt-1 text-xs text-red-400 font-medium">{errors.gender.message}</p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Specialization & Doctor Selection */}
-                      <div className="grid gap-5 md:grid-cols-2">
-                        <div>
-                          <label className="block mb-1.5 text-xs font-medium text-gray-300 font-jakarta">
-                            Medical Department *
-                          </label>
-                          <div className="relative">
-                            <select
-                              {...register("specialization", {
-                                required: "Specialization is required",
-                              })}
-                              className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta cursor-pointer"
-                            >
-                              <option value="" className="bg-[#0d181d] text-white">Select Department</option>
-                              {SPECIALIZATIONS.map((spec) => (
-                                <option key={spec} value={spec} className="bg-[#0d181d] text-white">
-                                  {spec}
-                                </option>
-                              ))}
-                            </select>
-                            <Stethoscope className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                            {selectedSpecialization && !errors.specialization && (
-                              <span className="absolute right-7 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                <Check className="h-3 w-3" />
-                              </span>
-                            )}
-                          </div>
-                          {errors.specialization && (
-                            <p className="mt-1 text-xs text-red-400 font-medium">
-                              {errors.specialization.message}
-                            </p>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="block mb-1.5 text-xs font-medium text-gray-300 font-jakarta">
-                            Preferred Specialist / Doctor (Optional)
-                          </label>
-                          <div className="relative">
-                            <select
-                              {...register("doctor")}
-                              className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta cursor-pointer"
-                            >
-                              <option value="" className="bg-[#0d181d] text-white">Any Available Specialist</option>
-                              {filteredDoctors.map((doc) => (
-                                <option key={doc._id} value={doc._id} className="bg-[#0d181d] text-white">
-                                  Dr. {doc.fullName} ({doc.specialization})
-                                </option>
-                              ))}
-                            </select>
-                            <UserCheck className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                            {selectedDoctorId && (
-                              <span className="absolute right-7 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                                <Check className="h-3 w-3" />
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Appointment Date */}
-                      <div>
-                        <label className="block mb-1.5 text-xs font-medium text-gray-300 font-jakarta">
-                          Appointment Date *
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="date"
-                            min={new Date().toISOString().split("T")[0]}
-                            {...register("appointmentDate", {
-                              required: "Appointment date is required",
-                            })}
-                            className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md px-3 py-3.5 pl-11 text-sm text-white outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta"
-                          />
-                          <Calendar className="absolute left-3.5 top-3.5 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                          {selectedDate && !errors.appointmentDate && (
-                            <span className="absolute right-3.5 top-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                              <Check className="h-3 w-3" />
-                            </span>
-                          )}
-                        </div>
-                        {errors.appointmentDate && (
-                          <p className="mt-1 text-xs text-red-400 font-medium">
-                            {errors.appointmentDate.message}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Slot Picker */}
-                      <div>
-                        <input
-                          type="hidden"
-                          {...register("appointmentTime", {
-                            required: "Please select an available time slot",
-                          })}
-                        />
-                        <SlotPicker
-                          doctorId={selectedDoctorId}
-                          specialization={selectedSpecialization}
-                          selectedDate={selectedDate}
-                          selectedSlot={selectedTime || ""}
-                          onSelectSlot={(slot) =>
-                            setValue("appointmentTime", slot, { shouldValidate: true })
-                          }
-                        />
-                        {errors.appointmentTime && (
-                          <p className="mt-2 text-xs font-semibold text-red-400 font-jakarta">
-                            {errors.appointmentTime.message}
-                          </p>
-                        )}
-
-                        <AnimatePresence>
-                          {selectedTime && (
-                            <motion.div
-                              initial={{ opacity: 0, y: -5 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -5 }}
-                              className="mt-3.5 flex items-center gap-2 rounded-xl bg-black/40 px-4 py-2.5 text-xs text-[#E0FBFC] border border-white/20 font-jakarta"
-                            >
-                              <Clock className="h-4 w-4 text-[#C2DFE3] animate-pulse" />
-                              <span>Selected Time Slot: <strong className="text-white font-semibold">{selectedTime}</strong></span>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-
-                      {/* Reason for Visit */}
-                      <div>
-                        <label className="block mb-1.5 text-xs font-medium text-gray-300 font-jakarta">
-                          Reason for Visit / Health Concern *
-                        </label>
-                        <div className="relative">
-                          <textarea
-                            rows={4}
-                            placeholder="Describe your health concern or symptoms *"
-                            {...register("reason", {
-                              required: "Reason is required",
-                            })}
-                            className="w-full border-0 border-b-2 border-white/30 bg-black/30 backdrop-blur-md p-4 pl-11 text-sm text-white placeholder-gray-400 outline-none transition-all duration-300 focus:border-[#C2DFE3] focus:bg-black/50 focus:ring-0 rounded-t-xl font-jakarta"
-                          />
-                          <FileText className="absolute left-3.5 top-4 h-4 w-4 text-[#C2DFE3] pointer-events-none" />
-                          {reasonVal && !errors.reason && (
-                            <span className="absolute right-3.5 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#C2DFE3]/20 text-[#E0FBFC] border border-[#C2DFE3]/30 text-xs pointer-events-none">
-                              <Check className="h-3 w-3" />
-                            </span>
-                          )}
-                        </div>
-                        {errors.reason && (
-                          <p className="mt-1 text-xs text-red-400 font-medium">
-                            {errors.reason.message}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Submit Button */}
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="group w-full flex items-center justify-center space-x-3 rounded-xl bg-gradient-to-r from-[#253237] via-[#3a4b52] to-[#253237] border border-[#5C6B73]/40 px-8 py-4 text-base font-semibold tracking-wide text-white shadow-xl hover:from-[#3a4b52] hover:to-[#5C6B73] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 transition-all duration-300 cursor-pointer font-outfit focus:outline-none focus:ring-2 focus:ring-[#C2DFE3]/40 min-h-[48px]"
-                      >
-                        {loading ? (
-                          <>
-                            <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                            <span>Booking Appointment...</span>
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 className="h-5 w-5 text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-                            <span>Confirm Clinical Appointment</span>
-                            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </AnimatedSection>
-                </form>
+              {/* Feature Highlights Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl pt-2 pb-4 text-left">
+                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                  <Stethoscope className="w-5 h-5 text-teal-300 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-semibold text-white font-jakarta">9+ Specialties</h4>
+                    <p className="text-[11px] text-gray-300 font-jakarta mt-0.5">Cardiology, Neurology, Pediatrics & more</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                  <Clock className="w-5 h-5 text-teal-300 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-semibold text-white font-jakarta">Real-time Slots</h4>
+                    <p className="text-[11px] text-gray-300 font-jakarta mt-0.5">Live schedule availability per specialist</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                  <ShieldCheck className="w-5 h-5 text-teal-300 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-semibold text-white font-jakarta">Zero Wait Time</h4>
+                    <p className="text-[11px] text-gray-300 font-jakarta mt-0.5">Priority check-in upon arrival</p>
+                  </div>
+                </div>
               </div>
+
+              {/* Primary Call To Action Button */}
+              <Link
+                to="/appointment/book"
+                className="group relative inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#253237] via-[#3a4b52] to-[#253237] border border-[#5C6B73]/50 px-10 py-5 text-base sm:text-lg font-semibold tracking-wide text-white shadow-2xl hover:from-[#3a4b52] hover:to-[#5C6B73] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 cursor-pointer font-outfit focus:outline-none focus:ring-2 focus:ring-[#C2DFE3]/50"
+              >
+                <CheckCircle2 className="w-6 h-6 text-teal-300 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+                <span>Book Your Appointment Now</span>
+                <ArrowRight className="w-5 h-5 text-teal-300 transition-transform duration-300 group-hover:translate-x-1.5" />
+              </Link>
             </div>
           </div>
-        </AnimatedSection>
+        </div>
+      </AnimatedSection>
 
       {/* ================= APPOINTMENT GUIDELINES ("+" PLUS/CROSS SHAPED LAYOUT) ================= */}
-
       <AnimatedSection as="section" className="bg-[#F8FBFC] py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
@@ -810,7 +387,6 @@ const Appointment = () => {
       </AnimatedSection>
 
       {/* ================= FAQ ACCORDION ================= */}
-
       <AnimatedSection as="section" className="py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
@@ -903,53 +479,6 @@ const Appointment = () => {
                 Contact our support team →
               </Link>
             </p>
-          </div>
-        </div>
-      </AnimatedSection>
-
-      {/* ================= APPOINTMENT CTA ================= */}
-
-      <AnimatedSection as="section" className="py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-4xl px-8 py-16 text-center shadow-2xl md:px-20">
-            {/* Background Image */}
-            <img
-              src={CTA_IMAGES.background}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            {/* Gradient Overlay for Readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#253237]/90 via-[#5C6B73]/85 to-[#9DB4C0]/90" />
-
-            {/* Content */}
-            <div className="relative z-10">
-              <h2 className="text-4xl font-bold text-white md:text-5xl font-poppins">
-                Your Health Is Our Priority
-              </h2>
-
-              <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[#E0FBFC] font-jakarta">
-                Our experienced doctors are here to provide trusted medical care
-                for you and your family. Book your appointment today and take
-                the first step toward better health.
-              </p>
-
-              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row font-outfit">
-                <Link
-                  to="/appointment"
-                  className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
-                >
-                  Book Appointment
-                </Link>
-
-                <Link
-                  to="/doctors"
-                  className="rounded-xl border-2 border-white px-8 py-4 text-lg font-semibold text-white transition duration-300 hover:bg-white hover:text-[#253237]"
-                >
-                  Meet Our Doctors
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </AnimatedSection>

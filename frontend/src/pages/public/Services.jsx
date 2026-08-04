@@ -682,7 +682,7 @@ const Services = () => {
 
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  to="/appointment"
+                  to="/appointment/book"
                   className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Book Appointment

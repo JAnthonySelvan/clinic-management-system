@@ -125,7 +125,7 @@ function Home() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full pt-4 font-jakarta">
               <Link
-                to="/appointment"
+                to="/appointment/book"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 px-9 py-4 text-base font-medium text-white shadow-xl shadow-teal-950/50 transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:from-teal-400 hover:to-emerald-400 group"
               >
                 <Calendar className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
@@ -492,7 +492,7 @@ function Home() {
 
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  to="/appointment"
+                  to="/appointment/book"
                   className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Book Appointment

@@ -17,6 +17,7 @@ import Services from "../pages/public/Services";
 import ServiceDetailPage from "../pages/public/ServiceDetailPage";
 import PublicDoctors from "../pages/public/Doctors";
 import Appointment from "../pages/public/Appointment";
+import BookAppointmentForm from "../pages/public/BookAppointmentForm";
 import Contact from "../pages/public/Contact";
 import TrackBooking from "../pages/public/TrackBooking";
 
@@ -59,6 +60,7 @@ function AppRoutes() {
         <Route path="/services/:serviceSlug" element={<ServiceDetailPage />} />
         <Route path="/doctors" element={<PublicDoctors />} />
         <Route path="/appointment" element={<Appointment />} />
+        <Route path="/appointment/book" element={<BookAppointmentForm />} />
         <Route path="/track-appointment" element={<TrackBooking />} />
         <Route path="/contact" element={<Contact />} />
       </Route>

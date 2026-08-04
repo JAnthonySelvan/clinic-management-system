@@ -524,14 +524,14 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <a
-                    href="/appointment"
+                  <Link
+                    to="/appointment/book"
                     onClick={(e) => e.stopPropagation()}
                     className="inline-flex items-center justify-center gap-2 w-full rounded-xl bg-white px-4 py-3 text-xs font-bold text-[#253237] shadow-md transition duration-300 hover:bg-[#E0FBFC]"
                   >
                     <span>Book Appointment</span>
                     <FaArrowRight className="text-[10px]" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </AnimatedSection>
@@ -838,7 +838,7 @@ const Contact = () => {
 
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  to="/appointment"
+                  to="/appointment/book"
                   className="rounded-xl bg-white px-8 py-4 text-lg font-semibold text-[#253237] transition duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Book Appointment
