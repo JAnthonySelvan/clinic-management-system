@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { login, logout, clearError } from "../../features/auth/authSlice";
-import toast from "react-hot-toast";
+import { SITE_LOGO } from "../../constants/images";
 
 const AdminLogin = () => {
   const dispatch = useAppDispatch();
@@ -44,11 +44,15 @@ const AdminLogin = () => {
   return (
     <section className="min-h-screen bg-[#F8FBFC] flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
-        <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-[#253237]">Admin Login</h1>
-
-          <p className="mt-3 text-[#5C6B73]">
-            Sign in to access the Saviours Clinic Admin Dashboard.
+        <div className="mb-8 text-center flex flex-col items-center">
+          <img
+            src={SITE_LOGO}
+            alt="SavioursClinic Logo"
+            className="h-16 w-16 rounded-2xl object-cover shadow-md mb-4 border border-gray-100"
+          />
+          <h1 className="text-3xl font-bold text-[#253237]">Saviours<span className="text-[#5c6b73]">Clinic</span></h1>
+          <p className="mt-2 text-sm text-[#5C6B73]">
+            Sign in to access the SavioursClinic Admin Dashboard.
           </p>
         </div>
 

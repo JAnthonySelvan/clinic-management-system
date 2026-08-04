@@ -17,6 +17,7 @@ import {
   SERVICE_DETAIL_IMAGES,
   ABOUT_DETAIL_IMAGES,
   SPECIALTY_IMAGES,
+  SITE_LOGO,
 } from "../../constants/images";
 
 // Standard medical icons for specialty links
@@ -224,9 +225,11 @@ function Navbar() {
         <div className="flex items-center justify-between">
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#253237] text-white shadow-md transition-transform duration-300 group-hover:scale-105">
-              <FaStethoscope className="text-xl text-[#E0FBFC]" />
-            </div>
+            <img
+              src={SITE_LOGO}
+              alt="SavioursClinic Logo"
+              className="h-11 w-11 rounded-2xl object-cover shadow-md transition-transform duration-300 group-hover:scale-105 border border-gray-100"
+            />
             <div>
               <span className="text-xl font-bold tracking-tight text-[#253237]">
                 Saviours<span className="text-[#5c6b73]">Clinic</span>

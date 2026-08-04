@@ -16,6 +16,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { logout } from "../features/auth/authSlice";
+import { SITE_LOGO } from "../constants/images";
 
 const DEFAULT_AVATAR =
   "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&q=80&auto=format&fit=crop";
@@ -91,11 +92,13 @@ const DoctorLayout = () => {
         {/* Brand Header */}
         <div className="flex items-center justify-between border-b border-[#5C6B73]/30 px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 text-[#E0FBFC]">
-              <FaStethoscope className="text-lg" />
-            </div>
+            <img
+              src={SITE_LOGO}
+              alt="SavioursClinic Logo"
+              className="h-10 w-10 rounded-xl object-cover border border-white/20 shadow-xs"
+            />
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white">Saviours</h1>
+              <h1 className="text-xl font-bold tracking-tight text-white">Saviours<span className="text-[#C2DFE3]">Clinic</span></h1>
               <p className="text-[11px] font-medium tracking-wider text-[#C2DFE3] uppercase">
                 Doctor Portal
               </p>

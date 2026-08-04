@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SITE_LOGO } from "../../constants/images";
 import {
   FaFacebookF,
   FaInstagram,
@@ -15,7 +16,14 @@ const Footer = () => {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Clinic Info */}
           <div>
-            <h2 className="text-3xl font-bold">Saviours</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src={SITE_LOGO}
+                alt="SavioursClinic Logo"
+                className="h-10 w-10 rounded-xl object-cover border border-white/20"
+              />
+              <h2 className="text-3xl font-bold tracking-tight text-white">Saviours<span className="text-[#9DB4C0]">Clinic</span></h2>
+            </div>
 
             <p className="mt-4 leading-7 text-[#C2DFE3]">
               Providing trusted healthcare with experienced doctors, advanced
