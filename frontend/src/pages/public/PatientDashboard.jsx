@@ -19,6 +19,7 @@ import {
   FaChild,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { FORMS_IMAGE } from "../../constants/images";
 
 const PatientDashboard = () => {
   const dispatch = useAppDispatch();
@@ -118,7 +119,13 @@ const PatientDashboard = () => {
   if (!isVerified) {
     return (
       <section className="relative overflow-hidden min-h-screen w-full flex items-center justify-center py-20 bg-[#080e12]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-transparent pointer-events-none" />
+        <img
+          src={FORMS_IMAGE.MyAppointments}
+          alt="My Appointments Background"
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-40 contrast-110"
+        />
+        <div className="absolute inset-0 bg-black/50 pointer-events-none" />
         <div className="relative z-10 w-full max-w-xl px-4">
           {inlineAuthStep === "email" ? (
             <EmailStep onNext={handleEmailNext} />
@@ -132,7 +139,14 @@ const PatientDashboard = () => {
 
   return (
     <section className="relative overflow-hidden min-h-screen w-full py-24 bg-[#080e12] text-[#E0FBFC]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <img
+        src={FORMS_IMAGE.MyAppointments}
+        alt="My Appointments Background"
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-center brightness-40 contrast-110"
+      />
+      <div className="absolute inset-0 bg-black/50 pointer-events-none" />
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0f171c]/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-[#253237] shadow-2xl mb-8">
           <div>
@@ -230,16 +244,32 @@ const PatientDashboard = () => {
           <div className="space-y-4">
             {filteredAppointments.map((app) => {
               const dt = new Date(app.appointmentDateTime);
-              const dateFormatted = dt.toLocaleDateString("en-US", {
-                weekday: "short",
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              });
-              const timeFormatted = dt.toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
+              const dateFormatted = app.appointmentDate
+                ? new Date(`${app.appointmentDate}T00:00:00`).toLocaleDateString("en-US", {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })
+                : dt.toLocaleDateString("en-US", {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  });
+
+              const formatSlotTimeUtc = (d) => {
+                if (!d || isNaN(d.getTime())) return "";
+                let hours = d.getUTCHours();
+                const minutes = d.getUTCMinutes().toString().padStart(2, "0");
+                const ampm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                const formattedHours = hours.toString().padStart(2, "0");
+                return `${formattedHours}:${minutes} ${ampm}`;
+              };
+
+              const timeFormatted = app.appointmentTime || formatSlotTimeUtc(dt);
 
               return (
                 <div

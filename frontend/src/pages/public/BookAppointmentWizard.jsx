@@ -31,6 +31,7 @@ const BookAppointmentWizard = () => {
   const [userEmail, setUserEmail] = useState(verifiedEmail || "");
   const [patientChoice, setPatientChoice] = useState(null); // { relationship, profile, childrenList, hasChildren }
   const [selectedChild, setSelectedChild] = useState(null);
+  const [isChildSelecting, setIsChildSelecting] = useState(false);
   const [activeProfile, setActiveProfile] = useState(null);
   const [scheduleData, setScheduleData] = useState(null);
 
@@ -57,8 +58,10 @@ const BookAppointmentWizard = () => {
   const handleWhoNext = (choiceData) => {
     setPatientChoice(choiceData);
     if (choiceData.relationship === "child" && choiceData.hasChildren) {
+      setIsChildSelecting(true);
       setCurrentStepIndex(3); // Child selector step
     } else {
+      setIsChildSelecting(false);
       setActiveProfile(choiceData.profile);
       setCurrentStepIndex(3); // Profile step
     }
@@ -67,6 +70,7 @@ const BookAppointmentWizard = () => {
   const handleChildSelect = (childObj) => {
     setSelectedChild(childObj);
     setActiveProfile(childObj);
+    setIsChildSelecting(false); // Advance to ProfileStep even if childObj is null (Add New Child)
     setCurrentStepIndex(3); // Profile step
   };
 
@@ -183,22 +187,28 @@ const BookAppointmentWizard = () => {
             />
           )}
 
-          {currentStepIndex === 3 && patientChoice?.relationship === "child" && patientChoice?.hasChildren && !selectedChild && (
+          {currentStepIndex === 3 && isChildSelecting && (
             <ChildSelectorStep
               key="step-3-child"
-              childrenList={patientChoice.childrenList}
+              childrenList={patientChoice?.childrenList || []}
               onSelectChild={handleChildSelect}
               onBack={() => setCurrentStepIndex(2)}
             />
           )}
 
-          {currentStepIndex === 3 && (patientChoice?.relationship !== "child" || !patientChoice?.hasChildren || selectedChild) && (
+          {currentStepIndex === 3 && !isChildSelecting && (
             <ProfileStep
               key="step-3-profile"
               relationship={patientChoice?.relationship || "self"}
               initialProfile={activeProfile}
               onNext={handleProfileNext}
-              onBack={() => setCurrentStepIndex(2)}
+              onBack={() => {
+                if (patientChoice?.relationship === "child" && patientChoice?.hasChildren) {
+                  setIsChildSelecting(true);
+                } else {
+                  setCurrentStepIndex(2);
+                }
+              }}
             />
           )}
 

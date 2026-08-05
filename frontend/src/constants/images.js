@@ -427,5 +427,6 @@ export const DEFAULT_AVATAR =
 
 export const FORMS_IMAGE = {
   BookingModal: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785820495/79bcd90968e0b6535db5fa72ba848e19_gnmyy8.jpg",
-  Appointment: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785820214/1af296e06610dd46944892fe29441231_pp3cch.jpg"
-}
+  Appointment: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785820214/1af296e06610dd46944892fe29441231_pp3cch.jpg",
+  MyAppointments: "https://res.cloudinary.com/dlaqnbmqk/image/upload/v1785927133/3a3396f798be1f6c525a9083780aa323_zmiqbf.jpg",
+};

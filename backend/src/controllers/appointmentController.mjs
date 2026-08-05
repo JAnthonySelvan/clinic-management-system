@@ -217,6 +217,34 @@ export const handleSlotPostApprovalCleanup = async (approvedAppointment, approvi
         await unassignedApp.save();
       }
     }
+
+    // 3. Reject any other pending requests for the SAME PATIENT at this exact same time slot across doctors
+    const patientConditions = [];
+    if (approvedAppointment.patientProfile) {
+      patientConditions.push({ patientProfile: approvedAppointment.patientProfile });
+    }
+    if (approvedAppointment.patientEmail) {
+      patientConditions.push({ patientEmail: approvedAppointment.patientEmail.toLowerCase() });
+    }
+    if (approvedAppointment.patientPhone) {
+      patientConditions.push({ patientPhone: approvedAppointment.patientPhone });
+    }
+
+    if (patientConditions.length > 0) {
+      const otherPatientPendingAtSlot = await Appointment.find({
+        _id: { $ne: approvedId },
+        $or: patientConditions,
+        appointmentDateTime,
+        status: "Pending",
+      });
+
+      for (const pendingApp of otherPatientPendingAtSlot) {
+        pendingApp.status = "Rejected";
+        pendingApp.rejectionReason = "Patient already has an approved appointment at this time slot";
+        pendingApp.rejectedBy = "system-auto";
+        await pendingApp.save();
+      }
+    }
   } catch (err) {
     console.error("Error during post-approval slot cleanup:", err);
   }
@@ -422,6 +450,33 @@ export const bookAppointment = async (req, res) => {
       });
     }
 
+    // Check if THIS patient already has an Approved appointment at this exact date and time slot with ANY doctor
+    const patientConds = [];
+    if (resolvedProfileId) {
+      patientConds.push({ patientProfile: resolvedProfileId });
+    }
+    if (finalPatientEmail) {
+      patientConds.push({ patientEmail: finalPatientEmail.toLowerCase() });
+    }
+    if (finalPatientPhone) {
+      patientConds.push({ patientPhone: finalPatientPhone });
+    }
+
+    if (patientConds.length > 0) {
+      const existingPatientApproved = await Appointment.findOne({
+        $or: patientConds,
+        appointmentDateTime,
+        status: "Approved",
+      });
+
+      if (existingPatientApproved) {
+        return res.status(400).json({
+          success: false,
+          message: "You already have an approved appointment with a doctor at this date and time slot.",
+        });
+      }
+    }
+
     // If a specific doctor was requested, check if that doctor is free at the requested time
     if (assignedDoctorId) {
       const existingBooking = await Appointment.findOne({
@@ -462,6 +517,8 @@ export const bookAppointment = async (req, res) => {
       specialization: assignedSpecialization,
       doctor: assignedDoctorId || null,
       patientProfile: resolvedProfileId || null,
+      appointmentDate: appointmentDate ? appointmentDate.trim() : undefined,
+      appointmentTime: appointmentTime ? appointmentTime.trim() : undefined,
       appointmentDateTime,
       reason,
       status: "Pending",

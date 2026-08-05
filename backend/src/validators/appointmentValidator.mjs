@@ -10,26 +10,34 @@ export const trackAppointmentValidation = [
 ];
 
 export const createAppointmentValidation = [
-  body("patientName").trim().notEmpty().withMessage("Patient name is required"),
+  body("patientName")
+    .if((value, { req }) => !req.body.patientProfileId)
+    .trim()
+    .notEmpty()
+    .withMessage("Patient name is required"),
 
   body("patientEmail")
+    .if((value, { req }) => !req.body.patientProfileId)
     .trim()
     .isEmail()
     .withMessage("Valid email is required")
     .normalizeEmail(),
 
   body("patientPhone")
+    .if((value, { req }) => !req.body.patientProfileId)
     .trim()
     .notEmpty()
     .withMessage("Phone number is required"),
 
   body("patientAge")
+    .if((value, { req }) => !req.body.patientProfileId)
     .notEmpty()
     .withMessage("Patient age is required")
     .isInt({ min: 0, max: 120 })
     .withMessage("Age must be between 0 and 120"),
 
   body("gender")
+    .if((value, { req }) => !req.body.patientProfileId)
     .notEmpty()
     .withMessage("Gender is required")
     .isIn(["Male", "Female", "Other"])
