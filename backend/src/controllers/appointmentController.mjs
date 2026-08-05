@@ -4,6 +4,7 @@ import User from "../models/User.mjs";
 import Schedule from "../models/Schedule.mjs";
 import PatientProfile from "../models/PatientProfile.mjs";
 import { validationResult } from "express-validator";
+import { sendAppointmentStatusEmail } from "../config/brevo.mjs";
 
 const getSpecializationRegex = (spec) => {
   if (!spec) return /.*/i;
@@ -922,7 +923,20 @@ export const updateAppointmentStatus = async (req, res) => {
 
           const updatedAppointment = await Appointment.findById(
             claimedAppointment._id
-          ).populate("doctor", "fullName specialization");
+          ).populate("doctor", "fullName name specialization");
+
+          if (updatedAppointment && updatedAppointment.patientEmail) {
+            sendAppointmentStatusEmail({
+              toEmail: updatedAppointment.patientEmail,
+              patientName: updatedAppointment.patientName,
+              doctorName: updatedAppointment.doctor?.name || updatedAppointment.doctor?.fullName || "Attending Specialist",
+              specialization: updatedAppointment.specialization,
+              appointmentDate: updatedAppointment.appointmentDateTime,
+              appointmentTime: updatedAppointment.appointmentTime,
+              status: updatedAppointment.status,
+              rejectionReason: updatedAppointment.rejectionReason,
+            }).catch((e) => console.error("Error sending status email:", e));
+          }
 
           return res.status(200).json({
             success: true,
@@ -1004,7 +1018,20 @@ export const updateAppointmentStatus = async (req, res) => {
 
     const updatedAppointment = await Appointment.findById(
       existingAppointment._id
-    ).populate("doctor", "fullName specialization");
+    ).populate("doctor", "fullName name specialization");
+
+    if (updatedAppointment && updatedAppointment.patientEmail) {
+      sendAppointmentStatusEmail({
+        toEmail: updatedAppointment.patientEmail,
+        patientName: updatedAppointment.patientName,
+        doctorName: updatedAppointment.doctor?.name || updatedAppointment.doctor?.fullName || "Attending Specialist",
+        specialization: updatedAppointment.specialization,
+        appointmentDate: updatedAppointment.appointmentDateTime,
+        appointmentTime: updatedAppointment.appointmentTime,
+        status: updatedAppointment.status,
+        rejectionReason: updatedAppointment.rejectionReason,
+      }).catch((e) => console.error("Error sending status email:", e));
+    }
 
     return res.status(200).json({
       success: true,

@@ -17,3 +17,25 @@ export const uploadImageBuffer = (buffer, folder = "doctors") => {
     stream.end(buffer);
   });
 };
+
+export const uploadPdfBuffer = (buffer, filename = `prescription_${Date.now()}`) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "prescriptions",
+        resource_type: "raw",
+        public_id: filename,
+        format: "pdf",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve({
+          pdfUrl: result.secure_url,
+          cloudinaryPublicId: result.public_id,
+        });
+      },
+    );
+
+    stream.end(buffer);
+  });
+};

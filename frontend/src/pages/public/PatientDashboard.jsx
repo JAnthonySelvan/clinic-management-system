@@ -17,9 +17,11 @@ import {
   FaHourglassHalf,
   FaTimesCircle,
   FaChild,
+  FaFilePdf,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { FORMS_IMAGE } from "../../constants/images";
+import PrescriptionViewerModal from "../../components/prescription/PrescriptionViewerModal";
 
 const PatientDashboard = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +31,10 @@ const PatientDashboard = () => {
   const [inlineAuthStep, setInlineAuthStep] = useState("email"); // "email" | "otp"
   const [authEmail, setAuthEmail] = useState("");
   const [activeTab, setActiveTab] = useState("all"); // "all" | profileId
+
+  // Prescription Viewer State
+  const [selectedAppointmentForViewer, setSelectedAppointmentForViewer] = useState(null);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   const isVerified = Boolean(otpToken && verifiedEmail);
 
@@ -325,12 +331,35 @@ const PatientDashboard = () => {
                       </p>
                     )}
                   </div>
+
+                  {app.status === "Completed" && (
+                    <div className="shrink-0 flex items-center pt-2 md:pt-0">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedAppointmentForViewer(app._id);
+                          setIsViewerOpen(true);
+                        }}
+                        className="flex items-center gap-2 rounded-2xl bg-[#0077B6] px-4 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#005f92] hover:scale-[1.02] cursor-pointer"
+                      >
+                        <FaFilePdf className="text-sm text-[#E0FBFC]" />
+                        <span>View Prescription & Notes</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
         )}
       </div>
+
+      {/* Prescription Viewer Modal */}
+      <PrescriptionViewerModal
+        appointmentId={selectedAppointmentForViewer}
+        isOpen={isViewerOpen}
+        onClose={() => setIsViewerOpen(false)}
+      />
     </section>
   );
 };

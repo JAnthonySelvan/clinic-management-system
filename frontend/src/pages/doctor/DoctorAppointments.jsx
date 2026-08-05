@@ -8,11 +8,15 @@ import {
   FaFilter,
   FaChevronLeft,
   FaChevronRight,
+  FaFilePdf,
+  FaNotesMedical,
 } from "react-icons/fa";
 import {
   fetchDoctorAppointments,
   changeAppointmentStatus,
 } from "../../features/appointment/appointmentSlice";
+import PrescriptionModal from "../../components/prescription/PrescriptionModal";
+import PrescriptionViewerModal from "../../components/prescription/PrescriptionViewerModal";
 
 const statusColor = {
   Pending: "bg-amber-50 text-amber-700 border border-amber-200/60",
@@ -40,6 +44,12 @@ const DoctorAppointments = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Prescription Modals State
+  const [selectedAppointmentForPrescription, setSelectedAppointmentForPrescription] = useState(null);
+  const [isWritePrescriptionOpen, setIsWritePrescriptionOpen] = useState(false);
+  const [selectedAppointmentForViewer, setSelectedAppointmentForViewer] = useState(null);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDoctorAppointments());
@@ -237,12 +247,9 @@ const DoctorAppointments = () => {
                         )}
 
                         {appointment.status === "Approved" && (
-                          /* Outlined to Filled Complete Button */
                           <button
                             type="button"
-                            onClick={() =>
-                              handleStatusChange(appointment._id, "Completed")
-                            }
+                            onClick={() => handleStatusChange(appointment._id, "Completed")}
                             className="border-2 border-blue-600 text-blue-600 bg-transparent hover:bg-blue-600 hover:text-white rounded-xl px-3 py-1.5 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shadow-2xs active:scale-95 cursor-pointer"
                           >
                             <FaCheckDouble className="text-xs" />
@@ -250,8 +257,35 @@ const DoctorAppointments = () => {
                           </button>
                         )}
 
-                        {(appointment.status === "Completed" ||
-                          appointment.status === "Rejected") && (
+                        {appointment.status === "Completed" && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedAppointmentForPrescription(appointment);
+                                setIsWritePrescriptionOpen(true);
+                              }}
+                              className="bg-[#253237] text-white hover:bg-[#1c272a] rounded-xl px-3 py-1.5 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+                            >
+                              <FaNotesMedical className="text-xs text-[#0077B6]" />
+                              <span>Write / Edit Rx</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedAppointmentForViewer(appointment._id);
+                                setIsViewerOpen(true);
+                              }}
+                              className="bg-[#0077B6] text-white hover:bg-[#005f92] rounded-xl px-2.5 py-1.5 text-xs font-bold transition-all duration-200 flex items-center gap-1 shadow-sm active:scale-95 cursor-pointer"
+                            >
+                              <FaFilePdf className="text-xs" />
+                              <span>View PDF</span>
+                            </button>
+                          </div>
+                        )}
+
+                        {appointment.status === "Rejected" && (
                           <span className="text-xs font-medium text-gray-400 italic">
                             No Actions
                           </span>
@@ -329,6 +363,22 @@ const DoctorAppointments = () => {
           </div>
         )}
       </div>
+
+      {/* Prescription Modals */}
+      <PrescriptionModal
+        appointment={selectedAppointmentForPrescription}
+        isOpen={isWritePrescriptionOpen}
+        onClose={() => setIsWritePrescriptionOpen(false)}
+        onSuccess={() => {
+          dispatch(fetchDoctorAppointments());
+        }}
+      />
+
+      <PrescriptionViewerModal
+        appointmentId={selectedAppointmentForViewer}
+        isOpen={isViewerOpen}
+        onClose={() => setIsViewerOpen(false)}
+      />
     </div>
   );
 };

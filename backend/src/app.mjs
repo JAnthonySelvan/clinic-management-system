@@ -16,6 +16,7 @@ import serviceRoutes from "./routes/serviceRoutes.mjs";
 import assistantRoutes from "./routes/assistantRoutes.mjs";
 import otpRoutes from "./routes/otpRoutes.mjs";
 import patientProfileRoutes from "./routes/patientProfileRoutes.mjs";
+import prescriptionRoutes from "./routes/prescriptionRoutes.mjs";
 
 dotenv.config();
 
@@ -82,6 +83,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/assistant", assistantRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/patient-profile", patientProfileRoutes);
+app.use("/api/prescriptions", prescriptionRoutes);
 
 // Production Static Serving for Single-Server / Monorepo Deployments
 const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
