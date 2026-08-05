@@ -14,6 +14,8 @@ import dashboardRoutes from "./routes/dashboardRoutes.mjs";
 import scheduleRoutes from "./routes/scheduleRoutes.mjs";
 import serviceRoutes from "./routes/serviceRoutes.mjs";
 import assistantRoutes from "./routes/assistantRoutes.mjs";
+import otpRoutes from "./routes/otpRoutes.mjs";
+import patientProfileRoutes from "./routes/patientProfileRoutes.mjs";
 
 dotenv.config();
 
@@ -78,6 +80,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/assistant", assistantRoutes);
+app.use("/api/otp", otpRoutes);
+app.use("/api/patient-profile", patientProfileRoutes);
 
 // Production Static Serving for Single-Server / Monorepo Deployments
 const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Appointment from "../models/Appointment.mjs";
 import User from "../models/User.mjs";
 import Schedule from "../models/Schedule.mjs";
+import PatientProfile from "../models/PatientProfile.mjs";
 import { validationResult } from "express-validator";
 
 const getSpecializationRegex = (spec) => {
@@ -319,7 +320,34 @@ export const bookAppointment = async (req, res) => {
       appointmentDate,
       appointmentTime,
       reason,
+      patientProfileId,
     } = req.body;
+
+    let finalPatientName = patientName;
+    let finalPatientEmail = patientEmail;
+    let finalPatientPhone = patientPhone;
+    let finalPatientAge = patientAge;
+    let finalGender = gender;
+    let resolvedProfileId = null;
+
+    if (patientProfileId) {
+      const profile = await PatientProfile.findById(patientProfileId);
+      if (profile) {
+        // If requireOtpVerified attached verifiedEmail, ensure profile belongs to verifiedEmail
+        if (req.verifiedEmail && profile.email.toLowerCase() !== req.verifiedEmail.toLowerCase()) {
+          return res.status(403).json({
+            success: false,
+            message: "Unauthorized profile usage.",
+          });
+        }
+        finalPatientName = profile.fullName;
+        finalPatientEmail = profile.email;
+        finalPatientPhone = profile.phone;
+        finalPatientAge = profile.age;
+        finalGender = profile.gender;
+        resolvedProfileId = profile._id;
+      }
+    }
 
     let assignedSpecialization = specialization;
     let assignedDoctorId = doctor;
@@ -426,13 +454,14 @@ export const bookAppointment = async (req, res) => {
     }
 
     const appointment = await Appointment.create({
-      patientName,
-      patientEmail,
-      patientPhone,
-      patientAge,
-      gender,
+      patientName: finalPatientName,
+      patientEmail: finalPatientEmail,
+      patientPhone: finalPatientPhone,
+      patientAge: finalPatientAge,
+      gender: finalGender,
       specialization: assignedSpecialization,
       doctor: assignedDoctorId || null,
+      patientProfile: resolvedProfileId || null,
       appointmentDateTime,
       reason,
       status: "Pending",

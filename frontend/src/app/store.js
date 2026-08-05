@@ -4,6 +4,8 @@ import authReducer from "../features/auth/authSlice";
 import doctorReducer from "../features/doctor/doctorSlice";
 import appointmentReducer from "../features/appointment/appointmentSlice";
 import scheduleReducer from "../features/schedule/scheduleSlice";
+import otpReducer from "../features/otp/otpSlice";
+import patientProfileReducer from "../features/patientProfile/patientProfileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     doctor: doctorReducer,
     appointment: appointmentReducer,
     schedule: scheduleReducer,
+    otp: otpReducer,
+    patientProfile: patientProfileReducer,
   },
 });
 

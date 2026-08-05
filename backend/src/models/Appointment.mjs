@@ -45,6 +45,12 @@ const appointmentSchema = new mongoose.Schema(
       required: false,
     },
 
+    patientProfile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PatientProfile",
+      required: false,
+    },
+
 
     appointmentDateTime: {
       type: Date,

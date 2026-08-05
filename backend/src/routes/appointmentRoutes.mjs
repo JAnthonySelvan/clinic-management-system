@@ -18,12 +18,14 @@ import {
   trackAppointmentValidation,
 } from "../validators/appointmentValidator.mjs";
 
+import { optionalOtpAuth } from "../middleware/otpAuthMiddleware.mjs";
+
 const router = express.Router();
 
 // Public
 router.get("/track", trackLimiter, trackAppointmentValidation, validate, trackAppointment);
 router.get("/booked-slots", getBookedSlots);
-router.post("/", createAppointmentValidation, validate, bookAppointment);
+router.post("/", optionalOtpAuth, createAppointmentValidation, validate, bookAppointment);
 
 // Admin
 router.get("/", protect, authorize("admin"), getAllAppointments);
