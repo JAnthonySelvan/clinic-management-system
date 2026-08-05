@@ -8,10 +8,10 @@ export const sendOtpEmail = async (toEmail, otpCode) => {
   const apiKey = process.env.BREVO_API_KEY;
 
   // Print OTP in development console for easy debugging/testing
-  console.log(`\n========================================`);
-  console.log(`[OTP EMAIL] Destination: ${toEmail}`);
-  console.log(`[OTP EMAIL] Verification Code: ${otpCode}`);
-  console.log(`========================================\n`);
+  // console.log(`\n========================================`);
+  // console.log(`[OTP EMAIL] Destination: ${toEmail}`);
+  // console.log(`[OTP EMAIL] Verification Code: ${otpCode}`);
+  // console.log(`========================================\n`);
 
   if (!apiKey) {
     // Surface specific missing key error if API key is absent
@@ -248,10 +248,10 @@ export const sendAppointmentStatusEmail = async ({
 }) => {
   const apiKey = process.env.BREVO_API_KEY;
 
-  console.log(`\n========================================`);
-  console.log(`[STATUS EMAIL] Destination: ${toEmail}`);
-  console.log(`[STATUS EMAIL] Patient: ${patientName} | Status: ${status}`);
-  console.log(`========================================\n`);
+  // console.log(`\n========================================`);
+  // console.log(`[STATUS EMAIL] Destination: ${toEmail}`);
+  // console.log(`[STATUS EMAIL] Patient: ${patientName} | Status: ${status}`);
+  // console.log(`========================================\n`);
 
   if (!toEmail) return { success: false, reason: "NO_EMAIL" };
 
